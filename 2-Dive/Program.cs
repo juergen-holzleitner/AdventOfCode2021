@@ -1,6 +1,7 @@
 ﻿var input = File.ReadLines(@"Input.txt");
 int horizontalPosition = 0;
 int depth = 0;
+int aim = 0;
 foreach (var line in input)
 {
   var tokens = line.Split(' ');
@@ -14,12 +15,13 @@ foreach (var line in input)
   {
     case "forward":
       horizontalPosition += value;
+      depth += aim * value;
       break;
     case "down":
-      depth += value;
+      aim += value;
       break;
     case "up":
-      depth -= value;
+      aim -= value;
       break;
     default:
       System.Diagnostics.Debug.Assert(false, $"Invalid token {tokens[0]}");
