@@ -63,7 +63,7 @@ void Step1(string fileName)
   Console.WriteLine(regular * inverted);
 }
 
-void Step2(string fileName)
+string GetMostSignificant(string fileName, bool most)
 {
   var input = File.ReadAllLines(fileName).ToList();
 
@@ -75,13 +75,25 @@ void Step2(string fileName)
       break;
 
     var target = individualBits?[pos] * 2 >= numTotal ? '1' : '0';
+    if (!most)
+      target = individualBits?[pos] * 2 < numTotal ? '1' : '0';
+
     input = (from i in input where i[pos] == target select i).ToList();
 
     if (input.Count <= 1)
       break;
   }
 
-  Console.WriteLine(input.Single());
+  return input.Single();
+}
+
+void Step2(string fileName)
+{
+  var oxygen = GetMostSignificant(fileName, true);
+  Console.WriteLine(oxygen);
+
+  var scrubber = GetMostSignificant(fileName, false);
+  Console.WriteLine(scrubber);
 }
 
 const string? fileName = @"input.txt";
