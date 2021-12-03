@@ -40,9 +40,9 @@
   return (individualBits, numTotal);
 }
 
-void Step1()
+void Step1(string fileName)
 {
-  var input = File.ReadLines(@"input.txt");
+  var input = File.ReadLines(fileName);
 
   (var individualBits, var numTotal) = CountIndividualBits(input);
 
@@ -63,5 +63,28 @@ void Step1()
   Console.WriteLine(regular * inverted);
 }
 
-Step1();
+void Step2(string fileName)
+{
+  var input = File.ReadAllLines(fileName).ToList();
 
+  for (int pos = 0; ; ++pos)
+  {
+    (var individualBits, var numTotal) = CountIndividualBits(input);
+
+    if (numTotal <= 1)
+      break;
+
+    var target = individualBits?[pos] * 2 >= numTotal ? '1' : '0';
+    input = (from i in input where i[pos] == target select i).ToList();
+
+    if (input.Count <= 1)
+      break;
+  }
+
+  Console.WriteLine(input.Single());
+}
+
+const string? fileName = @"input.txt";
+
+// Step1(fileName);
+Step2(fileName);
