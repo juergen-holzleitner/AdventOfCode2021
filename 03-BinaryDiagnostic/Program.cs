@@ -90,10 +90,12 @@ string GetMostSignificant(string fileName, bool most)
 void Step2(string fileName)
 {
   var oxygen = GetMostSignificant(fileName, true);
-  Console.WriteLine(oxygen);
+  int ox = Convert.ToInt32(oxygen, 2);
 
   var scrubber = GetMostSignificant(fileName, false);
-  Console.WriteLine(scrubber);
+  int sc = Convert.ToInt32(scrubber, 2);
+  
+  Console.WriteLine(ox * sc);
 }
 
 const string? fileName = @"input.txt";
