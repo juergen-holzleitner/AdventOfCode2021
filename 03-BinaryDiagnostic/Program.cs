@@ -49,7 +49,7 @@ void Step1()
   System.Diagnostics.Trace.Assert(individualBits != null);
 
   int regular = 0, inverted = 0;
-  for (int i = 0; i < individualBits.Length; ++i)
+  for (int i = 0; i < individualBits?.Length; ++i)
   {
     regular <<= 1;
     inverted <<= 1;
