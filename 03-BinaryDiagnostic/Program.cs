@@ -38,4 +38,16 @@ foreach (var line in intput)
 
 }
 
-Console.WriteLine("Hello, World!");
+int regular = 0, inverted = 0;
+for (int i = 0; i < individualBits.Length; ++i)
+{
+  regular <<= 1;
+  inverted <<= 1;
+
+  if (individualBits[i] * 2 > numTotal)
+    regular |= 1;
+  else
+    inverted |= 1;
+}
+
+Console.WriteLine(regular * inverted);
