@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-var bingoGame = ReadFileData(@"input-small.txt");
-(var winningCard, var n) = GetWinningCard(bingoGame);
+var bingoGame = ReadFileData(@"input.txt");
+(var winningCard, var n) = GetWinningCard(bingoGame, true);
 
 var sum = (
     from r in winningCard.bingoPositions
@@ -13,7 +13,7 @@ var sum = (
 Console.WriteLine(sum * n);
 
 
-(BingoCard, int) GetWinningCard(BingoGame bingoGame)
+(BingoCard, int) GetWinningCard(BingoGame bingoGame, bool checkLast)
 { 
   foreach (var n in bingoGame.drawnNumbers)
   {
@@ -21,8 +21,16 @@ Console.WriteLine(sum * n);
     {
       DrawNumber(card, n);
 
-      if (IsWinningCard(card))
-        return (card, n);
+      if (checkLast)
+      {
+        if (bingoGame.bingoCards.All(b => IsWinningCard(b)))
+          return (card, n);
+      }
+      else
+      {
+        if (IsWinningCard(card))
+          return (card, n);
+      }
     }
   }
 
