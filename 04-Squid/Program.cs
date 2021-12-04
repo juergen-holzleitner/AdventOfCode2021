@@ -1,8 +1,59 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-var input = ReadFileData(@"input-small.txt");
-Console.WriteLine("Hello, World!");
+var bingoGame = ReadFileData(@"input-small.txt");
+(var winningCard, var n) = GetWinningCard(bingoGame);
 
+var sum = (
+    from r in winningCard.bingoPositions
+    from c in r
+    where !c.IsHit
+    select c.Number
+  ).Sum();
+
+Console.WriteLine(sum * n);
+
+
+(BingoCard, int) GetWinningCard(BingoGame bingoGame)
+{ 
+  foreach (var n in bingoGame.drawnNumbers)
+  {
+    foreach (var card in bingoGame.bingoCards)
+    {
+      DrawNumber(card, n);
+
+      if (IsWinningCard(card))
+        return (card, n);
+    }
+  }
+
+  throw new ApplicationException("no winning card found");
+}
+
+void DrawNumber(BingoCard card, int n)
+{
+  for (int row = 0; row < card.bingoPositions.Count; ++row)
+    for (int col = 0; col < card.bingoPositions[row].Count; ++col)
+      if (card.bingoPositions[row][col].Number == n)
+        card.bingoPositions[row][col].IsHit = true;
+}
+
+bool IsWinningCard(BingoCard card)
+{
+  foreach (var row in card.bingoPositions)
+  {
+    if (row.All(p => p.IsHit))
+      return true;
+  }
+
+  for (int n = 0; n < card.bingoPositions.First().Count; n++)
+  {
+    var column = from c in card.bingoPositions select c[n];
+    if (column.All(p => p.IsHit))
+      return true;
+  }
+
+  return false;
+}
 
 BingoGame ReadFileData(string fileName)
 {
@@ -29,7 +80,8 @@ BingoGame ReadFileData(string fileName)
 
     System.Diagnostics.Debug.Assert(currentCard != null);
 
-    var row = (from n in line.Split(' ', StringSplitOptions.RemoveEmptyEntries) select int.Parse(n)).ToList();
+    var row = (from n in line.Split(' ', StringSplitOptions.RemoveEmptyEntries) 
+               select new BingoPosition() { Number = int.Parse(n) }).ToList();
     currentCard.bingoPositions.Add(row);
   }
   AddCardToGame(currentCard, bingoGame);
@@ -46,14 +98,14 @@ void AddCardToGame(BingoCard? currentCard, BingoGame bingoGame)
     {
       System.Diagnostics.Debug.Assert(row.Count == 5);
       foreach (var number in row)
-        System.Diagnostics.Debug.Assert(number >= 0);
+        System.Diagnostics.Debug.Assert(number.Number >= 0);
     }
 
     bingoGame.bingoCards.Add(currentCard);
   }
 }
 
-struct BingoPosition
+class BingoPosition
 {
   public int Number { get; set; } = -1;
   public bool IsHit { get; set; } = false;
@@ -61,7 +113,7 @@ struct BingoPosition
 
 class BingoCard
 {
-  public List<List<int>> bingoPositions = new List<List<int>>();
+  public List<List<BingoPosition>> bingoPositions = new();
 }
 
 struct BingoGame
