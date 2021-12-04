@@ -28,7 +28,7 @@
       }
       else
       {
-        System.Diagnostics.Trace.Assert(false, $"invalid character {line[i]}");
+        System.Diagnostics.Debug.Assert(false, $"invalid character {line[i]}");
         isLineValid = false;
       }
     }
@@ -48,7 +48,7 @@ void Step1(string fileName)
 
   (var individualBits, var numTotal) = CountIndividualBits(input);
 
-  System.Diagnostics.Trace.Assert(individualBits != null);
+  System.Diagnostics.Debug.Assert(individualBits != null);
 
   int regular = 0, inverted = 0;
   for (int i = 0; i < individualBits?.Length; ++i)
