@@ -40,7 +40,9 @@
   return (individualBits, numTotal);
 }
 
+#pragma warning disable CS8321 // Local function is declared but never used
 void Step1(string fileName)
+#pragma warning restore CS8321 // Local function is declared but never used
 {
   var input = File.ReadLines(fileName);
 
