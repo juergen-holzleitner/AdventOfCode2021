@@ -11,25 +11,30 @@ OverlapInfo GetOverlapInfo(Input input)
   var overlapInfo = new OverlapInfo();
   foreach (var line in input.Lines)
   {
-    if (line.start.x == line.end.x)
+    var distanceVector = line.end - line.start;
+    int steps = 0;
+
+    if (distanceVector.x == 0)
     {
-      int start = Math.Min(line.start.y, line.end.y);
-      int end = Math.Max(line.start.y, line.end.y);
-      for (int y = start; y <= end; ++y)
-      {
-        var p = line.start with { y = y };
-        AddPointToPositionInfo(p, overlapInfo);
-      }
-    } 
-    else if (line.start.y == line.end.y)
+      steps = Math.Abs(distanceVector.y);
+      distanceVector = distanceVector with { y = distanceVector.y / steps };
+    }
+    else if (distanceVector.y == 0)
     {
-      int start = Math.Min(line.start.x, line.end.x);
-      int end = Math.Max(line.start.x, line.end.x);
-      for (int x = start; x <= end; ++x)
-      {
-        var p = line.start with { x = x };
-        AddPointToPositionInfo(p, overlapInfo);
-      }
+      steps = Math.Abs(distanceVector.x);
+      distanceVector = distanceVector with { x = distanceVector.x / steps };
+    }
+    else
+    {
+      steps = Math.Abs(distanceVector.y);
+      System.Diagnostics.Debug.Assert(steps == Math.Abs(distanceVector.x));
+      distanceVector /= steps;
+    }
+
+    for (int n = 0; n <= steps; ++n)
+    {
+      var p = line.start + n * distanceVector;
+      AddPointToPositionInfo(p, overlapInfo);
     }
   }
   return overlapInfo;
@@ -55,10 +60,7 @@ Input ReadInput(string fileName)
     var p1 = new Point(int.Parse(groups["x1"].Value), int.Parse(groups["y1"].Value));
     var p2 = new Point(int.Parse(groups["x2"].Value), int.Parse(groups["y2"].Value));
 
-    if (p1.x == p2.x || p1.y == p2.y)
-    {
-      input.Lines.Add(new Line(p1, p2));
-    }
+    input.Lines.Add(new Line(p1, p2));
   }
 
   return input;
@@ -74,6 +76,24 @@ class Input
   public List<Line> Lines { get; set; } = new();
 }
 
-readonly record struct Point (int x, int y);
+readonly record struct Point (int x, int y)
+{
+  public static Point operator -(Point a, Point b)
+  {
+    return new(a.x - b.x, a.y - b.y);
+  }
+  public static Point operator +(Point a, Point b)
+  {
+    return new(a.x + b.x, a.y + b.y);
+  }
+  public static Point operator *(int n, Point a)
+  {
+    return new(a.x * n, a.y * n);
+  }
+  public static Point operator /(Point a, int n)
+  {
+    return new(a.x / n, a.y / n);
+  }
+}
 
 readonly record struct Line (Point start, Point end);
