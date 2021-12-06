@@ -16,7 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "03-BinaryDiagnostic", "03-B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "04-Squid", "04-Squid\04-Squid.csproj", "{5274C916-F68A-49B2-8B62-1EB952793B00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "05-Venture", "05-Venture\05-Venture.csproj", "{1AC14888-204E-4BD7-8673-3CBA3DFCBE14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "05-Venture", "05-Venture\05-Venture.csproj", "{1AC14888-204E-4BD7-8673-3CBA3DFCBE14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "06-Lanternfish", "06-Lanternfish\06-Lanternfish.csproj", "{C9C27683-F58F-40D7-B00E-3DBD72F64E6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +46,10 @@ Global
 		{1AC14888-204E-4BD7-8673-3CBA3DFCBE14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AC14888-204E-4BD7-8673-3CBA3DFCBE14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AC14888-204E-4BD7-8673-3CBA3DFCBE14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9C27683-F58F-40D7-B00E-3DBD72F64E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9C27683-F58F-40D7-B00E-3DBD72F64E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9C27683-F58F-40D7-B00E-3DBD72F64E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9C27683-F58F-40D7-B00E-3DBD72F64E6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
