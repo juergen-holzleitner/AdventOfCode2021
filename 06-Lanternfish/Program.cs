@@ -1,40 +1,35 @@
 ﻿var input = GetInput(@"input.txt");
 
-for (int i = 0; i < 80; ++i)
+for (int i = 0; i < 256; ++i)
 {
   input = ProcessDay(input);
-  // Console.WriteLine($"{i}: {String.Join(',', input)}");
 }
 
-Console.WriteLine(input.Count);
+Console.WriteLine(input.Sum());
 
-List<int> GetInput(string fileName)
+long[] GetInput(string fileName)
 {
   var s = File.ReadAllText(fileName);
   var data = from n in s.Split(',') select int.Parse(n);
-  return data.ToList();
+  var array = new long[9];
+  foreach (var n in data)
+  {
+    ++array[n];
+  }
+  return array;
 }
 
-List<int> ProcessDay(List<int> current)
+long[] ProcessDay(long[] current)
 {
-  List<int> newDay = new();
+  var result = new long[current.Length];
 
-  int itemsToAdd = 0;
-  foreach (var n in current)
+  for (int n = 1; n < current.Length; ++n)
   {
-    if (n == 0)
-    {
-      ++itemsToAdd;
-      newDay.Add(6);
-    }
-    else
-    {
-      newDay.Add(n - 1);
-    }
+    result[n - 1] = current[n];
   }
 
-  for (int n = 0; n < itemsToAdd; ++n)
-    newDay.Add(8);
+  result[6]+=current[0];
+  result[8] += current[0];
 
-  return newDay;
+  return result;
 }
