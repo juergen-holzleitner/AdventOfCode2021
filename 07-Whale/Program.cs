@@ -3,7 +3,7 @@
 int? minNeededFuel = null;
 for (int n = input.Min(); n <= input.Max(); n++)
 {
-  int neededFuel = GetNeededFuel(input, n);
+  int neededFuel = GetNeededFuel(input, n, false);
   // Console.WriteLine($"{n}: {neededFuel}");
   if (!minNeededFuel.HasValue || neededFuel < minNeededFuel)
     minNeededFuel = neededFuel;
@@ -11,12 +11,20 @@ for (int n = input.Min(); n <= input.Max(); n++)
 
 Console.WriteLine(minNeededFuel);
 
-int GetNeededFuel(int[] input, int n)
+int GetNeededFuel(int[] input, int n, bool part1)
 {
   int fuel = 0;
   foreach (var i in input)
   {
-    fuel += Math.Abs(n - i);
+    var diff = Math.Abs(n - i);
+    if (part1)
+    {
+      fuel += diff;
+    }
+    else
+    {
+      fuel += diff * (diff + 1) / 2;
+    }
   }
   return fuel;
 }
