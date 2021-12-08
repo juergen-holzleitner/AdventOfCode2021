@@ -1,6 +1,11 @@
-﻿var input = GetInput(@"input-small.txt");
+﻿var input = GetInput(@"input.txt");
 
-Console.WriteLine();
+var part1 = from i in input 
+            from o in i.Outputs
+            where o.Length == 2 || o.Length == 4 || o.Length == 3 || o.Length == 7 
+            select o;
+
+Console.WriteLine(part1.Count());
 
 IEnumerable<Input> GetInput(string fileName)
 {
