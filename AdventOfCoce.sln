@@ -20,7 +20,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "05-Venture", "05-Venture\05
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "06-Lanternfish", "06-Lanternfish\06-Lanternfish.csproj", "{C9C27683-F58F-40D7-B00E-3DBD72F64E6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "07-Whale", "07-Whale\07-Whale.csproj", "{273F8E0D-FE57-4E15-A2E4-405FBAD02D44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "07-Whale", "07-Whale\07-Whale.csproj", "{273F8E0D-FE57-4E15-A2E4-405FBAD02D44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "08-SevenSegment", "08-SevenSegment\08-SevenSegment.csproj", "{9D27D02C-BB6C-43C6-9C35-0498358FE4C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{273F8E0D-FE57-4E15-A2E4-405FBAD02D44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{273F8E0D-FE57-4E15-A2E4-405FBAD02D44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{273F8E0D-FE57-4E15-A2E4-405FBAD02D44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D27D02C-BB6C-43C6-9C35-0498358FE4C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D27D02C-BB6C-43C6-9C35-0498358FE4C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D27D02C-BB6C-43C6-9C35-0498358FE4C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D27D02C-BB6C-43C6-9C35-0498358FE4C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
