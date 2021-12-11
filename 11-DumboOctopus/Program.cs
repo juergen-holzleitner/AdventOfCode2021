@@ -1,9 +1,29 @@
 ﻿var input = GetInput(@"input.txt");
 
-int numFlashes = 0;
-for (int i = 0; i < 100; ++i)
-  numFlashes += ProcessNextStep(input); 
-Console.WriteLine(numFlashes);
+//int numFlashes = 0;
+//for (int i = 0; i < 100; ++i)
+//  numFlashes += ProcessNextStep(input); 
+//Console.WriteLine(numFlashes);
+
+int numSteps = 0;
+while (!AreSynchronized(input))
+{
+  ProcessNextStep(input);
+  ++numSteps;
+}
+Console.WriteLine(numSteps);
+
+
+bool AreSynchronized(List<List<int>> input)
+{
+  for (int row = 0; row < input.Count; ++row)
+    for (int col = 0; col < input[row].Count; ++col)
+    {
+      if (input[row][col] != input[0][0])
+        return false;
+    }
+  return true;
+}
 
 int ProcessNextStep(List<List<int>> input)
 {
