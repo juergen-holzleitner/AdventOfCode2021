@@ -31,28 +31,41 @@ List<Position> GetEndPositions(List<Connection> connections, List<Position> star
       var nextPos = nextPos1.Union(nextPos2);
       
       foreach (var n in nextPos)
-      {
-        if (IsSmallCave(n))
+        if (n != "start")
         {
-          if (!position.VisitedSmallCaves.Contains(n))
+          if (IsSmallCave(n))
           {
-            var visitedSmallCaves = new List<string>(position.VisitedSmallCaves);
-            visitedSmallCaves.Add(n);
+            var visitedTwice = from v in position.VisitedSmallCaves where v.Value >= 2 select v;
+
+            if (!position.VisitedSmallCaves.ContainsKey(n) || !visitedTwice.Any())
+            {
+              var visitedSmallCaves = new Dictionary<string, int>(position.VisitedSmallCaves);
+
+              if (visitedSmallCaves.ContainsKey(n))
+                visitedSmallCaves[n]++;
+              else
+              {
+                if (n == "start" || n == "end")
+                  visitedSmallCaves.Add(n, 2);
+                else
+                  visitedSmallCaves.Add(n, 1);
+              }
+            
+              var path = new List<string>(position.Path);
+              path.Add(n);
+
+              var newPos = new Position(visitedSmallCaves, path);
+              stack.Push(newPos);
+            }
+          }
+          else
+          {
             var path = new List<string>(position.Path);
             path.Add(n);
-
-            var newPos = new Position(visitedSmallCaves, path);
+            var newPos = new Position(position.VisitedSmallCaves, path);
             stack.Push(newPos);
           }
         }
-        else
-        {
-          var path = new List<string>(position.Path);
-          path.Add(n);
-          var newPos = new Position(position.VisitedSmallCaves, path);
-          stack.Push(newPos);
-        }
-      }
     }
 
   }
@@ -90,9 +103,15 @@ List<Position> GetStartPositions(List<Connection> connections)
   {
     if (connection.Start == "start" || connection.End == "start")
     {
+      var visited = new Dictionary<string, int>()
+      {
+        { "start", 1 },
+      };
+
       return new List<Position>()
       {
-        new Position(new List<string>(){"start"}, new List<string>(){"start"}),
+       
+        new Position(visited, new List<string>(){"start"}),
       };
     }
   }
@@ -103,5 +122,5 @@ List<Position> GetStartPositions(List<Connection> connections)
 
 readonly record struct Connection(string Start , string End);
 
-readonly record struct Position(List<string> VisitedSmallCaves, List<string> Path);
+readonly record struct Position(Dictionary<string, int> VisitedSmallCaves, List<string> Path);
 
