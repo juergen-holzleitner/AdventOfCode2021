@@ -1,5 +1,6 @@
-﻿var input = GetInput(@"input-small.txt");
-int maxDepth = 10;
+﻿var input = GetInput(@"input.txt");
+int maxDepth = 40;
+Dictionary<Tuple<char, char, int>, IDictionary<char, long>> histogramCache = new();
 
 var hist = GetHistogram(input.PolymerTemplate, input.InsertionRules);
 
@@ -7,6 +8,7 @@ var most = (from h in hist orderby h.Value descending select h).First();
 var least = (from h in hist orderby h.Value select h).First();
 
 Console.WriteLine($"{most.Key}: {most.Value}, {least.Key}: {least.Value} -> {most.Value - least.Value}");
+
 
 Dictionary<char, long> GetHistogram(string template, IDictionary<Tuple<char, char>, char> rules)
 {
@@ -23,6 +25,11 @@ Dictionary<char, long> GetHistogram(string template, IDictionary<Tuple<char, cha
 
 IDictionary<char, long> Process(int depth, char left, char right, IDictionary<Tuple<char, char>, char> insertionRules)
 {
+  if (histogramCache.TryGetValue(new (left, right, depth), out var h))
+  {
+    return h;
+  }
+
   Dictionary<char, long> histogram = new();
   if (depth < maxDepth && insertionRules.TryGetValue(new (left, right), out char value))
   {
@@ -35,6 +42,8 @@ IDictionary<char, long> Process(int depth, char left, char right, IDictionary<Tu
   {
     AddToHistogram(histogram, right);
   }
+
+  histogramCache.Add(new Tuple<char, char, int>(left, right, depth), histogram);
   return histogram;
 }
 
