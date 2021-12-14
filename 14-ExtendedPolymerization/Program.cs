@@ -1,27 +1,31 @@
 ﻿var input = GetInput(@"input.txt");
-const int maxDepth = 10;
+int maxDepth = 10;
 
-Dictionary<char, long> histogram = new();
-AddToHistogram(histogram, input.PolymerTemplate[0]);
+var hist = GetHistogram(input.PolymerTemplate, input.InsertionRules);
 
-for (int n = 0; n < input.PolymerTemplate.Length - 1; n++)
+var most = (from h in hist orderby h.Value descending select h).First();
+var least = (from h in hist orderby h.Value select h).First();
+
+Console.WriteLine($"{most.Key}: {most.Value}, {least.Key}: {least.Value} -> {most.Value - least.Value}");
+
+Dictionary<char, long> GetHistogram(string template, IDictionary<Tuple<char, char>, char> rules)
 {
-  Process(0, input.PolymerTemplate[n], input.PolymerTemplate[n + 1], input.InsertionRules);
+  Dictionary<char, long> histogram = new();
+  AddToHistogram(histogram, template[0]);
+
+  for (int n = 0; n < template.Length - 1; n++)
+  {
+    Process(0, template[n], template[n + 1], histogram, rules);
+  }
+  return histogram;
 }
 
-var vals = histogram.Values;
-var most = vals.Max();
-var least = vals.Min();
-
-Console.WriteLine(most - least);
-
-
-void Process(int depth, char left, char right, IDictionary<Tuple<char, char>, char> insertionRules)
+void Process(int depth, char left, char right, IDictionary<char, long> histogram, IDictionary<Tuple<char, char>, char> insertionRules)
 {
   if (depth < maxDepth && insertionRules.TryGetValue(new (left, right), out char value))
   {
-    Process(depth + 1, left, value, insertionRules);
-    Process(depth + 1, value, right, insertionRules);
+    Process(depth + 1, left, value, histogram, insertionRules);
+    Process(depth + 1, value, right, histogram, insertionRules);
   }
   else
   {
@@ -29,7 +33,7 @@ void Process(int depth, char left, char right, IDictionary<Tuple<char, char>, ch
   }
 }
 
-void AddToHistogram(IDictionary<char, long> h, char ch)
+void AddToHistogram(IDictionary<char, long> histogram, char ch)
 {
   if (!histogram.ContainsKey(ch))
     histogram.Add(ch, 1);
