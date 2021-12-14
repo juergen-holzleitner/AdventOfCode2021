@@ -1,21 +1,18 @@
 ﻿var input = GetInput(@"input.txt");
 const int maxDepth = 10;
 
-System.Text.StringBuilder sb = new();
-sb.Append('N');
+Dictionary<char, long> histogram = new();
+AddToHistogram(histogram, input.PolymerTemplate[0]);
+
 for (int n = 0; n < input.PolymerTemplate.Length - 1; n++)
 {
   Process(0, input.PolymerTemplate[n], input.PolymerTemplate[n + 1], input.InsertionRules);
 }
 
+var vals = histogram.Values;
+var most = vals.Max();
+var least = vals.Min();
 
-var charDistribution = (from c in sb.ToString()
-                        group c by c into g
-                        orderby g.Count() descending
-                        select new { ch = g.Key, cnt = g.Count() }
-                        );
-var most = charDistribution.First().cnt;
-var least = charDistribution.Last().cnt;
 Console.WriteLine(most - least);
 
 
@@ -28,8 +25,16 @@ void Process(int depth, char left, char right, IDictionary<Tuple<char, char>, ch
   }
   else
   {
-    sb.Append(right);
+    AddToHistogram(histogram, right);
   }
+}
+
+void AddToHistogram(IDictionary<char, long> h, char ch)
+{
+  if (!histogram.ContainsKey(ch))
+    histogram.Add(ch, 1);
+  else
+    histogram[ch]++;
 }
 
 Input GetInput(string fileName)
