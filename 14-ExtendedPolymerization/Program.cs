@@ -1,10 +1,15 @@
 ﻿var input = GetInput(@"input.txt");
-var newPolymer = input.PolymerTemplate;
+const int maxDepth = 10;
 
-for (int i = 0; i < 40; ++i)
-  newPolymer = ProcessStep(newPolymer, input.InsertionRules);
+System.Text.StringBuilder sb = new();
+sb.Append('N');
+for (int n = 0; n < input.PolymerTemplate.Length - 1; n++)
+{
+  Process(0, input.PolymerTemplate[n], input.PolymerTemplate[n + 1], input.InsertionRules);
+}
 
-var charDistribution = (from c in newPolymer
+
+var charDistribution = (from c in sb.ToString()
                         group c by c into g
                         orderby g.Count() descending
                         select new { ch = g.Key, cnt = g.Count() }
@@ -14,23 +19,22 @@ var least = charDistribution.Last().cnt;
 Console.WriteLine(most - least);
 
 
-string ProcessStep(string polymerTemplate, IDictionary<string, string> insertionRules)
+void Process(int depth, char left, char right, IDictionary<Tuple<char, char>, char> insertionRules)
 {
-  System.Text.StringBuilder sb = new();
-  for (int i=0; i < polymerTemplate.Length - 1; i++)
+  if (depth < maxDepth && insertionRules.TryGetValue(new (left, right), out char value))
   {
-    sb.Append(polymerTemplate[i]);
-    if (insertionRules.TryGetValue(polymerTemplate.Substring(i, 2), out var value))
-      sb.Append(value);
+    Process(depth + 1, left, value, insertionRules);
+    Process(depth + 1, value, right, insertionRules);
   }
-  sb.Append(polymerTemplate[^1]);
-
-  return sb.ToString();
+  else
+  {
+    sb.Append(right);
+  }
 }
 
 Input GetInput(string fileName)
 {
-  Dictionary<string, string> rules = new();
+  Dictionary<Tuple<char, char>, char> rules = new();
   string? template = null;
 
   var lines = File.ReadLines(fileName);
@@ -41,7 +45,8 @@ Input GetInput(string fileName)
     var match = regexInsertion.Match(line);
     if (match.Success)
     {
-      rules.Add(match.Groups["pair"].Value, match.Groups["ins"].Value);
+      var p = new Tuple<char, char>(match.Groups["pair"].Value[0], match.Groups["pair"].Value[1]);
+      rules.Add(p, match.Groups["ins"].Value[0]);
     }
     else
     { 
@@ -62,4 +67,4 @@ Input GetInput(string fileName)
   return new Input(template, rules);
 }
 
-readonly record struct Input(string PolymerTemplate, IDictionary<string, string> InsertionRules);
+readonly record struct Input(string PolymerTemplate, IDictionary<Tuple<char, char>, char> InsertionRules);
