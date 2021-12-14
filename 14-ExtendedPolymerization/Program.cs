@@ -1,8 +1,36 @@
-﻿var input = GetInput(@"input-small.txt");
+﻿var input = GetInput(@"input.txt");
+var newPolymer = input.PolymerTemplate;
+
+for (int i = 0; i < 40; ++i)
+  newPolymer = ProcessStep(newPolymer, input.InsertionRules);
+
+var charDistribution = (from c in newPolymer
+                        group c by c into g
+                        orderby g.Count() descending
+                        select new { ch = g.Key, cnt = g.Count() }
+                        );
+var most = charDistribution.First().cnt;
+var least = charDistribution.Last().cnt;
+Console.WriteLine(most - least);
+
+
+string ProcessStep(string polymerTemplate, IDictionary<string, string> insertionRules)
+{
+  System.Text.StringBuilder sb = new();
+  for (int i=0; i < polymerTemplate.Length - 1; i++)
+  {
+    sb.Append(polymerTemplate[i]);
+    if (insertionRules.TryGetValue(polymerTemplate.Substring(i, 2), out var value))
+      sb.Append(value);
+  }
+  sb.Append(polymerTemplate[^1]);
+
+  return sb.ToString();
+}
 
 Input GetInput(string fileName)
 {
-  List<InsertionRule> rules = new List<InsertionRule>();
+  Dictionary<string, string> rules = new();
   string? template = null;
 
   var lines = File.ReadLines(fileName);
@@ -13,8 +41,7 @@ Input GetInput(string fileName)
     var match = regexInsertion.Match(line);
     if (match.Success)
     {
-      var insertionRule = new InsertionRule(match.Groups["pair"].Value, match.Groups["ins"].Value);
-      rules.Add(insertionRule);
+      rules.Add(match.Groups["pair"].Value, match.Groups["ins"].Value);
     }
     else
     { 
@@ -35,5 +62,4 @@ Input GetInput(string fileName)
   return new Input(template, rules);
 }
 
-readonly record struct InsertionRule(string pair, string insert);
-readonly record struct Input(string PolymerTemplate, IEnumerable<InsertionRule> InsertionRules);
+readonly record struct Input(string PolymerTemplate, IDictionary<string, string> InsertionRules);
