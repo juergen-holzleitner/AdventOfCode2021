@@ -1,4 +1,4 @@
-﻿var input = GetInput(@"input.txt");
+﻿var input = GetInput(@"input-small.txt");
 int maxDepth = 10;
 
 var hist = GetHistogram(input.PolymerTemplate, input.InsertionRules);
@@ -15,21 +15,37 @@ Dictionary<char, long> GetHistogram(string template, IDictionary<Tuple<char, cha
 
   for (int n = 0; n < template.Length - 1; n++)
   {
-    Process(0, template[n], template[n + 1], histogram, rules);
+    var h = Process(0, template[n], template[n + 1], rules);
+    MergeHistogram(histogram, h);
   }
   return histogram;
 }
 
-void Process(int depth, char left, char right, IDictionary<char, long> histogram, IDictionary<Tuple<char, char>, char> insertionRules)
+IDictionary<char, long> Process(int depth, char left, char right, IDictionary<Tuple<char, char>, char> insertionRules)
 {
+  Dictionary<char, long> histogram = new();
   if (depth < maxDepth && insertionRules.TryGetValue(new (left, right), out char value))
   {
-    Process(depth + 1, left, value, histogram, insertionRules);
-    Process(depth + 1, value, right, histogram, insertionRules);
+    var hleft = Process(depth + 1, left, value, insertionRules);
+    MergeHistogram(histogram, hleft);
+    var hRight = Process(depth + 1, value, right, insertionRules);
+    MergeHistogram(histogram, hRight);
   }
   else
   {
     AddToHistogram(histogram, right);
+  }
+  return histogram;
+}
+
+void MergeHistogram(IDictionary<char, long> histogram, IDictionary<char, long> h)
+{
+  foreach (var x in h)
+  {
+    if (!histogram.ContainsKey(x.Key))
+      histogram.Add(x.Key, x.Value);
+    else
+      histogram[x.Key]+=x.Value;
   }
 }
 
