@@ -38,7 +38,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "14-ExtendedPolymerization",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "15-Chiton", "15-Chiton\15-Chiton.csproj", "{8023D9AC-2F3D-4D6F-BDE3-493676FF28F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "16-PacketDecoder", "16-PacketDecoder\16-PacketDecoder.csproj", "{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "16-PacketDecoder", "16-PacketDecoder\16-PacketDecoder.csproj", "{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "17-TrickShot", "17-TrickShot\17-TrickShot.csproj", "{D9AECB25-28F2-4E19-8F90-7694F0FB1AF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,6 +112,10 @@ Global
 		{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9AECB25-28F2-4E19-8F90-7694F0FB1AF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9AECB25-28F2-4E19-8F90-7694F0FB1AF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9AECB25-28F2-4E19-8F90-7694F0FB1AF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9AECB25-28F2-4E19-8F90-7694F0FB1AF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
