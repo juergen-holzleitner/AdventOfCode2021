@@ -1,16 +1,24 @@
 ﻿var input = GetInput(@"input.txt");
 
-var steps = GetPossibleNumXSteps(input);
+var xOptions = GetPossibleNumXSteps(input);
+var yOptions = GetPossibleNumYSteps(input);
 
-var (maxSpeed, maxPos) = GetMaxYPos(input);
+var res = from x in xOptions
+          from y in yOptions
+          where (x.NumSteps == y.NumSteps) || (x.IsRepeatInfinite && x.NumSteps <= y.NumSteps)
+          select new { X = x.Speed, Y = y.Speed };
 
-Console.WriteLine($"maxSpeed: {maxSpeed}, maxPos: {maxPos}");
+res = res.OrderBy(res => res.X).OrderBy(res => res.Y).Distinct().ToList();
+
+Console.WriteLine(res.Count());
+Console.WriteLine();
+// var (maxSpeed, maxPos) = GetMaxYPos(input);
+// Console.WriteLine($"maxSpeed: {maxSpeed}, maxPos: {maxPos}");
 
 
-(int?, HashSet<int>) GetPossibleNumXSteps(Input input)
+List<XOption> GetPossibleNumXSteps(Input input)
 {
-  HashSet<int> res = new();
-  int? minInfinite = null;
+  List<XOption> res = new();
   for (int speed = input.MaxX; speed >= 0; --speed)
   {
     int pos = 0;
@@ -24,17 +32,35 @@ Console.WriteLine($"maxSpeed: {maxSpeed}, maxPos: {maxPos}");
 
       if (pos >= input.MinX && pos<= input.MaxX)
       {
-        res.Add(steps);
-        if (curSpeed == 0)
-        {
-          if (!minInfinite.HasValue || steps < minInfinite.Value)
-            minInfinite = steps;
-        }
+        res.Add(new XOption(speed, steps, curSpeed==0));
       }
     }
   }
 
-  return (minInfinite, res);
+  return res;
+}
+
+List<YOption> GetPossibleNumYSteps(Input input)
+{
+  List<YOption> res = new();
+  for (int speed = input.MinY; speed <= -input.MinY; ++speed)
+  {
+    int steps = 0;
+    int pos = 0;
+    int curSpeed = speed;
+    while (pos >= input.MinY)
+    {
+      ++steps;
+      pos += curSpeed;
+      --curSpeed;
+      if (pos >= input.MinY && pos <= input.MaxY)
+      {
+        res.Add(new YOption(speed, steps));
+      }
+    }
+  }
+
+  return res;
 }
 
 (int, int) GetMaxYPos(Input input)
@@ -92,3 +118,6 @@ Input GetInput(string fileName)
 
 
 readonly record struct Input(int MinX, int MaxX, int MinY, int MaxY);
+readonly record struct XOption(int Speed, int NumSteps, bool IsRepeatInfinite);
+
+readonly record struct YOption(int Speed, int NumSteps);
