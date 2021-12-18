@@ -36,7 +36,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "13-Origami", "13-Origami\13
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "14-ExtendedPolymerization", "14-ExtendedPolymerization\14-ExtendedPolymerization.csproj", "{8AB480B1-4CE2-4E02-932F-C9D5D08A83A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15-Chiton", "15-Chiton\15-Chiton.csproj", "{8023D9AC-2F3D-4D6F-BDE3-493676FF28F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "15-Chiton", "15-Chiton\15-Chiton.csproj", "{8023D9AC-2F3D-4D6F-BDE3-493676FF28F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "16-PacketDecoder", "16-PacketDecoder\16-PacketDecoder.csproj", "{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,6 +106,10 @@ Global
 		{8023D9AC-2F3D-4D6F-BDE3-493676FF28F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8023D9AC-2F3D-4D6F-BDE3-493676FF28F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8023D9AC-2F3D-4D6F-BDE3-493676FF28F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{733CEE63-CC78-41C4-94A6-03A2F42C7D4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
