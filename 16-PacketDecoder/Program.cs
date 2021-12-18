@@ -1,39 +1,108 @@
 ﻿var input = ReadInput(@"input.txt");
-foreach (var item in input)
+foreach (var (line, item) in input)
 {
   var packet = item.Decode();
-  int versionSum = PrintPacket(packet, 0);
-  Console.WriteLine("Version Sum: " + versionSum);
+  Console.WriteLine(line);
+  PrintPacket(packet, 0);
+  Console.WriteLine();
 }
 
-int PrintPacket(Packet packet, int level)
+void PrintPacket(Packet packet, int level)
 {
   for (int i = 0; i < level; ++i)
     Console.Write('\t');
+
   if (packet is Literal literal)
   {
-    Console.WriteLine($"V: {literal.Version} Literal: {literal.Value}");
-    return literal.Version;
+    Console.WriteLine($"V: {literal.Version} T: {GetPackageTypeString(literal.Type)}");
   }
   else if (packet is Operator op)
   {
-    Console.WriteLine($"V: {op.Version} T: {op.Type}");
-    int version = op.Version;
+    Console.WriteLine($"V: {op.Version} T: {GetPackageTypeString(op.Type)}");
     foreach (var p in op.Packets)
     {
-      version += PrintPacket(p, level + 1);
+      PrintPacket(p, level + 1);
     }
-    return version;
   }
   else
   {
     System.Diagnostics.Debug.Assert(false);
-    Console.WriteLine($"V: {packet.Version} T: {packet.Type}");
+    Console.WriteLine($"V: {packet.Version} T: {GetPackageTypeString(packet.Type)}");
+  }
+
+  for (int i = 0; i < level; ++i)
+    Console.Write('\t');
+  Console.WriteLine("-> " + GetPacketValue(packet));
+}
+
+long GetPacketValue(Packet packet)
+{
+  if (packet is Literal literal)
+  {
+    return literal.Value;
+  }
+  else if (packet is Operator op)
+  {
+    long value = 0;
+    switch (op.Type)
+    {
+      case 0:
+        value = op.Packets.Sum(x => GetPacketValue(x));
+        break;
+      case 1:
+        value = op.Packets.Aggregate(1, (long acc, Packet x) => acc * GetPacketValue(x));
+        break;
+      case 2:
+        value = op.Packets.Min(x => GetPacketValue(x));
+        break;
+      case 3:
+        value = op.Packets.Max(x => GetPacketValue(x));
+        break;
+      case 5:
+        System.Diagnostics.Debug.Assert(op.Packets.Count == 2);
+        value = GetPacketValue(op.Packets[0]) > GetPacketValue(op.Packets[1]) ? 1 : 0;
+        break;
+      case 6:
+        System.Diagnostics.Debug.Assert(op.Packets.Count == 2);
+        value = GetPacketValue(op.Packets[0]) < GetPacketValue(op.Packets[1]) ? 1 : 0;
+        break;
+      case 7:
+        System.Diagnostics.Debug.Assert(op.Packets.Count == 2);
+        value = GetPacketValue(op.Packets[0]) == GetPacketValue(op.Packets[1]) ? 1 : 0;
+        break;
+      default:
+        System.Diagnostics.Debug.Assert(false);
+        break;
+    }
+    
+    return value;
+  }
+  else
+  {
+    System.Diagnostics.Debug.Assert(false);
     return 0;
   }
 }
 
-IEnumerable<Decoder> ReadInput(string fileName)
+string GetPackageTypeString(byte type)
+{
+  switch (type)
+  {
+    case 0: return "sum";
+    case 1: return "product";
+    case 2: return "minimum";
+    case 3: return "maximum";
+    case 4: return "literal";
+    case 5: return "greater than";
+    case 6: return "less than";
+    case 7: return "equal";
+    default:
+      System.Diagnostics.Debug.Assert(false);
+      return "<unknown>";
+  }
+}
+
+IEnumerable<(string, Decoder)> ReadInput(string fileName)
 {
   var data = File.ReadLines(fileName);
   foreach (var line in data)
@@ -46,7 +115,7 @@ IEnumerable<Decoder> ReadInput(string fileName)
 
     }
     
-    yield return decoder;
+    yield return (line, decoder);
   }
 }
 
@@ -121,17 +190,17 @@ class Decoder
     return val;
   }
 
-  ulong DecodeLiteral()
+  long DecodeLiteral()
   {
-    ulong val = 0;
-    var maxDigits = sizeof(ulong) * 2;
+    long val = 0;
+    var maxDigits = sizeof(long) * 2;
     int numDigits = 0;
     bool continueReading;
     do
     {
       continueReading = bits.Dequeue();
       val <<= 4;
-      var digit = (ulong)DecodeBits(4);
+      var digit = (long)DecodeBits(4);
       val |= digit;
       
       ++numDigits;
@@ -146,5 +215,5 @@ class Decoder
 
 record Packet(byte Version, byte Type);
 
-record Literal(byte Version, byte Type, ulong Value) : Packet(Version, Type);
+record Literal(byte Version, byte Type, long Value) : Packet(Version, Type);
 record Operator(byte Version, byte Type, List<Packet> Packets) : Packet(Version, Type);
