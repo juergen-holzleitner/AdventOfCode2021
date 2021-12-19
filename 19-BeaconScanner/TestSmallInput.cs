@@ -38,16 +38,19 @@ namespace _19_BeaconScanner
       {
         System.Console.WriteLine($"{allScanner.Count} scanner left");
         System.Diagnostics.Trace.TraceWarning($"{allScanner.Count} scanner left");
-
+        
+        bool found = false;
         foreach (var scaner in allScanner)
         {
           if (IsScannerMatching(scaner, transformedScanners, failedChecks))
           {
             allScanner.Remove(scaner);
+            found = true;
             break;
           }
         }
 
+        System.Diagnostics.Debug.Assert(found);
       }
 
       HashSet<Beacon> allBeacons = new();
@@ -84,10 +87,7 @@ namespace _19_BeaconScanner
       foreach (var alScanner in transformedScanners)
       {
         if (failedChecks.Contains((scanner, alScanner)))
-        {
-          System.Console.WriteLine("skip known failed check");
           continue;
-        }
 
         foreach (var mat in Matrix.GetRotationMatrices())
         {
