@@ -42,7 +42,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "16-PacketDecoder", "16-Pack
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "17-TrickShot", "17-TrickShot\17-TrickShot.csproj", "{D9AECB25-28F2-4E19-8F90-7694F0FB1AF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "18-SnailFish", "18-SnailFish\18-SnailFish.csproj", "{09A85D62-4838-4961-A197-4DCBF0C473CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "18-SnailFish", "18-SnailFish\18-SnailFish.csproj", "{09A85D62-4838-4961-A197-4DCBF0C473CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "19-BeaconScanner", "19-BeaconScanner\19-BeaconScanner.csproj", "{9380929E-07D9-43E4-80FB-0EFFF0F39449}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -122,6 +124,10 @@ Global
 		{09A85D62-4838-4961-A197-4DCBF0C473CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09A85D62-4838-4961-A197-4DCBF0C473CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09A85D62-4838-4961-A197-4DCBF0C473CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9380929E-07D9-43E4-80FB-0EFFF0F39449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9380929E-07D9-43E4-80FB-0EFFF0F39449}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9380929E-07D9-43E4-80FB-0EFFF0F39449}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9380929E-07D9-43E4-80FB-0EFFF0F39449}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
