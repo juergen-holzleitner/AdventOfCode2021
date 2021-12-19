@@ -17,9 +17,7 @@ namespace _19_BeaconScanner
     [TestMethod]
     public void ParseScannerName()
     {
-      var line = "--- scanner 0 ---";
-      var lines = line.Split(System.Environment.NewLine) as IEnumerable<string>;
-      var scanner = Parser.ParseScanner(lines.GetEnumerator());
+      var scanner = ParseScannerFromText("--- scanner 0 ---");
       Assert.AreEqual(new Parser.Scanner("scanner 0", new List<Parser.Beacon>()).Name, scanner.Name);
     }
 
@@ -34,8 +32,14 @@ namespace _19_BeaconScanner
 5,6,-4
 8,0,7";
 
-      var lines = line.Split(System.Environment.NewLine) as IEnumerable<string>;
-      var scanner = Parser.ParseScanner(lines.GetEnumerator());
+      var scanner = ParseScannerFromText(line);
+      Assert.AreEqual(new Parser.Scanner("scanner 0", new List<Parser.Beacon>()).Name, scanner.Name);
+    }
+
+    private Parser.Scanner ParseScannerFromText(string text)
+    {
+      var lines = text.Split(System.Environment.NewLine) as IEnumerable<string>;
+      return Parser.ParseScanner(lines.GetEnumerator());
     }
   }
 }
