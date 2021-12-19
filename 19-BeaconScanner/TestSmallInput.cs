@@ -24,12 +24,13 @@ namespace _19_BeaconScanner
     {
       var allScanner = ParseScanner(File.ReadLines(fileName).GetEnumerator()).ToList();
       
-      List<AligneedScanner> alignedScanner = new();
+      List<TransformedScanner> transformedScanners = new();
       var identityAlign = new Alignment(Matrix.GetIdentity(), new Beacon(0, 0, 0));
       var startScanner = allScanner.First();
       allScanner.Remove(startScanner);
 
-      alignedScanner.Add(new AligneedScanner(startScanner, identityAlign));
+      var initialTransformed = TransformScaner(new AligneedScanner(startScanner, identityAlign));
+      transformedScanners.Add(initialTransformed);
 
       while (allScanner.Any())
       {
@@ -38,7 +39,7 @@ namespace _19_BeaconScanner
 
         foreach (var scaner in allScanner)
         {
-          if (IsScannerMatching(scaner, alignedScanner))
+          if (IsScannerMatching(scaner, transformedScanners))
           {
             allScanner.Remove(scaner);
             break;
@@ -48,14 +49,24 @@ namespace _19_BeaconScanner
       }
 
       HashSet<Beacon> allBeacons = new();
-      foreach (var scaner in alignedScanner)
+      foreach (var scaner in transformedScanners)
       {
-        foreach (var b in GetAllTransformedScannerBeacons(scaner))
+        foreach (var b in scaner.Scanner.Beacons)
           allBeacons.Add(b);
       }
 
       return allBeacons;
     }
+
+    static TransformedScanner TransformScaner(AligneedScanner aligneedScanner)
+    { 
+      List<Beacon> transformedBeacons = new List<Beacon>(GetAllTransformedScannerBeacons(aligneedScanner));
+      var scanner = new Scanner(aligneedScanner.Scanner.Name, transformedBeacons);
+      return new TransformedScanner(scanner, aligneedScanner.Alignment);
+
+    }
+
+    internal record struct TransformedScanner(Scanner Scanner, Alignment Alignment);
 
     static IEnumerable<Beacon> GetAllTransformedScannerBeacons(AligneedScanner scanner)
     {
@@ -66,9 +77,9 @@ namespace _19_BeaconScanner
       }
     }
 
-    static bool IsScannerMatching(Scanner scanner, List<AligneedScanner> aligneedScanners)
+    static bool IsScannerMatching(Scanner scanner, List<TransformedScanner> transformedScanners)
     {
-      foreach (var alScanner in aligneedScanners)
+      foreach (var alScanner in transformedScanners)
       {
         foreach (var mat in Matrix.GetRotationMatrices())
         {
@@ -76,13 +87,13 @@ namespace _19_BeaconScanner
           {
             foreach (var b2 in scanner.Beacons)
             {
-              var scannerPos = TestOverlap.GetScannerPosition(b1, alScanner.Alignment, b2, mat);
+              var scannerPos = TestOverlap.GetScannerPosition(b1, b2, mat);
               var aligned1 = new AligneedScanner(scanner, new Alignment(mat, scannerPos));
 
               var numMatches = TestOverlap.GetNumMatches(alScanner, aligned1);
               if (numMatches >= 12)
               {
-                aligneedScanners.Add(aligned1);
+                transformedScanners.Add(TransformScaner(aligned1));
                 return true;
               }
             }

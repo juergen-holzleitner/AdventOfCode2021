@@ -2,6 +2,7 @@
 using System.Linq;
 using static _19_BeaconScanner.Parser;
 using static _19_BeaconScanner.TestMatrix;
+using static _19_BeaconScanner.TestSmallInput;
 
 namespace _19_BeaconScanner
 {
@@ -104,12 +105,36 @@ namespace _19_BeaconScanner
       return numMatches;
     }
 
+    static internal int GetNumMatches(TransformedScanner transformed, AligneedScanner aligned)
+    {
+      int numMatches = 0;
+
+      foreach (var b1 in transformed.Scanner.Beacons)
+      {
+        foreach (var b2 in aligned.Scanner.Beacons)
+        {
+          var pos2 = Transform(b2, aligned.Alignment);
+          if (b1 == pos2)
+          {
+            ++numMatches;
+            break;
+          }
+        }
+      }
+
+      return numMatches;
+    }
+
     static internal Beacon GetScannerPosition(Beacon start, Alignment startAlign, Beacon scanner, Matrix endMatrix)
     {
-      var e = endMatrix.Multiply(scanner);
       var s = Transform(start, startAlign);
+      return GetScannerPosition(s, scanner, endMatrix);
+    }
 
-      return GetBeaconDistance(e, s);
+    static internal Beacon GetScannerPosition(Beacon transformedStart, Beacon scanner, Matrix endMatrix)
+    {
+      var e = endMatrix.Multiply(scanner);
+      return GetBeaconDistance(e, transformedStart);
     }
 
     static internal Beacon Transform(Beacon b, Alignment a)
