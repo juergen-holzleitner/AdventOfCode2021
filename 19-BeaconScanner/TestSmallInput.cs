@@ -83,11 +83,18 @@ namespace _19_BeaconScanner
       {
         foreach (var mat in Matrix.GetRotationMatrices())
         {
+          HashSet<Beacon> usedScannerPos = new();
+
           foreach (var b1 in alScanner.Scanner.Beacons)
           {
             foreach (var b2 in scanner.Beacons)
             {
               var scannerPos = TestOverlap.GetScannerPosition(b1, b2, mat);
+              
+              if (usedScannerPos.Contains(scannerPos))
+                continue;
+              usedScannerPos.Add(scannerPos);
+
               var aligned1 = new AligneedScanner(scanner, new Alignment(mat, scannerPos));
 
               if (TestOverlap.HasAtLeastMatches(alScanner, aligned1, 12))
