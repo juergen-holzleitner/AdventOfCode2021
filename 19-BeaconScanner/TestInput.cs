@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 
 namespace _19_BeaconScanner
 {
@@ -15,11 +16,11 @@ namespace _19_BeaconScanner
     }
 
     [TestMethod]
-    public void ParseScannerHeader()
+    public void ParseScannerName()
     {
       var line = "--- scanner 0 ---";
       var scanner = ParseScanner(line);
-      Assert.AreEqual(new Scanner("scanner 0"), scanner);
+      Assert.AreEqual(new Scanner("scanner 0", new List<Beacon>()).Name, scanner.Name);
     }
 
     private Scanner ParseScanner(string line)
@@ -29,7 +30,7 @@ namespace _19_BeaconScanner
       if (!match.Success)
         throw new ApplicationException("Failed to parse scanner");
       var name = match.Groups["Name"].Value;
-      return new Scanner(name);
+      return new Scanner(name, new List<Beacon>());
     }
 
     private Beacon ParseBeacon(string line)
@@ -46,6 +47,6 @@ namespace _19_BeaconScanner
     }
 
     readonly record struct Beacon(int X, int Y, int Z);
-    readonly record struct Scanner(string Name);
+    readonly record struct Scanner(string Name, IEnumerable<Beacon> Beacons);
   }
 }
