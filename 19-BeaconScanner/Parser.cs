@@ -5,7 +5,7 @@ namespace _19_BeaconScanner
 {
   internal static class Parser
   {
-    internal static Scanner ParseScanner(IEnumerator<string> lines)
+    internal static IEnumerable<Scanner> ParseScanner(IEnumerator<string> lines)
     {
       while (lines.MoveNext())
       { 
@@ -27,10 +27,8 @@ namespace _19_BeaconScanner
           var b = ParseBeacon(lines.Current);
           beacons.Add(b);
         }
-        return new Scanner(name, beacons);
+        yield return new Scanner(name, beacons);
       }
-
-      throw new ApplicationException("Failed to parse scanner");
     }
 
     internal static Beacon ParseBeacon(string line)
