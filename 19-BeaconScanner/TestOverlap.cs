@@ -83,7 +83,7 @@ namespace _19_BeaconScanner
       Assert.IsTrue(found);
     }
 
-    private int GetNumMatches(AligneedScanner aligned1, AligneedScanner aligned2)
+    static internal int GetNumMatches(AligneedScanner aligned1, AligneedScanner aligned2)
     {
       int numMatches = 0;
 
@@ -104,7 +104,7 @@ namespace _19_BeaconScanner
       return numMatches;
     }
 
-    Beacon GetScannerPosition(Beacon start, Alignment startAlign, Beacon scanner, Matrix endMatrix)
+    static internal Beacon GetScannerPosition(Beacon start, Alignment startAlign, Beacon scanner, Matrix endMatrix)
     {
       var e = endMatrix.Multiply(scanner);
       var s = Transform(start, startAlign);
@@ -112,22 +112,22 @@ namespace _19_BeaconScanner
       return GetBeaconDistance(e, s);
     }
 
-    Beacon Transform(Beacon b, Alignment a)
+    static internal Beacon Transform(Beacon b, Alignment a)
     {
       var pos = a.Matrix.Multiply(b);
       return Add(pos, a.Position);
     }
 
-    record struct Alignment(Matrix Matrix, Beacon Position);
+    internal record struct Alignment(Matrix Matrix, Beacon Position);
 
-    record struct AligneedScanner(Scanner Scanner, Alignment Alignment);
+    internal record struct AligneedScanner(Scanner Scanner, Alignment Alignment);
 
-    Beacon GetBeaconDistance(Beacon start, Beacon end)
+    static Beacon GetBeaconDistance(Beacon start, Beacon end)
     { 
       return new Beacon(end.X - start.X, end.Y - start.Y, end.Z - start.Z);
     }
 
-    Beacon Add(Beacon start, Beacon end)
+    static Beacon Add(Beacon start, Beacon end)
     {
       return new Beacon(start.X + end.X, start.Y + end.Y, start.Z + end.Z);
     }
