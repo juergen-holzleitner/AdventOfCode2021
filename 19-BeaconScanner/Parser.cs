@@ -5,14 +5,23 @@ namespace _19_BeaconScanner
 {
   internal static class Parser
   {
-    internal static Scanner ParseScanner(string line)
+    internal static Scanner ParseScanner(IEnumerator<string> lines)
     {
-      var regex = new System.Text.RegularExpressions.Regex(@"--- (?<Name>scanner \d+) ---");
-      var match = regex.Match(line);
-      if (!match.Success)
-        throw new ApplicationException("Failed to parse scanner");
-      var name = match.Groups["Name"].Value;
-      return new Scanner(name, new List<Beacon>());
+      while (lines.MoveNext())
+      { 
+        if (string.IsNullOrEmpty(lines.Current))
+          continue;
+
+        var regex = new System.Text.RegularExpressions.Regex(@"--- (?<Name>scanner \d+) ---");
+        var match = regex.Match(lines.Current);
+        if (!match.Success)
+          throw new ApplicationException("Failed to parse scanner name");
+
+        var name = match.Groups["Name"].Value;
+        return new Scanner(name, new List<Beacon>());
+      }
+
+      throw new ApplicationException("Failed to parse scanner");
     }
 
     internal static Beacon ParseBeacon(string line)
