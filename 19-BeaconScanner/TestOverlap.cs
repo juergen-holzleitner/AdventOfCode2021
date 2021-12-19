@@ -45,7 +45,7 @@ namespace _19_BeaconScanner
 459,-707,401
 -485,-357,347
 ";
-      var line1 = @"--- scanner 0 ---
+      var line1 = @"--- scanner 1 ---
 686,422,578
 605,423,415
 515,917,-361
@@ -60,6 +60,11 @@ namespace _19_BeaconScanner
 553,889,-390
 ";
 
+      CheckScannerAreEqual(line0, line1);
+    }
+
+    private void CheckScannerAreEqual(string line0, string line1)
+    {
       var scanner0 = TestInput.ParseScannerFromText(line0).First();
       var aligned0 = new AligneedScanner(scanner0, new Alignment(Matrix.GetIdentity(), new Beacon(0, 0, 0)));
 
@@ -72,7 +77,7 @@ namespace _19_BeaconScanner
         var aligned1 = new AligneedScanner(scanner1, new Alignment(mat, scannerPos));
 
         var numMatches = GetNumMatches(aligned0, aligned1);
-        if (numMatches >= 12)
+        if (numMatches >= scanner0.Beacons.Count())
           found = true;
       }
       Assert.IsTrue(found);
