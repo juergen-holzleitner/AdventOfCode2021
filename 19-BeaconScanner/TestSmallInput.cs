@@ -20,7 +20,7 @@ namespace _19_BeaconScanner
       Assert.AreEqual(79, allBeacons.Count);
     }
 
-    private HashSet<Beacon> GetAllUniqueBeacons(string fileName)
+    static internal HashSet<Beacon> GetAllUniqueBeacons(string fileName)
     {
       var allScanner = ParseScanner(File.ReadLines(fileName).GetEnumerator()).ToList();
       
@@ -33,6 +33,9 @@ namespace _19_BeaconScanner
 
       while (allScanner.Any())
       {
+        System.Console.WriteLine($"{allScanner.Count} scanner left");
+        System.Diagnostics.Trace.TraceWarning($"{allScanner.Count} scanner left");
+
         foreach (var scaner in allScanner)
         {
           if (IsScannerMatching(scaner, alignedScanner))
@@ -54,7 +57,7 @@ namespace _19_BeaconScanner
       return allBeacons;
     }
 
-    IEnumerable<Beacon> GetAllTransformedScannerBeacons(AligneedScanner scanner)
+    static IEnumerable<Beacon> GetAllTransformedScannerBeacons(AligneedScanner scanner)
     {
       foreach (var b in scanner.Scanner.Beacons)
       {
@@ -63,7 +66,7 @@ namespace _19_BeaconScanner
       }
     }
 
-    bool IsScannerMatching(Scanner scanner, List<AligneedScanner> aligneedScanners)
+    static bool IsScannerMatching(Scanner scanner, List<AligneedScanner> aligneedScanners)
     {
       foreach (var alScanner in aligneedScanners)
       {
