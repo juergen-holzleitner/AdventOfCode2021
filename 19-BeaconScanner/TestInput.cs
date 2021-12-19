@@ -18,7 +18,7 @@ namespace _19_BeaconScanner
     public void ParseScannerName()
     {
       var scanner = ParseScannerFromText("--- scanner 0 ---");
-      Assert.AreEqual(new Parser.Scanner("scanner 0", new List<Parser.Beacon>()).Name, scanner.Name);
+      CheckScannerEqual(new Parser.Scanner("scanner 0", new List<Parser.Beacon>()), scanner);
     }
 
     [TestMethod]
@@ -27,13 +27,22 @@ namespace _19_BeaconScanner
       var line = @"--- scanner 0 ---
 -1,-1,1
 -2,-2,2
--3,-3,3
--2,-3,1
-5,6,-4
-8,0,7";
+5,6,-4";
 
       var scanner = ParseScannerFromText(line);
-      Assert.AreEqual(new Parser.Scanner("scanner 0", new List<Parser.Beacon>()).Name, scanner.Name);
+      List<Parser.Beacon> expectedBeacons = new List<Parser.Beacon>()
+      { 
+        new Parser.Beacon(-1,-1,1),
+        new Parser.Beacon(-2,-2,2),
+        new Parser.Beacon(5,6,-4),
+      };
+      CheckScannerEqual(new Parser.Scanner("scanner 0", expectedBeacons), scanner);
+    }
+
+    void CheckScannerEqual(Parser.Scanner expected, Parser.Scanner actual)
+    {
+      Assert.AreEqual(expected.Name, actual.Name);
+      CollectionAssert.AreEqual((System.Collections.ICollection)expected.Beacons, (System.Collections.ICollection)actual.Beacons);
     }
 
     private Parser.Scanner ParseScannerFromText(string text)

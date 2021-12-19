@@ -18,7 +18,16 @@ namespace _19_BeaconScanner
           throw new ApplicationException("Failed to parse scanner name");
 
         var name = match.Groups["Name"].Value;
-        return new Scanner(name, new List<Beacon>());
+
+        var beacons = new List<Beacon>();
+        while (lines.MoveNext())
+        {
+          if (string.IsNullOrEmpty(lines.Current))
+            break;
+          var b = ParseBeacon(lines.Current);
+          beacons.Add(b);
+        }
+        return new Scanner(name, beacons);
       }
 
       throw new ApplicationException("Failed to parse scanner");
