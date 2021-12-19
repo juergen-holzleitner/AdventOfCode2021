@@ -11,8 +11,25 @@ namespace _19_BeaconScanner
     {
       var line = "-1,-1,1";
       var beacon = ParseBeacon(line);
-      Assert.IsNotNull(beacon);
-      Assert.AreEqual(beacon, new Beacon(-1, -1, 1));
+      Assert.AreEqual(new Beacon(-1, -1, 1), beacon);
+    }
+
+    [TestMethod]
+    public void ParseScannerHeader()
+    {
+      var line = "--- scanner 0 ---";
+      var scanner = ParseScanner(line);
+      Assert.AreEqual(new Scanner("scanner 0"), scanner);
+    }
+
+    private Scanner ParseScanner(string line)
+    {
+      var regex = new System.Text.RegularExpressions.Regex(@"--- (?<Name>scanner \d+) ---");
+      var match = regex.Match(line);
+      if (!match.Success)
+        throw new ApplicationException("Failed to parse scanner");
+      var name = match.Groups["Name"].Value;
+      return new Scanner(name);
     }
 
     private Beacon ParseBeacon(string line)
@@ -29,5 +46,6 @@ namespace _19_BeaconScanner
     }
 
     readonly record struct Beacon(int X, int Y, int Z);
+    readonly record struct Scanner(string Name);
   }
 }
