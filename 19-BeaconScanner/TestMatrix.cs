@@ -92,6 +92,42 @@ namespace _19_BeaconScanner
       Assert.AreEqual(new Beacon(-1, -2, -3), res);
     }
 
+    [TestMethod]
+    public void RotationsZPos()
+    {
+      var beacon = new Beacon(3, 1, 2);
+
+      var res = Matrix.GetRotationMatrices().ToList()[16].Multiply(beacon);
+      Assert.AreEqual(new Beacon(2, 1, -3), res);
+
+      res = Matrix.GetRotationMatrices().ToList()[17].Multiply(beacon);
+      Assert.AreEqual(new Beacon(2, 3, 1), res);
+
+      res = Matrix.GetRotationMatrices().ToList()[18].Multiply(beacon);
+      Assert.AreEqual(new Beacon(2, -1,  3), res);
+
+      res = Matrix.GetRotationMatrices().ToList()[19].Multiply(beacon);
+      Assert.AreEqual(new Beacon(2, -3, -1), res);
+    }
+
+    [TestMethod]
+    public void RotationsZNeg()
+    {
+      var beacon = new Beacon(3, 1, 2);
+
+      var res = Matrix.GetRotationMatrices().ToList()[20].Multiply(beacon);
+      Assert.AreEqual(new Beacon(-2, 1, -3), res);
+
+      res = Matrix.GetRotationMatrices().ToList()[21].Multiply(beacon);
+      Assert.AreEqual(new Beacon(-2, -3, -1), res);
+
+      res = Matrix.GetRotationMatrices().ToList()[22].Multiply(beacon);
+      Assert.AreEqual(new Beacon(-2, -1, 3), res);
+
+      res = Matrix.GetRotationMatrices().ToList()[23].Multiply(beacon);
+      Assert.AreEqual(new Beacon(-2, 3, 1), res);
+    }
+
     class Matrix
     {
       public static Matrix GetIdentity()
@@ -275,6 +311,94 @@ namespace _19_BeaconScanner
             {  0,  0, -1 },
             { -1,  0,  0 },
             {  0, -1,  0 },
+          }
+        };
+
+        // Z
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0,  0, -1 },
+            {  0,  1,  0 },
+            {  1,  0,  0 },
+          }
+        };
+
+        // Z 90 deg
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0,  1,  0 },
+            {  0,  0,  1 },
+            {  1,  0,  0 },
+          }
+        };
+
+        // Z 180 deg
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0,  0,  1 },
+            {  0, -1,  0 },
+            {  1,  0,  0 },
+          }
+        };
+
+        // Z 270 deg
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0, -1,  0 },
+            {  0,  0, -1 },
+            {  1,  0,  0 },
+          }
+        };
+
+        // -Z
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0,  0, -1 },
+            {  0,  1,  0 },
+            { -1,  0,  0 },
+          }
+        };
+
+        // -Z 90 deg
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0, -1,  0 },
+            {  0,  0, -1 },
+            { -1,  0,  0 },
+          }
+        };
+
+        // -Z 180 deg
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0,  0,  1 },
+            {  0, -1,  0 },
+            { -1,  0,  0 },
+          }
+        };
+
+        // -Z 270 deg
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0,  1,  0 },
+            {  0,  0,  1 },
+            { -1,  0,  0 },
           }
         };
       }
