@@ -1,5 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 
 namespace _19_BeaconScanner
@@ -11,42 +10,16 @@ namespace _19_BeaconScanner
     public void ParseSingleBeacon()
     {
       var line = "-1,-1,1";
-      var beacon = ParseBeacon(line);
-      Assert.AreEqual(new Beacon(-1, -1, 1), beacon);
+      var beacon = Parser.ParseBeacon(line);
+      Assert.AreEqual(new Parser.Beacon(-1, -1, 1), beacon);
     }
 
     [TestMethod]
     public void ParseScannerName()
     {
       var line = "--- scanner 0 ---";
-      var scanner = ParseScanner(line);
-      Assert.AreEqual(new Scanner("scanner 0", new List<Beacon>()).Name, scanner.Name);
+      var scanner = Parser.ParseScanner(line);
+      Assert.AreEqual(new Parser.Scanner("scanner 0", new List<Parser.Beacon>()).Name, scanner.Name);
     }
-
-    private Scanner ParseScanner(string line)
-    {
-      var regex = new System.Text.RegularExpressions.Regex(@"--- (?<Name>scanner \d+) ---");
-      var match = regex.Match(line);
-      if (!match.Success)
-        throw new ApplicationException("Failed to parse scanner");
-      var name = match.Groups["Name"].Value;
-      return new Scanner(name, new List<Beacon>());
-    }
-
-    private Beacon ParseBeacon(string line)
-    {
-      var regex = new System.Text.RegularExpressions.Regex(@"(?<X>[+-]?\d+),(?<Y>[+-]?\d+),(?<Z>[+-]?\d+)");
-      var match = regex.Match(line);
-      if (!match.Success)
-        throw new ApplicationException("Failed to parse beacon");
-
-      int X = int.Parse(match.Groups["X"].Value);
-      int Y = int.Parse(match.Groups["Y"].Value);
-      int Z = int.Parse(match.Groups["Z"].Value);
-      return new Beacon(X, Y, Z);
-    }
-
-    readonly record struct Beacon(int X, int Y, int Z);
-    readonly record struct Scanner(string Name, IEnumerable<Beacon> Beacons);
   }
 }
