@@ -32,6 +32,8 @@ namespace _19_BeaconScanner
       var initialTransformed = TransformScaner(new AligneedScanner(startScanner, identityAlign));
       transformedScanners.Add(initialTransformed);
 
+      HashSet<(Scanner, TransformedScanner)> failedChecks = new();
+      
       while (allScanner.Any())
       {
         System.Console.WriteLine($"{allScanner.Count} scanner left");
@@ -39,7 +41,7 @@ namespace _19_BeaconScanner
 
         foreach (var scaner in allScanner)
         {
-          if (IsScannerMatching(scaner, transformedScanners))
+          if (IsScannerMatching(scaner, transformedScanners, failedChecks))
           {
             allScanner.Remove(scaner);
             break;
@@ -77,10 +79,16 @@ namespace _19_BeaconScanner
       }
     }
 
-    static bool IsScannerMatching(Scanner scanner, List<TransformedScanner> transformedScanners)
+    static bool IsScannerMatching(Scanner scanner, List<TransformedScanner> transformedScanners, HashSet<(Scanner, TransformedScanner)> failedChecks)
     {
       foreach (var alScanner in transformedScanners)
       {
+        if (failedChecks.Contains((scanner, alScanner)))
+        {
+          System.Console.WriteLine("skip known failed check");
+          continue;
+        }
+
         foreach (var mat in Matrix.GetRotationMatrices())
         {
           HashSet<Beacon> usedScannerPos = new();
@@ -105,6 +113,7 @@ namespace _19_BeaconScanner
             }
           }
         }
+        failedChecks.Add((scanner, alScanner));
       }
 
       return false;
