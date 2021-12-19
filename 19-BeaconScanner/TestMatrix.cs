@@ -1,9 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static _19_BeaconScanner.Parser;
 
 namespace _19_BeaconScanner
@@ -128,7 +125,7 @@ namespace _19_BeaconScanner
       Assert.AreEqual(new Beacon(-2, 3, 1), res);
     }
 
-    class Matrix
+    public class Matrix
     {
       public static Matrix GetIdentity()
       {
