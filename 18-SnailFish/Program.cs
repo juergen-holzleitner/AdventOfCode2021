@@ -33,6 +33,22 @@ var result = AddAll(input.ToArray());
 Console.WriteLine(GetNumberString(result));
 Console.WriteLine($"Magnitude: {GetMagnitude(result)}");
 
+(Number, long)? max = null;
+
+foreach (var left in input)
+  foreach (var right in input)
+  {
+    var l = ParseNumber(left);
+    var r = ParseNumber(right);
+    var sum = Add(l, r);
+    var mag = GetMagnitude(sum);
+    if (max == null || max.Value.Item2 < mag)
+      max = (sum, mag);
+  }
+
+System.Diagnostics.Debug.Assert(max != null);
+Console.WriteLine($"{GetNumberString(max.Value.Item1)}\nMag: {max.Value.Item2}");
+
 void TestMagnitude(string input, long result)
 {
   var n = ParseNumber(input);
