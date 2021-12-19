@@ -105,7 +105,7 @@ namespace _19_BeaconScanner
       return numMatches;
     }
 
-    static internal int GetNumMatches(TransformedScanner transformed, AligneedScanner aligned)
+    static internal bool HasAtLeastMatches(TransformedScanner transformed, AligneedScanner aligned, int minMatches)
     {
       int numMatches = 0;
 
@@ -117,12 +117,14 @@ namespace _19_BeaconScanner
           if (b1 == pos2)
           {
             ++numMatches;
+            if (numMatches >= minMatches)
+              return true;
             break;
           }
         }
       }
 
-      return numMatches;
+      return false;
     }
 
     static internal Beacon GetScannerPosition(Beacon start, Alignment startAlign, Beacon scanner, Matrix endMatrix)

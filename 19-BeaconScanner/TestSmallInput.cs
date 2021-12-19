@@ -90,8 +90,7 @@ namespace _19_BeaconScanner
               var scannerPos = TestOverlap.GetScannerPosition(b1, b2, mat);
               var aligned1 = new AligneedScanner(scanner, new Alignment(mat, scannerPos));
 
-              var numMatches = TestOverlap.GetNumMatches(alScanner, aligned1);
-              if (numMatches >= 12)
+              if (TestOverlap.HasAtLeastMatches(alScanner, aligned1, 12))
               {
                 transformedScanners.Add(TransformScaner(aligned1));
                 return true;
