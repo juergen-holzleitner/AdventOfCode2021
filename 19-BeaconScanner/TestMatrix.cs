@@ -56,6 +56,24 @@ namespace _19_BeaconScanner
       Assert.AreEqual(new Beacon(-3, -2, 1), res);
     }
 
+    [TestMethod]
+    public void RotationsYPos()
+    {
+      var beacon = new Beacon(3, 1, 2);
+
+      var res = Matrix.GetRotationMatrices().ToList()[8].Multiply(beacon);
+      Assert.AreEqual(new Beacon(1, -3, 2), res);
+
+      res = Matrix.GetRotationMatrices().ToList()[9].Multiply(beacon);
+      Assert.AreEqual(new Beacon(1, -2, -3), res);
+
+      res = Matrix.GetRotationMatrices().ToList()[10].Multiply(beacon);
+      Assert.AreEqual(new Beacon(1,  3, -2), res);
+
+      res = Matrix.GetRotationMatrices().ToList()[11].Multiply(beacon);
+      Assert.AreEqual(new Beacon(1,  2,  3), res);
+    }
+
     class Matrix
     {
       public static Matrix GetIdentity()
@@ -151,6 +169,50 @@ namespace _19_BeaconScanner
             { -1,  0, 0 },
             {  0,  0, 1 },
             {  0, -1, 0 },
+          }
+        };
+
+        // Y
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0, -1,  0 },
+            {  1,  0,  0 },
+            {  0,  0,  1 },
+          }
+        };
+
+        // Y 90 deg
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0,  0, -1 },
+            {  1,  0,  0 },
+            {  0, -1,  0 },
+          }
+        };
+
+        // Y 180 deg
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0,  1,  0 },
+            {  1,  0,  0 },
+            {  0,  0, -1 },
+          }
+        };
+
+        // Y 270 deg
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            {  0,  0,  1 },
+            {  1,  0,  0 },
+            {  0,  1,  0 },
           }
         };
       }
