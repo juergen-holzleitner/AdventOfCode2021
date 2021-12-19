@@ -64,7 +64,7 @@ namespace _19_BeaconScanner
       CheckScannerAreEqual(line0, line1);
     }
 
-    private void CheckScannerAreEqual(string line0, string line1)
+    private static void CheckScannerAreEqual(string line0, string line1)
     {
       var scanner0 = TestInput.ParseScannerFromText(line0).First();
       var aligned0 = new AligneedScanner(scanner0, new Alignment(Matrix.GetIdentity(), new Beacon(0, 0, 0)));

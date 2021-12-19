@@ -60,7 +60,7 @@ namespace _19_BeaconScanner
 
     static TransformedScanner TransformScaner(AligneedScanner aligneedScanner)
     { 
-      List<Beacon> transformedBeacons = new List<Beacon>(GetAllTransformedScannerBeacons(aligneedScanner));
+      List<Beacon> transformedBeacons = new(GetAllTransformedScannerBeacons(aligneedScanner));
       var scanner = new Scanner(aligneedScanner.Scanner.Name, transformedBeacons);
       return new TransformedScanner(scanner, aligneedScanner.Alignment);
 
