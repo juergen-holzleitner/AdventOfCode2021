@@ -30,7 +30,7 @@ namespace _19_BeaconScanner
 5,6,-4";
 
       var scanner = ParseScannerFromText(line);
-      List<Parser.Beacon> expectedBeacons = new List<Parser.Beacon>()
+      List<Parser.Beacon> expectedBeacons = new()
       { 
         new Parser.Beacon(-1,-1,1),
         new Parser.Beacon(-2,-2,2),
@@ -39,13 +39,13 @@ namespace _19_BeaconScanner
       CheckScannerEqual(new Parser.Scanner("scanner 0", expectedBeacons), scanner);
     }
 
-    void CheckScannerEqual(Parser.Scanner expected, Parser.Scanner actual)
+    static void CheckScannerEqual(Parser.Scanner expected, Parser.Scanner actual)
     {
       Assert.AreEqual(expected.Name, actual.Name);
       CollectionAssert.AreEqual((System.Collections.ICollection)expected.Beacons, (System.Collections.ICollection)actual.Beacons);
     }
 
-    private Parser.Scanner ParseScannerFromText(string text)
+    private static Parser.Scanner ParseScannerFromText(string text)
     {
       var lines = text.Split(System.Environment.NewLine) as IEnumerable<string>;
       return Parser.ParseScanner(lines.GetEnumerator());
