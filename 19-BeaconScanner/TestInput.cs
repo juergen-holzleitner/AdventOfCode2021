@@ -95,7 +95,7 @@ namespace _19_BeaconScanner
       CollectionAssert.AreEqual((System.Collections.ICollection)expected.Beacons, (System.Collections.ICollection)actual.Beacons);
     }
 
-    private static IEnumerable<Parser.Scanner> ParseScannerFromText(string text)
+    internal static IEnumerable<Parser.Scanner> ParseScannerFromText(string text)
     {
       var lines = text.Split(System.Environment.NewLine) as IEnumerable<string>;
       return Parser.ParseScanner(lines.GetEnumerator());

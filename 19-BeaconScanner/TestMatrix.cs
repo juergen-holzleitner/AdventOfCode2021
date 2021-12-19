@@ -41,16 +41,16 @@ namespace _19_BeaconScanner
       var beacon = new Beacon(3, 1, 2);
 
       var res = Matrix.GetRotationMatrices().ToList()[4].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-3, 1, 2), res);
+      Assert.AreEqual(new Beacon(-3, -1, 2), res);
 
       res = Matrix.GetRotationMatrices().ToList()[5].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-3, 2, -1), res);
+      Assert.AreEqual(new Beacon(-3, -2, -1), res);
 
       res = Matrix.GetRotationMatrices().ToList()[6].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-3, -1, -2), res);
+      Assert.AreEqual(new Beacon(-3,  1, -2), res);
 
       res = Matrix.GetRotationMatrices().ToList()[7].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-3, -2, 1), res);
+      Assert.AreEqual(new Beacon(-3,  2,  1), res);
     }
 
     [TestMethod]
@@ -77,16 +77,16 @@ namespace _19_BeaconScanner
       var beacon = new Beacon(3, 1, 2);
 
       var res = Matrix.GetRotationMatrices().ToList()[12].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-1, -3, 2), res);
+      Assert.AreEqual(new Beacon(-1,  3,  2), res);
 
       res = Matrix.GetRotationMatrices().ToList()[13].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-1, 2, 3), res);
+      Assert.AreEqual(new Beacon(-1, -2,  3), res);
 
       res = Matrix.GetRotationMatrices().ToList()[14].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-1, 3, -2), res);
+      Assert.AreEqual(new Beacon(-1, -3, -2), res);
 
       res = Matrix.GetRotationMatrices().ToList()[15].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-1, -2, -3), res);
+      Assert.AreEqual(new Beacon(-1,  2, -3), res);
     }
 
     [TestMethod]
@@ -113,16 +113,16 @@ namespace _19_BeaconScanner
       var beacon = new Beacon(3, 1, 2);
 
       var res = Matrix.GetRotationMatrices().ToList()[20].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-2, 1, -3), res);
+      Assert.AreEqual(new Beacon(-2, 1, 3), res);
 
       res = Matrix.GetRotationMatrices().ToList()[21].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-2, -3, -1), res);
+      Assert.AreEqual(new Beacon(-2,  -3, 1), res);
 
       res = Matrix.GetRotationMatrices().ToList()[22].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-2, -1, 3), res);
+      Assert.AreEqual(new Beacon(-2,  1, -3), res);
 
       res = Matrix.GetRotationMatrices().ToList()[23].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-2, 3, 1), res);
+      Assert.AreEqual(new Beacon(-2,  3,  1), res);
     }
 
     public class Matrix
@@ -185,7 +185,7 @@ namespace _19_BeaconScanner
           mat = new int[3, 3]
           {
             { -1,  0,  0 },
-            {  0,  1,  0 },
+            {  0, -1,  0 },
             {  0,  0,  1 },
           }
         };
@@ -197,7 +197,7 @@ namespace _19_BeaconScanner
           {
             { -1,  0,  0 },
             {  0,  0, -1 },
-            {  0,  1,  0 },
+            {  0, -1,  0 },
           }
         };
 
@@ -207,7 +207,7 @@ namespace _19_BeaconScanner
           mat = new int[3, 3]
           {
             { -1,  0,  0 },
-            {  0, -1,  0 },
+            {  0,  1,  0 },
             {  0,  0, -1 },
           }
         };
@@ -219,7 +219,7 @@ namespace _19_BeaconScanner
           {
             { -1,  0, 0 },
             {  0,  0, 1 },
-            {  0, -1, 0 },
+            {  0,  1, 0 },
           }
         };
 
@@ -272,7 +272,7 @@ namespace _19_BeaconScanner
         {
           mat = new int[3, 3]
           {
-            {  0, -1,  0 },
+            {  0,  1,  0 },
             { -1,  0,  0 },
             {  0,  0,  1 },
           }
@@ -285,7 +285,7 @@ namespace _19_BeaconScanner
           {
             {  0,  0,  1 },
             { -1,  0,  0 },
-            {  0,  1,  0 },
+            {  0, -1,  0 },
           }
         };
 
@@ -294,7 +294,7 @@ namespace _19_BeaconScanner
         {
           mat = new int[3, 3]
           {
-            {  0,  1,  0 },
+            {  0, -1,  0 },
             { -1,  0,  0 },
             {  0,  0, -1 },
           }
@@ -307,7 +307,7 @@ namespace _19_BeaconScanner
           {
             {  0,  0, -1 },
             { -1,  0,  0 },
-            {  0, -1,  0 },
+            {  0,  1,  0 },
           }
         };
 
@@ -360,7 +360,7 @@ namespace _19_BeaconScanner
         {
           mat = new int[3, 3]
           {
-            {  0,  0, -1 },
+            {  0,  0,  1 },
             {  0,  1,  0 },
             { -1,  0,  0 },
           }
@@ -372,7 +372,7 @@ namespace _19_BeaconScanner
           mat = new int[3, 3]
           {
             {  0, -1,  0 },
-            {  0,  0, -1 },
+            {  0,  0,  1 },
             { -1,  0,  0 },
           }
         };
@@ -382,8 +382,8 @@ namespace _19_BeaconScanner
         {
           mat = new int[3, 3]
           {
-            {  0,  0,  1 },
-            {  0, -1,  0 },
+            {  0,  0, -1 },
+            {  0,  1,  0 },
             { -1,  0,  0 },
           }
         };
