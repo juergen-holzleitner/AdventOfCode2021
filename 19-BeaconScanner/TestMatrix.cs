@@ -113,46 +113,46 @@ namespace _19_BeaconScanner
       var beacon = new Beacon(3, 1, 2);
 
       var res = Matrix.GetRotationMatrices().ToList()[20].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-2, 1, 3), res);
+      Assert.AreEqual(new Beacon(-2,  1, 3), res);
 
       res = Matrix.GetRotationMatrices().ToList()[21].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-2,  -3, 1), res);
+      Assert.AreEqual(new Beacon(-2, -3,  1), res);
 
       res = Matrix.GetRotationMatrices().ToList()[22].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-2,  1, -3), res);
+      Assert.AreEqual(new Beacon(-2, -1, -3), res);
 
       res = Matrix.GetRotationMatrices().ToList()[23].Multiply(beacon);
-      Assert.AreEqual(new Beacon(-2,  3,  1), res);
+      Assert.AreEqual(new Beacon(-2,  3, -1), res);
     }
 
     public class Matrix
     {
       public static Matrix GetIdentity()
       {
-        return new Matrix()
-        {
-          mat = new int[3, 3]
-          {
-            { 1, 0, 0 },
-            { 0, 1, 0 },
-            { 0, 0, 1 },
-          }
-        };
+        return GetRotationMatrices().First();
       }
 
       public static IEnumerable<Matrix> GetRotationMatrices()
       {
         // +X
-        yield return GetIdentity();
+        yield return new Matrix()
+        {
+          mat = new int[3, 3]
+          {
+            { 1,  0,  0 },
+            { 0,  1,  0 },
+            { 0,  0,  1 },
+          }
+        };
 
         // +X 90 deg
         yield return new Matrix()
         {
           mat = new int[3, 3]
           {
-            { 1,  0, 0 },
-            { 0,  0, 1 },
-            { 0, -1, 0 },
+            { 1,  0,  0 },
+            { 0,  0,  1 },
+            { 0, -1,  0 },
           }
         };
         
@@ -383,7 +383,7 @@ namespace _19_BeaconScanner
           mat = new int[3, 3]
           {
             {  0,  0, -1 },
-            {  0,  1,  0 },
+            {  0, -1,  0 },
             { -1,  0,  0 },
           }
         };
@@ -394,7 +394,7 @@ namespace _19_BeaconScanner
           mat = new int[3, 3]
           {
             {  0,  1,  0 },
-            {  0,  0,  1 },
+            {  0,  0, -1 },
             { -1,  0,  0 },
           }
         };
