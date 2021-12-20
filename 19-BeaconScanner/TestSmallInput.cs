@@ -20,10 +20,43 @@ namespace _19_BeaconScanner
       Assert.AreEqual(79, allBeacons.Count);
     }
 
+    [TestMethod]
+    public void CheckManhattanDistance()
+    {
+      const string fileName = @"input-small.txt";
+      var maxDist = GetMaxManhattanDistanceOfScanner(fileName);
+      Assert.AreEqual(3621, maxDist);
+    }
+
     static internal HashSet<Beacon> GetAllUniqueBeacons(string fileName)
     {
+      var transformedScanners = GetAllTransformedScanner(fileName);
+
+      HashSet<Beacon> allBeacons = new();
+      foreach (var scaner in transformedScanners)
+      {
+        foreach (var b in scaner.Scanner.Beacons)
+          allBeacons.Add(b);
+      }
+
+      return allBeacons;
+    }
+
+    static internal int GetMaxManhattanDistanceOfScanner(string fileName)
+    {
+      var transformedScanners = GetAllTransformedScanner(fileName);
+
+      var dist = (from x in transformedScanners
+                  from y in transformedScanners
+                  select TestManhattan.GetManhattanDistance(x.Alignment.Position, y.Alignment.Position)).Max();
+
+      return dist;
+    }
+
+    private static List<TransformedScanner> GetAllTransformedScanner(string fileName)
+    {
       var allScanner = ParseScanner(File.ReadLines(fileName).GetEnumerator()).ToList();
-      
+
       List<TransformedScanner> transformedScanners = new();
       var identityAlign = new Alignment(Matrix.GetIdentity(), new Beacon(0, 0, 0));
       var startScanner = allScanner.First();
@@ -33,12 +66,12 @@ namespace _19_BeaconScanner
       transformedScanners.Add(initialTransformed);
 
       HashSet<(Scanner, TransformedScanner)> failedChecks = new();
-      
+
       while (allScanner.Any())
       {
         System.Console.WriteLine($"{allScanner.Count} scanner left");
         System.Diagnostics.Trace.TraceWarning($"{allScanner.Count} scanner left");
-        
+
         bool found = false;
         foreach (var scaner in allScanner)
         {
@@ -53,14 +86,7 @@ namespace _19_BeaconScanner
         System.Diagnostics.Debug.Assert(found);
       }
 
-      HashSet<Beacon> allBeacons = new();
-      foreach (var scaner in transformedScanners)
-      {
-        foreach (var b in scaner.Scanner.Beacons)
-          allBeacons.Add(b);
-      }
-
-      return allBeacons;
+      return transformedScanners;
     }
 
     static TransformedScanner TransformScaner(AligneedScanner aligneedScanner)

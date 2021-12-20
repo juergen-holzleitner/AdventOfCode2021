@@ -21,7 +21,7 @@ namespace _19_BeaconScanner
       Assert.AreEqual(3621, d);
     }
 
-    private int GetManhattanDistance(Beacon b1, Beacon b2)
+    internal static int GetManhattanDistance(Beacon b1, Beacon b2)
     {
       return Math.Abs(b1.X - b2.X) + Math.Abs(b1.Y - b2.Y) + Math.Abs(b1.Z - b2.Z);
     }
