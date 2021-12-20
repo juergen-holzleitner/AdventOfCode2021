@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using static _19_BeaconScanner.Parser;
 
 const string fileName = @"input.txt";
-HashSet<Beacon> allBeacons = TestSmallInput.GetAllUniqueBeacons(fileName);
-
-System.Console.WriteLine(allBeacons.Count);
+// HashSet<Beacon> allBeacons = TestSmallInput.GetAllUniqueBeacons(fileName);
+// System.Console.WriteLine(allBeacons.Count);
+var maxDist = TestSmallInput.GetMaxManhattanDistanceOfScanner(fileName);
+System.Console.WriteLine("MaxDist: " + maxDist);
