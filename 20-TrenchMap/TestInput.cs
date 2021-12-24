@@ -1,5 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace _20_TrenchMap
 {
@@ -13,14 +16,32 @@ namespace _20_TrenchMap
       Assert.AreEqual(512, input.EnhancmentAlgorithm.Length);
     }
 
+    [TestMethod]
+    public void TestReadInputImage()
+    {
+      var input = ReadInput(@"input-small.txt");
+      Assert.AreEqual(5, input.InputImage.Count);
+    }
+
     private static Input ReadInput(string fileName)
     {
       var lines = File.ReadLines(fileName).GetEnumerator();
       lines.MoveNext();
       var enhAlg = lines.Current;
-      return new Input(enhAlg);
+      lines.MoveNext();
+      if (!string.IsNullOrEmpty(lines.Current))
+        throw new ApplicationException("Expected empty line");
+
+      List<List<char>> inputImage = new();
+      while (lines.MoveNext())
+      {
+        var l = lines.Current.ToList();
+        inputImage.Add(l);
+      }
+
+      return new Input(enhAlg, inputImage);
     }
 
-    readonly record struct Input(string EnhancmentAlgorithm);
+    readonly record struct Input(string EnhancmentAlgorithm, List<List<char>> InputImage);
   }
 }
