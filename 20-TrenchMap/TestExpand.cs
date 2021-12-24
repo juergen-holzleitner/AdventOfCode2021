@@ -13,15 +13,24 @@ namespace _20_TrenchMap
     [TestMethod]
     public void TestExpandLine()
     {
-      string line = "#..#.";
-      string expandedLine = ExpandLineBy(line, 2);
-      Assert.AreEqual(".." + line + "..", expandedLine);
+      var line = "#..#.".ToList();
+      var expandedLine = ExpandLineBy(line, 2);
+      CollectionAssert.AreEqual("..#..#...".ToList(), expandedLine);
     }
 
-    private string ExpandLineBy(string line, int size)
+    private static List<char> ExpandLineBy(List<char> line, int size)
     {
-      var expansion = new string('.', size);
-      return expansion + line + expansion;
+      var newLine = new List<char>();
+
+      for (int i = 0; i < size; ++i)
+        newLine.Add('.');
+
+      newLine.AddRange(line);
+
+      for (int i = 0; i < size; ++i)
+        newLine.Add('.');
+
+      return newLine;
     }
   }
 }

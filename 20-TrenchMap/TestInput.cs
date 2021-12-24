@@ -29,9 +29,9 @@ namespace _20_TrenchMap
     public void TestInputIsRectangle()
     {
       var input = ReadInput(smallInputFilename);
-      int first = input.InputImage.First().Count();
+      int first = input.InputImage.First().Count;
       foreach (var i in input.InputImage)
-        Assert.AreEqual(first, i.Count());
+        Assert.AreEqual(first, i.Count);
     }
 
     private static Input ReadInput(string fileName)
