@@ -9,24 +9,26 @@ namespace _20_TrenchMap
   [TestClass]
   public class TestInput
   {
+    private const string smallInputFilename = @"input-small.txt";
+
     [TestMethod]
     public void TestReadEnhancementAlgorithm()
     {
-      var input = ReadInput(@"input-small.txt");
+      var input = ReadInput(smallInputFilename);
       Assert.AreEqual(512, input.EnhancmentAlgorithm.Length);
     }
 
     [TestMethod]
     public void TestReadInputImage()
     {
-      var input = ReadInput(@"input-small.txt");
+      var input = ReadInput(smallInputFilename);
       Assert.AreEqual(5, input.InputImage.Count);
     }
 
     [TestMethod]
     public void TestInputIsRectangle()
     {
-      var input = ReadInput(@"input-small.txt");
+      var input = ReadInput(smallInputFilename);
       int first = input.InputImage.First().Count();
       foreach (var i in input.InputImage)
         Assert.AreEqual(first, i.Count());
