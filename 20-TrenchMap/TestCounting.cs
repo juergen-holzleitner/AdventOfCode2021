@@ -28,6 +28,18 @@ namespace _20_TrenchMap
       Assert.AreEqual(24, numLitPixels);
     }
 
+    [TestMethod]
+    public void TestEnhanceTwice()
+    {
+      var input = TestInput.ReadInput(TestInput.smallInputFilename);
+      var currImage = input.InputImage;
+      for (int n = 0; n < 2; ++n)
+        currImage = TestPixelEnhancement.EnhanceImage(currImage, input.EnhancmentAlgorithm);
+
+      int numLitPixels = GetNumLitPixels(currImage);
+      Assert.AreEqual(35, numLitPixels);
+    }
+
     private int GetNumLitPixels(List<List<char>> image)
     {
       return (from r in image

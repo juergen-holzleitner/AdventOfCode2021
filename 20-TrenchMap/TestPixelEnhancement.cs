@@ -50,7 +50,7 @@ namespace _20_TrenchMap
         CollectionAssert.AreEqual(newTestImage[i], newImage[i]);
     }
 
-    private static List<List<char>> EnhanceImage(List<List<char>> inputImage, string enhAlg)
+    internal static List<List<char>> EnhanceImage(List<List<char>> inputImage, string enhAlg)
     {
       var newImage = TestExpand.ExpandImageBy(inputImage, 1);
       var orgImage = TestExpand.ExpandImageBy(inputImage, 1);
