@@ -16,7 +16,7 @@ namespace _20_TrenchMap
         new List<char> { '#', '.', '.' },
         new List<char> { '.', '#', '.' },
       };
-      var num = ClaculateBinaryFromPixel(testPixel, 1, 1);
+      var num = ClaculateBinaryFromPixel(testPixel, 1, 1, '.');
       Assert.AreEqual(34, num);
     }
 
@@ -32,7 +32,7 @@ namespace _20_TrenchMap
     public void TestEnhancmentStep()
     {
       var input = TestInput.ReadInput(TestInput.smallInputFilename);
-      var newImage = EnhanceImage(input.InputImage, input.EnhancmentAlgorithm);
+      var newImage = EnhanceImage(input.InputImage, input.EnhancmentAlgorithm, '.');
 
       List<List<char>> newTestImage = new()
       {
@@ -50,14 +50,14 @@ namespace _20_TrenchMap
         CollectionAssert.AreEqual(newTestImage[i], newImage[i]);
     }
 
-    internal static List<List<char>> EnhanceImage(List<List<char>> inputImage, string enhAlg)
+    internal static List<List<char>> EnhanceImage(List<List<char>> inputImage, string enhAlg, char infinitePixel)
     {
-      var newImage = TestExpand.ExpandImageBy(inputImage, 1);
-      var orgImage = TestExpand.ExpandImageBy(inputImage, 1);
+      var newImage = TestExpand.ExpandImageBy(inputImage, 1, infinitePixel);
+      var orgImage = TestExpand.ExpandImageBy(inputImage, 1, infinitePixel);
       for (int row = 0; row < newImage.Count; ++row)
         for (int col = 0; col < newImage[row].Count; ++col)
         {
-          var num = ClaculateBinaryFromPixel(orgImage, row, col);
+          var num = ClaculateBinaryFromPixel(orgImage, row, col, infinitePixel);
           newImage[row][col] = GetEnhancedPixel(enhAlg, num);
         }
       return newImage;
@@ -68,21 +68,21 @@ namespace _20_TrenchMap
       return enhAlg[pos];
     }
 
-    private static int ClaculateBinaryFromPixel(List<List<char>> testPixel, int row, int column)
+    private static int ClaculateBinaryFromPixel(List<List<char>> image, int row, int column, char infinitePixel)
     {
-      if (row < 0 || row >= testPixel.Count )
+      if (row < 0 || row >= image.Count )
         throw new ArgumentException("arg is out of bounds", nameof(row));
-      if (column < 0 || column >= testPixel[row].Count)
+      if (column < 0 || column >= image[row].Count)
         throw new ArgumentException("arg is out of bounds", nameof(column));
 
       int val = 0;
       for (int r = row -1; r <= row + 1; ++r)
         for (int c = column - 1; c <= column + 1; ++c)
         {
-          var pixel = '.';
-          if (r >= 0 && r < testPixel.Count)
-            if (c >= 0 && c < testPixel[r].Count)
-              pixel = testPixel[r][c];
+          var pixel = infinitePixel;
+          if (r >= 0 && r < image.Count)
+            if (c >= 0 && c < image[r].Count)
+              pixel = image[r][c];
 
           val <<= 1;
           if (pixel == '.')
