@@ -70,13 +70,13 @@ namespace _20_TrenchMap
 
     private static int ClaculateBinaryFromPixel(List<List<char>> image, int row, int column, char infinitePixel)
     {
-      if (row < 0 || row >= image.Count )
+      if (row < 0 || row >= image.Count)
         throw new ArgumentException("arg is out of bounds", nameof(row));
       if (column < 0 || column >= image[row].Count)
         throw new ArgumentException("arg is out of bounds", nameof(column));
 
       int val = 0;
-      for (int r = row -1; r <= row + 1; ++r)
+      for (int r = row - 1; r <= row + 1; ++r)
         for (int c = column - 1; c <= column + 1; ++c)
         {
           var pixel = infinitePixel;

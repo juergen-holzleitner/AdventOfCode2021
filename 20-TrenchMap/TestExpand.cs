@@ -20,7 +20,7 @@ namespace _20_TrenchMap
     {
       List<List<char>> image = new()
       {
-        new List<char> {'.'}
+        new List<char> { '.' }
       };
 
       var expandedImage = ExpandImageBy(image, 1, '.');
