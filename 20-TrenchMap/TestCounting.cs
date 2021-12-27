@@ -44,6 +44,22 @@ namespace _20_TrenchMap
       Assert.AreEqual(35, numLitPixels);
     }
 
+    [TestMethod]
+    public void TestEnhanceFifty()
+    {
+      var input = TestInput.ReadInput(TestInput.smallInputFilename);
+      var currImage = input.InputImage;
+      var infinitePixel = '.';
+      for (int n = 0; n < 50; ++n)
+      {
+        currImage = TestPixelEnhancement.EnhanceImage(currImage, input.EnhancmentAlgorithm, infinitePixel);
+        infinitePixel = TestInfinitePixel.GetNextInfinitePixel(infinitePixel, input.EnhancmentAlgorithm);
+      }
+
+      int numLitPixels = GetNumLitPixels(currImage);
+      Assert.AreEqual(3351, numLitPixels);
+    }
+
     internal static int GetNumLitPixels(List<List<char>> image)
     {
       return (from r in image
