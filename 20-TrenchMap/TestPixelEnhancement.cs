@@ -1,9 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _20_TrenchMap
 {
@@ -21,6 +18,19 @@ namespace _20_TrenchMap
       };
       var num = ClaculateBinaryFromPixel(testPixel, 1, 1);
       Assert.AreEqual(34, num);
+    }
+
+    [TestMethod]
+    public void TestEnhancePixel()
+    {
+      var input = TestInput.ReadInput(TestInput.smallInputFilename);
+      char ch = GetEnhancedPixel(input, 34);
+      Assert.AreEqual('#', ch);
+    }
+
+    private char GetEnhancedPixel(TestInput.Input input, int pos)
+    {
+      return input.EnhancmentAlgorithm[pos];
     }
 
     private int ClaculateBinaryFromPixel(List<List<char>> testPixel, int row, int column)

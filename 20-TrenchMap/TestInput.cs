@@ -9,7 +9,7 @@ namespace _20_TrenchMap
   [TestClass]
   public class TestInput
   {
-    private const string smallInputFilename = @"input-small.txt";
+    internal const string smallInputFilename = @"input-small.txt";
 
     [TestMethod]
     public void TestReadEnhancementAlgorithm()
@@ -34,7 +34,7 @@ namespace _20_TrenchMap
         Assert.AreEqual(first, i.Count);
     }
 
-    private static Input ReadInput(string fileName)
+    internal static Input ReadInput(string fileName)
     {
       var lines = File.ReadLines(fileName).GetEnumerator();
       lines.MoveNext();
@@ -53,6 +53,6 @@ namespace _20_TrenchMap
       return new Input(enhAlg, inputImage);
     }
 
-    readonly record struct Input(string EnhancmentAlgorithm, List<List<char>> InputImage);
+    internal readonly record struct Input(string EnhancmentAlgorithm, List<List<char>> InputImage);
   }
 }
