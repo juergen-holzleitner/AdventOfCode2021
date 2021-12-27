@@ -33,11 +33,11 @@ namespace _20_TrenchMap
       };
 
       Assert.AreEqual(expandedTestImage.Count, expandedImage.Count);
-      for (int i = 0; i < image.Count; i++)
+      for (int i = 0; i < expandedTestImage.Count; i++)
         CollectionAssert.AreEqual(expandedTestImage[i], expandedImage[i]);
     }
 
-    private static List<List<char>> ExpandImageBy(List<List<char>> image, int size)
+    internal static List<List<char>> ExpandImageBy(List<List<char>> image, int size)
     {
       var initialLength = image.First().Count;
       var expanded = new List<List<char>>();
