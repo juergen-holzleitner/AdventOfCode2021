@@ -16,5 +16,11 @@ namespace _21_DiracDice
       return zeroBased + 1;
     }
 
+    internal static bool IsWinningScore(int score)
+    {
+      if (score <= 999)
+        return false;
+      return true;
+    }
   }
 }
