@@ -22,5 +22,12 @@ namespace _21_DiracDice
         return false;
       return true;
     }
+
+    internal static void ProcessMove(Pawn pawn, DeterministicDice dice)
+    {
+      var distance = dice.GetValueAfterRolls(3);
+      var newPos = IncrementPosBy(pawn.Position, distance);
+      pawn.MoveTo(newPos);
+    }
   }
 }
