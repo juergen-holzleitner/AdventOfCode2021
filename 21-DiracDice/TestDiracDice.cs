@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace _21_DiracDice
 {
@@ -190,5 +191,13 @@ namespace _21_DiracDice
       Assert.IsTrue(equals);
     }
 
+    [TestMethod]
+    public void QuantumDie_GeneratesAllNextUniverses()
+    {
+      var universes = QuantumDie.GenerateUniverses();
+      Assert.AreEqual(27, universes.Sum(u => u.Value));
+      Assert.AreEqual(3, universes.Min(u => u.Key));
+      Assert.AreEqual(9, universes.Max(u => u.Key));
+    }
   }
 }
