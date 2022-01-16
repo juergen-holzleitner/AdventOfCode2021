@@ -175,5 +175,20 @@ namespace _21_DiracDice
       Assert.AreEqual(739785, result);
     }
 
+    [TestMethod]
+    public void Universes_CanCompare_State()
+    {
+      var p11 = new Pawn(1);
+      var p12 = new Pawn(2);
+      var universe1 = new Universe(p11, p12);
+
+      var p21 = new Pawn(1);
+      var p22 = new Pawn(2);
+      var universe2 = new Universe(p21, p22);
+
+      bool equals = universe1.Equals(universe2);
+      Assert.IsTrue(equals);
+    }
+
   }
 }
