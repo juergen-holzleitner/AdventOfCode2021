@@ -1,17 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace _21_DiracDice
 {
   internal class Universe : IEquatable<Universe>
   {
-    private readonly Pawn p1;
-    private readonly Pawn p2;
+    private readonly List<Pawn> pawns;
 
     public Universe(Pawn p1, Pawn p2)
     {
-      this.p1 = p1;
-      this.p2 = p2;
+      pawns = new List<Pawn>() 
+      {
+        p1,
+        p2,
+      };
     }
+
+    public Universe(List<Pawn> pawns, int steps)
+    {
+      this.pawns = pawns;
+      Steps = steps;
+    }
+
+    public List<Pawn> Pawns { get { return pawns; } }
+
+    public int Steps { get; set; } = 0;
 
     public override bool Equals(object? obj) => Equals(obj as Universe);
 
@@ -23,10 +36,10 @@ namespace _21_DiracDice
 
       if (GetType() != other.GetType()) return false;
 
-      return p1.Equals(other.p1) && p2.Equals(other.p2);
+      return Steps == other.Steps && Pawns[0].Equals(other.Pawns[0]) && Pawns[1].Equals(other.Pawns[1]);
     }
 
-    public override int GetHashCode() => (p1, p2).GetHashCode();
+    public override int GetHashCode() => (Steps, Pawns[0], Pawns[1]).GetHashCode();
 
     public static bool operator ==(Universe lhs, Universe rhs)
     {

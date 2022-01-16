@@ -167,10 +167,10 @@ namespace _21_DiracDice
           break;
       }
 
-      var otherScore = pawns[(n+1) % 2].Score;
+      var otherScore = pawns[(n + 1) % 2].Score;
       int rolls = (n + 1) * 3;
       int result = rolls * otherScore;
-      
+
       Assert.AreEqual(745, otherScore);
       Assert.AreEqual(993, rolls);
       Assert.AreEqual(739785, result);
@@ -198,6 +198,104 @@ namespace _21_DiracDice
       Assert.AreEqual(27, universes.Sum(u => u.Value));
       Assert.AreEqual(3, universes.Min(u => u.Key));
       Assert.AreEqual(9, universes.Max(u => u.Key));
+    }
+
+    [TestMethod]
+    public void ProcessOneUniverseStep()
+    {
+      Pawn p1 = new Pawn(4);
+      Pawn p2 = new Pawn(8);
+      var universe = new Universe(p1, p2);
+
+      var activeUniverses = new Dictionary<Universe, int>()
+      {
+        {universe, 1 }
+      };
+
+      var newUniverses = new Dictionary<Universe, int>();
+
+      foreach (var u in activeUniverses)
+      {
+        foreach (var d in QuantumDie.GenerateUniverses())
+        {
+          int n = u.Key.Steps % 2;
+
+          int newPos = GameBoard.IncrementPosBy(u.Key.Pawns[n].Position, d.Key);
+          var newList = new List<Pawn>(u.Key.Pawns);
+          newList[n] = new Pawn(newList[n].Position);
+          newList[n].MoveTo(newPos);
+
+          var newU = new Universe(newList, u.Key.Steps + 1);
+          if (newUniverses.ContainsKey(newU))
+          {
+            newUniverses[newU] += d.Value;
+          }
+          else
+          {
+            newUniverses.Add(newU, d.Value);
+          }
+        }
+      }
+
+      Assert.AreEqual(7, newUniverses.Count);
+    }
+
+    [TestMethod]
+    public void ExampleWithTestValues_ReturnsCorrectValues()
+    {
+      Pawn p1 = new Pawn(4);
+      Pawn p2 = new Pawn(8);
+      var universe = new Universe(p1, p2);
+
+      var activeUniverses = new Dictionary<Universe, long>()
+    {
+      {universe, 1 }
+    };
+
+      var winCounts = new long[2] { 0, 0 };
+
+      while (activeUniverses.Any())
+      {
+        var newUniverses = new Dictionary<Universe, long>();
+
+        foreach (var u in activeUniverses)
+        {
+          int step = u.Key.Steps % 2;
+
+          foreach (var d in QuantumDie.GenerateUniverses())
+          {
+            int newPos = GameBoard.IncrementPosBy(u.Key.Pawns[step].Position, d.Key);
+            var newPawn = new Pawn(u.Key.Pawns[step]);
+            newPawn.MoveTo(newPos);
+
+            long numUniverses = u.Value * d.Value;
+
+            if (newPawn.Score >= 21)
+            {
+              winCounts[step] += numUniverses;
+              continue;
+            }
+
+            var newList = new List<Pawn>(u.Key.Pawns);
+            newList[step] = newPawn;
+
+            var newU = new Universe(newList, u.Key.Steps + 1);
+            if (newUniverses.ContainsKey(newU))
+            {
+              newUniverses[newU] += numUniverses;
+            }
+            else
+            {
+              newUniverses.Add(newU, numUniverses);
+            }
+          }
+        }
+
+        activeUniverses = newUniverses;
+      }
+
+      Assert.AreEqual(444356092776315, winCounts[0]);
+      Assert.AreEqual(341960390180808, winCounts[1]);
     }
   }
 }

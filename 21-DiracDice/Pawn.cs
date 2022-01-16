@@ -9,6 +9,12 @@ namespace _21_DiracDice
       Position = startPosition;
     }
 
+    public Pawn(Pawn other)
+    {
+      Position = other.Position;
+      Score = other.Score;
+    }
+
     public int Position { get; internal set; }
 
     public int Score { get; internal set; } = 0;
