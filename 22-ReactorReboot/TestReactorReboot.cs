@@ -67,5 +67,20 @@ namespace _22_ReactorReboot
       var numCubesOn = reactor.GetNumCubesOn();
       Assert.AreEqual(38, numCubesOn);
     }
+
+    [TestMethod]
+    public void Reactor_IsCorrect_SmallInput()
+    {
+      var reactor = new Reactor();
+
+      foreach (var line in ReadAllInputLines(@"input-small.txt"))
+      {
+        var input = InterpretLine(line);
+        reactor.ProcessStep(input);
+      }
+
+      var numCubesOn = reactor.GetNumCubesOn();
+      Assert.AreEqual(590784, numCubesOn);
+    }
   }
 }
