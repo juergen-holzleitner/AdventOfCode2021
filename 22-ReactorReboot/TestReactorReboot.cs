@@ -7,21 +7,16 @@ namespace _22_ReactorReboot
   public class TestReactorReboot
   {
     [TestMethod]
-    [DataRow("on x=10..12", true)]
-    [DataRow("off x=10..12", false)]
-    public void ReadOnOffWorks(string line, bool on)
+    [DataRow("on x=10..12,y=3..7,z=2..9", true, 10, 3, 2)]
+    [DataRow("off x=10..12,y=3..7,z=2..9", false, 10, 3, 2)]
+    [DataRow("on x=5..12,y=3..7,z=2..9", true, 5, 3, 2)]
+    public void Read_Start_Works(string line, bool on, int expectedX, int expectedY, int expectedZ)
     {
       var input = InterpretLine(line);
       Assert.AreEqual(input.On, on);
-    }
-
-    [TestMethod]
-    [DataRow("on x=10..12", 10)]
-    [DataRow("on x=5..12", 5)]
-    public void ReadX_Works(string line, int expectedX)
-    {
-      var input = InterpretLine(line);
       Assert.AreEqual(input.Start.X, expectedX);
+      Assert.AreEqual(input.Start.Y, expectedY);
+      Assert.AreEqual(input.Start.Z, expectedZ);
     }
   }
 }
