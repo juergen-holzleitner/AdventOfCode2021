@@ -6,6 +6,8 @@ namespace _22_ReactorReboot
   {
     internal static Input InterpretLine(string line)
     {
+      if (line == "off")
+        return new Input(false);
       return new Input(true);
     }
 
