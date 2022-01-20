@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace _22_ReactorReboot
 {
@@ -6,9 +7,11 @@ namespace _22_ReactorReboot
   {
     internal static Input InterpretLine(string line)
     {
-      if (line == "off")
-        return new Input(false, new Position(10));
-      return new Input(true, new Position(10));
+      var regex = new Regex(@"(?<on>on|off) x=(?<X>\d+)..(\d+)");
+      var match = regex.Match(line);
+      var on = match.Groups["on"].Value == "on";
+      var X = int.Parse(match.Groups["X"].Value);
+      return new Input(on, new Position(X));
     }
 
     public readonly record struct Position(int X);

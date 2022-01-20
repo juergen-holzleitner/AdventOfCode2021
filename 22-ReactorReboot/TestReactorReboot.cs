@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static _22_ReactorReboot.InputReader;
 
 namespace _22_ReactorReboot
 {
@@ -6,24 +7,21 @@ namespace _22_ReactorReboot
   public class TestReactorReboot
   {
     [TestMethod]
-    public void ReadOnWorks()
+    [DataRow("on x=10..12", true)]
+    [DataRow("off x=10..12", false)]
+    public void ReadOnOffWorks(string line, bool on)
     {
-      var input = InputReader.InterpretLine("on");
-      Assert.AreEqual(input.On, true);
+      var input = InterpretLine(line);
+      Assert.AreEqual(input.On, on);
     }
 
     [TestMethod]
-    public void ReadOffWorks()
+    [DataRow("on x=10..12", 10)]
+    [DataRow("on x=5..12", 5)]
+    public void ReadX_Works(string line, int expectedX)
     {
-      var input = InputReader.InterpretLine("off");
-      Assert.AreEqual(input.On, false);
-    }
-
-    [TestMethod]
-    public void ReadX_Works()
-    {
-      var input = InputReader.InterpretLine("off on x=10..12");
-      Assert.AreEqual(input.Start.X, 10);
+      var input = InterpretLine(line);
+      Assert.AreEqual(input.Start.X, expectedX);
     }
   }
 }
