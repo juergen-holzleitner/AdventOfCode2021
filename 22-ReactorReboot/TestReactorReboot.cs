@@ -22,5 +22,24 @@ namespace _22_ReactorReboot
       Assert.AreEqual(input.End.Y, expectedEndY);
       Assert.AreEqual(input.End.Z, expectedEndZ);
     }
+
+    [TestMethod]
+    public void ReactorHas_101_ElementsInEachDimension()
+    {
+      var reactor = new Reactor();
+      Assert.AreEqual(101, reactor.State.GetLength(0));
+      Assert.AreEqual(101, reactor.State.GetLength(1));
+      Assert.AreEqual(101, reactor.State.GetLength(2));
+    }
+
+    [TestMethod]
+    public void Reactor_StartsWithAllOff()
+    {
+      var reactor = new Reactor();
+      for (int x = 0; x < reactor.State.GetLength(0); ++x)
+        for (int y = 0; y < reactor.State.GetLength(1); ++y)
+          for (int z = 0; z < reactor.State.GetLength(2); ++z)
+            Assert.IsFalse(reactor.State[x, y, z]);
+    }
   }
 }
