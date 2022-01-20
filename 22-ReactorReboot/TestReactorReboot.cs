@@ -41,5 +41,23 @@ namespace _22_ReactorReboot
           for (int z = 0; z < reactor.State.GetLength(2); ++z)
             Assert.IsFalse(reactor.State[x, y, z]);
     }
+
+    [TestMethod]
+    public void Reactor_Supports_OnCubes()
+    {
+      var reactor = new Reactor();
+      var numCubesOn = reactor.GetNumCubesOn();
+      Assert.AreEqual(0, numCubesOn);
+    }
+
+    [TestMethod]
+    public void Reactor_NumberOn_IsCorrectAfterFirstStep()
+    {
+      var reactor = new Reactor();
+      var input = InterpretLine("on x=10..12,y=10..12,z=10..12");
+      reactor.ProcessStep(input);
+      var numCubesOn = reactor.GetNumCubesOn();
+      Assert.AreEqual(27, numCubesOn);
+    }
   }
 }
