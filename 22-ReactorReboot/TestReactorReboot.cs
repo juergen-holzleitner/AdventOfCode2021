@@ -15,8 +15,15 @@ namespace _22_ReactorReboot
     [TestMethod]
     public void ReadOffWorks()
     {
-      var intpur = InputReader.InterpretLine("off");
-      Assert.AreEqual(intpur.On, false);
+      var input = InputReader.InterpretLine("off");
+      Assert.AreEqual(input.On, false);
+    }
+
+    [TestMethod]
+    public void ReadX_Works()
+    {
+      var input = InputReader.InterpretLine("off on x=10..12");
+      Assert.AreEqual(input.Start.X, 10);
     }
   }
 }
