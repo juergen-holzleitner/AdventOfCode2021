@@ -51,13 +51,21 @@ namespace _22_ReactorReboot
     }
 
     [TestMethod]
-    public void Reactor_NumberOn_IsCorrectAfterFirstStep()
+    public void Reactor_NumberOn_IsCorrectAfterSampleStep()
     {
       var reactor = new Reactor();
+      
       var input = InterpretLine("on x=10..12,y=10..12,z=10..12");
       reactor.ProcessStep(input);
+      
+      input = InterpretLine("on x=11..13,y=11..13,z=11..13");
+      reactor.ProcessStep(input);
+
+      input = InterpretLine("off x=9..11,y=9..11,z=9..11");
+      reactor.ProcessStep(input);
+
       var numCubesOn = reactor.GetNumCubesOn();
-      Assert.AreEqual(27, numCubesOn);
+      Assert.AreEqual(38, numCubesOn);
     }
   }
 }
