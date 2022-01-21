@@ -126,5 +126,52 @@ namespace _22_ReactorReboot
 
       Assert.AreEqual(6, reactor.GetNumCubesOn());
     }
+
+    [TestMethod]
+    public void EnableMultipleBlocks_InReactor_Works()
+    {
+      Reactor reactor = new();
+      var block = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 1, 2));
+      var block2 = new InputReader.Block(new InputReader.Position(10, 10, 10), new InputReader.Position(12, 10, 10));
+      reactor.ProcessAddBlockOn(block);
+      reactor.ProcessAddBlockOn(block2);
+
+      Assert.AreEqual(9, reactor.GetNumCubesOn());
+    }
+
+    [TestMethod]
+    public void NonInteractingBlocksAreRecognized()
+    {
+      var block1 = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 0, 0));
+      var block2 = new InputReader.Block(new InputReader.Position(1, 1, 1), new InputReader.Position(1, 1, 1));
+      bool intersect = Reactor.AreBlocksIntersect(block1, block2);
+      Assert.IsFalse(intersect);
+    }
+
+    [TestMethod]
+    public void InteractingBlocksAreRecognized()
+    {
+      var block1 = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 0, 0));
+      var block2 = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 0, 0));
+      bool intersect = Reactor.AreBlocksIntersect(block1, block2);
+      Assert.IsTrue(intersect);
+    }
+
+    [TestMethod]
+    public void BlockContainsOtherBlock_ReturnsFalse()
+    {
+      var block1 = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 0, 0));
+      var block2 = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 0, 1));
+      bool contains = Reactor.BlockContainsOther(block1, block2);
+      Assert.IsFalse(contains);
+    }
+    [TestMethod]
+    public void BlockContainsOtherBlock_ReturnsTrue()
+    {
+      var block1 = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 0, 1));
+      var block2 = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 0, 0));
+      bool contains = Reactor.BlockContainsOther(block1, block2);
+      Assert.IsTrue(contains);
+    }
   }
 }

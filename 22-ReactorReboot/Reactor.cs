@@ -79,5 +79,46 @@ namespace _22_ReactorReboot
 
       return dX * dY * dZ;
     }
+
+    internal static bool AreBlocksIntersect(InputReader.Block blockA, InputReader.Block blockB)
+    {
+      if (blockA.A.X > blockB.B.X)
+        return false;
+      if (blockA.A.Y > blockB.B.Y)
+        return false;
+      if (blockA.A.Z > blockB.B.Z)
+        return false;
+
+      if (blockA.B.X < blockB.A.X)
+        return false;
+      if (blockA.B.Y < blockB.A.Y)
+        return false;
+      if (blockA.B.Z < blockB.A.Z)
+        return false;
+
+      return true;
+    }
+
+    internal static bool BlockContainsOther(InputReader.Block block1, InputReader.Block block2)
+    {
+      if (!AreBlocksIntersect(block1, block2))
+        return false;
+
+      if (block2.A.X < block1.A.X)
+        return false;
+      if (block2.A.Y < block1.A.Y)
+        return false;
+      if (block2.A.Z < block1.A.Z)
+        return false;
+
+      if (block2.B.X > block1.B.X)
+        return false;
+      if (block2.B.Y > block1.B.Y)
+        return false;
+      if (block2.B.Z > block1.B.Z)
+        return false;
+
+      return true;
+    }
   }
 }
