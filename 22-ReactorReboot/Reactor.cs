@@ -21,17 +21,17 @@ namespace _22_ReactorReboot
 
     internal void ProcessStep(InputReader.Input input)
     {
-      if (input.Start.X > 50) return;
-      if (input.Start.Y > 50) return;
-      if (input.Start.Z > 50) return;
+      if (input.Block.A.X > 50) return;
+      if (input.Block.A.Y > 50) return;
+      if (input.Block.A.Z > 50) return;
 
-      if (input.End.X < -50) return;
-      if (input.End.Y < -50) return;
-      if (input.End.Z < -50) return;
+      if (input.Block.B.X < -50) return;
+      if (input.Block.B.Y < -50) return;
+      if (input.Block.B.Z < -50) return;
 
-      for (long x = input.Start.X; x <= input.End.X; ++x)
-        for (long y = input.Start.Y; y <= input.End.Y; ++y)
-          for (long z = input.Start.Z; z <= input.End.Z; ++z)
+      for (long x = input.Block.A.X; x <= input.Block.B.X; ++x)
+        for (long y = input.Block.A.Y; y <= input.Block.B.Y; ++y)
+          for (long z = input.Block.A.Z; z <= input.Block.B.Z; ++z)
           {
             var X = x + 50;
             var Y = y + 50;

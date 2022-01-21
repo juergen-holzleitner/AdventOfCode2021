@@ -13,13 +13,13 @@ namespace _22_ReactorReboot
     {
       var input = InputReader.InterpretLine(line);
       Assert.AreEqual(input.On, on);
-      Assert.AreEqual(input.Start.X, expectedStartX);
-      Assert.AreEqual(input.Start.Y, expectedStartY);
-      Assert.AreEqual(input.Start.Z, expectedStartZ);
+      Assert.AreEqual(input.Block.A.X, expectedStartX);
+      Assert.AreEqual(input.Block.A.Y, expectedStartY);
+      Assert.AreEqual(input.Block.A.Z, expectedStartZ);
 
-      Assert.AreEqual(input.End.X, expectedEndX);
-      Assert.AreEqual(input.End.Y, expectedEndY);
-      Assert.AreEqual(input.End.Z, expectedEndZ);
+      Assert.AreEqual(input.Block.B.X, expectedEndX);
+      Assert.AreEqual(input.Block.B.Y, expectedEndY);
+      Assert.AreEqual(input.Block.B.Z, expectedEndZ);
     }
 
     [TestMethod]
