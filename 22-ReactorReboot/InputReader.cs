@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace _22_ReactorReboot
@@ -17,12 +18,27 @@ namespace _22_ReactorReboot
       var endX = int.Parse(match.Groups["EndX"].Value);
       var endY = int.Parse(match.Groups["EndY"].Value);
       var endZ = int.Parse(match.Groups["EndZ"].Value);
+
+      if (startX > endX)
+        throw new ApplicationException("invalid input");
+      if (startY > endY)
+        throw new ApplicationException("invalid input");
+      if (startZ > endZ)
+        throw new ApplicationException("invalid input");
+
       return new Input(on, new Block(new Position(startX, startY, startZ), new Position(endX, endY, endZ)));
     }
 
     internal static IEnumerable<string> ReadAllInputLines(string fileName)
     {
       return System.IO.File.ReadLines(fileName);
+    }
+
+    internal static IEnumerable<Input> GetAllInputs(string fileName)
+    {
+      return from line in ReadAllInputLines(fileName)
+             let input = InterpretLine(line)
+             select input;
     }
 
     public readonly record struct Position(int X, int Y, int Z);

@@ -1,4 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace _22_ReactorReboot
 {
@@ -32,16 +34,6 @@ namespace _22_ReactorReboot
     }
 
     [TestMethod]
-    public void Reactor_StartsWithAllOff()
-    {
-      var reactor = new Reactor();
-      for (int x = 0; x < reactor.State.GetLength(0); ++x)
-        for (int y = 0; y < reactor.State.GetLength(1); ++y)
-          for (int z = 0; z < reactor.State.GetLength(2); ++z)
-            Assert.IsFalse(reactor.State[x, y, z]);
-    }
-
-    [TestMethod]
     public void Reactor_Supports_OnCubes()
     {
       var reactor = new Reactor();
@@ -72,14 +64,48 @@ namespace _22_ReactorReboot
     {
       var reactor = new Reactor();
 
-      foreach (var line in InputReader.ReadAllInputLines(@"input-small.txt"))
+      var allInput = InputReader.GetAllInputs(@"input-small.txt");
+      var limitedInput = Reactor.LimitInputs(allInput);
+      foreach (var input in limitedInput)
       {
-        var input = InputReader.InterpretLine(line);
         reactor.ProcessStep(input);
       }
 
       var numCubesOn = reactor.GetNumCubesOn();
       Assert.AreEqual(590784, numCubesOn);
+    }
+
+    [TestMethod]
+    public void Reactor_IsCorrect_Part1Input()
+    {
+      var reactor = new Reactor();
+
+      var allInput = InputReader.GetAllInputs(@"input.txt");
+      var limitedInput = Reactor.LimitInputs(allInput);
+      foreach (var input in limitedInput)
+      {
+        reactor.ProcessStep(input);
+      }
+
+      var numCubesOn = reactor.GetNumCubesOn();
+      Assert.AreEqual(596598, numCubesOn);
+    }
+
+    [TestMethod]
+    public void LimitInput_Works()
+    {
+      var input = InputReader.InterpretLine("on x=10..12,y=10..12,z=10..12");
+      var input2 = InputReader.InterpretLine("on x=-100..-60,y=10..12,z=10..12");
+      var input3 = InputReader.InterpretLine("on x=-30..12,y=51..51,z=10..12");
+      var input4 = InputReader.InterpretLine("on x=-30..12,y=10..51,z=10..12");
+      var inputList = new List<InputReader.Input>() { input, input2, input3, input4 };
+
+      var limitedInput = Reactor.LimitInputs(inputList);
+
+      var input4Limited = InputReader.InterpretLine("on x=-30..12,y=10..50,z=10..12");
+      var expectedList = new List<InputReader.Input>() { input, input4Limited };
+
+      CollectionAssert.AreEqual(expectedList, limitedInput.ToList());
     }
   }
 }

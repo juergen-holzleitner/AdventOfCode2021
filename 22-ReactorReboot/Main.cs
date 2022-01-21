@@ -2,9 +2,10 @@
 
 var reactor = new Reactor();
 
-foreach (var line in InputReader.ReadAllInputLines(@"input.txt"))
+var allInput = InputReader.GetAllInputs(@"input.txt");
+var limitedInput = Reactor.LimitInputs(allInput);
+foreach (var input in limitedInput)
 {
-  var input = InputReader.InterpretLine(line);
   reactor.ProcessStep(input);
 }
 
