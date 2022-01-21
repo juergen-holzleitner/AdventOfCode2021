@@ -7,18 +7,24 @@ namespace _22_ReactorReboot
   {
     const int limit = 50;
 
+    List<InputReader.Block> enabledCubes = new();
+
     public Reactor()
     {
     }
 
     public bool[,,] State { get; set; } = new bool[2 * limit + 1, 2 * limit + 1, 2 * limit + 1];
 
-    internal int GetNumCubesOn()
+    internal long GetNumCubesOn()
     {
-      int num = 0;
+      long num = 0;
       foreach (var i in State)
         if (i)
           ++num;
+
+      foreach (var b in enabledCubes)
+        num += GetBlockSize(b);
+
       return num;
     }
 
@@ -58,6 +64,20 @@ namespace _22_ReactorReboot
         var newB = new InputReader.Position(Math.Min(limit, input.Block.B.X), Math.Min(limit, input.Block.B.Y), Math.Min(limit, input.Block.B.Z));
         yield return new InputReader.Input(input.On, new InputReader.Block(newA, newB));
       }
+    }
+
+    internal void ProcessAddBlockOn(InputReader.Block block)
+    {
+      enabledCubes.Add(block);
+    }
+
+    internal static long GetBlockSize(InputReader.Block block)
+    {
+      var dX = block.B.X - block.A.X + 1;
+      var dY = block.B.Y - block.A.Y + 1;
+      var dZ = block.B.Z - block.A.Z + 1;
+
+      return dX * dY * dZ;
     }
   }
 }

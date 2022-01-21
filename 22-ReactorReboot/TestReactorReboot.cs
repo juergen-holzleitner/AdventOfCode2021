@@ -107,5 +107,24 @@ namespace _22_ReactorReboot
 
       CollectionAssert.AreEqual(expectedList, limitedInput.ToList());
     }
+
+    [TestMethod]
+    public void Get_BlockSize_Returns_CorrectValue()
+    {
+      var block = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 1, 2));
+      var blockSize = Reactor.GetBlockSize(block);
+
+      Assert.AreEqual(6, blockSize);
+    }
+
+    [TestMethod]
+    public void EnableBlock_InReactor_Works()
+    {
+      Reactor reactor = new();
+      var block = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 1, 2));
+      reactor.ProcessAddBlockOn(block);
+
+      Assert.AreEqual(6, reactor.GetNumCubesOn());
+    }
   }
 }
