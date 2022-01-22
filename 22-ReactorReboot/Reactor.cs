@@ -141,6 +141,10 @@ namespace _22_ReactorReboot
       fragmentsToAdd = SplitY(existingBlock, fragmentsToAdd, existingBlock.B.Y);
       fragmentsToAdd = SplitY(existingBlock, fragmentsToAdd, existingBlock.A.Y - 1);
 
+      // check Z
+      fragmentsToAdd = SplitZ(existingBlock, fragmentsToAdd, existingBlock.B.Z);
+      fragmentsToAdd = SplitZ(existingBlock, fragmentsToAdd, existingBlock.A.Z - 1);
+
       return fragmentsToAdd;
     }
 
@@ -180,6 +184,30 @@ namespace _22_ReactorReboot
             newFragments.Add(lower);
 
           var upper = f with { A = f.A with { Y = splitY + 1 } };
+          if (!BlockContainsOther(existingBlock, upper))
+            newFragments.Add(upper);
+        }
+        else
+        {
+          newFragments.Add(f);
+        }
+      }
+
+      return newFragments;
+    }
+
+    private static List<InputReader.Block> SplitZ(InputReader.Block existingBlock, List<InputReader.Block> fragmentsToAdd, int splitZ)
+    {
+      List<InputReader.Block> newFragments = new();
+      foreach (var f in fragmentsToAdd)
+      {
+        if (splitZ >= f.A.Z && splitZ < f.B.Z)
+        {
+          var lower = f with { B = f.B with { Z = splitZ } };
+          if (!BlockContainsOther(existingBlock, lower))
+            newFragments.Add(lower);
+
+          var upper = f with { A = f.A with { Z = splitZ + 1 } };
           if (!BlockContainsOther(existingBlock, upper))
             newFragments.Add(upper);
         }
