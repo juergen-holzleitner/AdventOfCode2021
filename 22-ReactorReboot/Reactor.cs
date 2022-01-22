@@ -129,41 +129,29 @@ namespace _22_ReactorReboot
         return fragmentsToAdd;
 
       fragmentsToAdd.Add(newBlock);
-      
+
       if (!AreBlocksIntersect(existingBlock, newBlock))
         return fragmentsToAdd;
 
       // check X
+      fragmentsToAdd = SplitX(existingBlock, fragmentsToAdd, existingBlock.B.X);
+      fragmentsToAdd = SplitX(existingBlock, fragmentsToAdd, existingBlock.A.X - 1);
+
+      return fragmentsToAdd;
+    }
+
+    private static List<InputReader.Block> SplitX(InputReader.Block existingBlock, List<InputReader.Block> fragmentsToAdd, int splitX)
+    {
       List<InputReader.Block> newFragments = new();
       foreach (var f in fragmentsToAdd)
       {
-        if (existingBlock.B.X >= f.A.X && existingBlock.B.X < f.B.X)
+        if (splitX >= f.A.X && splitX < f.B.X)
         {
-          var lower = f with { B = f.B with { X = existingBlock.B.X } };
+          var lower = f with { B = f.B with { X = splitX } };
           if (!BlockContainsOther(existingBlock, lower))
             newFragments.Add(lower);
 
-          var upper = f with { A = f.A with { X = existingBlock.B.X + 1 } };
-          if (!BlockContainsOther(existingBlock, upper))
-            newFragments.Add(upper);
-        }
-        else
-        {
-          newFragments.Add(f);
-        }
-      }
-      fragmentsToAdd = newFragments;
-      newFragments = new();
-
-      foreach (var f in fragmentsToAdd)
-      {
-        if (existingBlock.A.X > f.A.X && existingBlock.A.X <= f.B.X)
-        {
-          var lower = f with { B = f.B with { X = existingBlock.A.X - 1 } };
-          if (!BlockContainsOther(existingBlock, lower))
-            newFragments.Add(lower);
-
-          var upper = f with { A = f.A with { X = existingBlock.A.X } };
+          var upper = f with { A = f.A with { X = splitX + 1 } };
           if (!BlockContainsOther(existingBlock, upper))
             newFragments.Add(upper);
         }
@@ -173,10 +161,7 @@ namespace _22_ReactorReboot
         }
       }
 
-      fragmentsToAdd = newFragments;
-      newFragments = new();
-
-      return fragmentsToAdd;
+      return newFragments;
     }
   }
 }
