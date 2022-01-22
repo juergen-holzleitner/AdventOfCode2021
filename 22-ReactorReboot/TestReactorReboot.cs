@@ -196,14 +196,19 @@ namespace _22_ReactorReboot
     }
 
     [TestMethod]
-    public void FragementsToAdd_WhenHalfXLeft_ReturnsCorrect()
+    public void FragementsToAdd_WhenHalfUpper_ReturnsCorrect()
     {
-      var existingBlock = new InputReader.Block(new InputReader.Position(-1, 0, 0), new InputReader.Position(1, 0, 0));
-      var newBlock = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(3, 0, 0));
+      var existingBlock = new InputReader.Block(new InputReader.Position(-1, 0, 0), new InputReader.Position(1, 2, 0));
+      var newBlock = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(3, 4, 0));
 
       var fragementsToAdd = Reactor.GetFragmentsToAdd(existingBlock, newBlock);
       
-      var expected = new List<InputReader.Block>() { new InputReader.Block(new InputReader.Position(2, 0, 0), new InputReader.Position(3, 0, 0)) };
+      var expected = new List<InputReader.Block>() 
+      { 
+        new InputReader.Block(new InputReader.Position(0, 3, 0), new InputReader.Position(1, 4, 0)),
+        new InputReader.Block(new InputReader.Position(2, 0, 0), new InputReader.Position(3, 2, 0)),
+        new InputReader.Block(new InputReader.Position(2, 3, 0), new InputReader.Position(3, 4, 0)),
+      };
 
       CollectionAssert.AreEqual(expected, fragementsToAdd.ToList());
     }
