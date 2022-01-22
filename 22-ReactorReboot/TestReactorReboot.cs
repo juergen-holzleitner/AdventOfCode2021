@@ -165,6 +165,7 @@ namespace _22_ReactorReboot
       bool contains = Reactor.BlockContainsOther(block1, block2);
       Assert.IsFalse(contains);
     }
+
     [TestMethod]
     public void BlockContainsOtherBlock_ReturnsTrue()
     {
@@ -172,6 +173,69 @@ namespace _22_ReactorReboot
       var block2 = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 0, 0));
       bool contains = Reactor.BlockContainsOther(block1, block2);
       Assert.IsTrue(contains);
+    }
+
+    [TestMethod]
+    public void FragementsToAdd_WithoutIntersection_ReturnsAll()
+    {
+      var existingBlock = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(0, 0, 0));
+      var newBlock = new InputReader.Block(new InputReader.Position(1, 1, 1), new InputReader.Position(1, 1, 1));
+
+      var fragementsToAdd = Reactor.GetFragmentsToAdd(existingBlock, newBlock);
+      CollectionAssert.AreEqual(new List<InputReader.Block>() { newBlock }, fragementsToAdd.ToList());
+    }
+
+    [TestMethod]
+    public void FragementsToAdd_WhenContained_ReturnsNothing()
+    {
+      var existingBlock = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(1, 2, 10));
+      var newBlock = new InputReader.Block(new InputReader.Position(1, 1, 1), new InputReader.Position(1, 1, 1));
+
+      var fragementsToAdd = Reactor.GetFragmentsToAdd(existingBlock, newBlock);
+      Assert.IsFalse(fragementsToAdd.Any());
+    }
+
+    [TestMethod]
+    public void FragementsToAdd_WhenHalfXLeft_ReturnsCorrect()
+    {
+      var existingBlock = new InputReader.Block(new InputReader.Position(-1, 0, 0), new InputReader.Position(1, 0, 0));
+      var newBlock = new InputReader.Block(new InputReader.Position(0, 0, 0), new InputReader.Position(3, 0, 0));
+
+      var fragementsToAdd = Reactor.GetFragmentsToAdd(existingBlock, newBlock);
+      
+      var expected = new List<InputReader.Block>() { new InputReader.Block(new InputReader.Position(2, 0, 0), new InputReader.Position(3, 0, 0)) };
+
+      CollectionAssert.AreEqual(expected, fragementsToAdd.ToList());
+    }
+
+    [TestMethod]
+    public void FragementsToAdd_WhenHalfXRight_ReturnsCorrect()
+    {
+      var existingBlock = new InputReader.Block(new InputReader.Position(-1, 0, 0), new InputReader.Position(1, 0, 0));
+      var newBlock = new InputReader.Block(new InputReader.Position(-3, 0, 0), new InputReader.Position(1, 0, 0));
+
+      var fragementsToAdd = Reactor.GetFragmentsToAdd(existingBlock, newBlock);
+
+      var expected = new List<InputReader.Block>() { new InputReader.Block(new InputReader.Position(-3, 0, 0), new InputReader.Position(-2, 0, 0)) };
+
+      CollectionAssert.AreEqual(expected, fragementsToAdd.ToList());
+    }
+
+    [TestMethod]
+    public void FragementsToAdd_WhenBothX_ReturnsCorrect()
+    {
+      var existingBlock = new InputReader.Block(new InputReader.Position(-1, 0, 0), new InputReader.Position(1, 0, 0));
+      var newBlock = new InputReader.Block(new InputReader.Position(-3, 0, 0), new InputReader.Position(3, 0, 0));
+
+      var fragementsToAdd = Reactor.GetFragmentsToAdd(existingBlock, newBlock);
+
+      var expected = new List<InputReader.Block>() 
+      {
+        new InputReader.Block(new InputReader.Position(-3, 0, 0), new InputReader.Position(-2, 0, 0)),
+        new InputReader.Block(new InputReader.Position(2, 0, 0), new InputReader.Position(3, 0, 0)) ,
+      };
+
+      CollectionAssert.AreEqual(expected, fragementsToAdd.ToList());
     }
   }
 }

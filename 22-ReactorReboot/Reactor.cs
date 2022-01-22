@@ -120,5 +120,63 @@ namespace _22_ReactorReboot
 
       return true;
     }
+
+    internal static IEnumerable<InputReader.Block> GetFragmentsToAdd(InputReader.Block existingBlock, InputReader.Block newBlock)
+    {
+      List<InputReader.Block> fragmentsToAdd = new();
+
+      if (BlockContainsOther(existingBlock, newBlock))
+        return fragmentsToAdd;
+
+      fragmentsToAdd.Add(newBlock);
+      
+      if (!AreBlocksIntersect(existingBlock, newBlock))
+        return fragmentsToAdd;
+
+      // check X
+      List<InputReader.Block> newFragments = new();
+      foreach (var f in fragmentsToAdd)
+      {
+        if (existingBlock.B.X >= f.A.X && existingBlock.B.X < f.B.X)
+        {
+          var lower = f with { B = f.B with { X = existingBlock.B.X } };
+          if (!BlockContainsOther(existingBlock, lower))
+            newFragments.Add(lower);
+
+          var upper = f with { A = f.A with { X = existingBlock.B.X + 1 } };
+          if (!BlockContainsOther(existingBlock, upper))
+            newFragments.Add(upper);
+        }
+        else
+        {
+          newFragments.Add(f);
+        }
+      }
+      fragmentsToAdd = newFragments;
+      newFragments = new();
+
+      foreach (var f in fragmentsToAdd)
+      {
+        if (existingBlock.A.X > f.A.X && existingBlock.A.X <= f.B.X)
+        {
+          var lower = f with { B = f.B with { X = existingBlock.A.X - 1 } };
+          if (!BlockContainsOther(existingBlock, lower))
+            newFragments.Add(lower);
+
+          var upper = f with { A = f.A with { X = existingBlock.A.X } };
+          if (!BlockContainsOther(existingBlock, upper))
+            newFragments.Add(upper);
+        }
+        else
+        {
+          newFragments.Add(f);
+        }
+      }
+
+      fragmentsToAdd = newFragments;
+      newFragments = new();
+
+      return fragmentsToAdd;
+    }
   }
 }
