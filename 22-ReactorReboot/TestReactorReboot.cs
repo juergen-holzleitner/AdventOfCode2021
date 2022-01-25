@@ -25,15 +25,6 @@ namespace _22_ReactorReboot
     }
 
     [TestMethod]
-    public void ReactorHas_101_ElementsInEachDimension()
-    {
-      var reactor = new Reactor();
-      Assert.AreEqual(101, reactor.State.GetLength(0));
-      Assert.AreEqual(101, reactor.State.GetLength(1));
-      Assert.AreEqual(101, reactor.State.GetLength(2));
-    }
-
-    [TestMethod]
     public void Reactor_Supports_OnCubes()
     {
       var reactor = new Reactor();
@@ -48,14 +39,20 @@ namespace _22_ReactorReboot
       
       var input = InputReader.InterpretLine("on x=10..12,y=10..12,z=10..12");
       reactor.ProcessStep(input);
-      
+
+      var numCubesOn = reactor.GetNumCubesOn();
+      Assert.AreEqual(27, numCubesOn);
+
       input = InputReader.InterpretLine("on x=11..13,y=11..13,z=11..13");
       reactor.ProcessStep(input);
+
+      numCubesOn = reactor.GetNumCubesOn();
+      Assert.AreEqual(46, numCubesOn);
 
       input = InputReader.InterpretLine("off x=9..11,y=9..11,z=9..11");
       reactor.ProcessStep(input);
 
-      var numCubesOn = reactor.GetNumCubesOn();
+      numCubesOn = reactor.GetNumCubesOn();
       Assert.AreEqual(38, numCubesOn);
     }
 

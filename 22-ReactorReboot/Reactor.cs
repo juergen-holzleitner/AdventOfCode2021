@@ -13,15 +13,9 @@ namespace _22_ReactorReboot
     {
     }
 
-    public bool[,,] State { get; set; } = new bool[2 * limit + 1, 2 * limit + 1, 2 * limit + 1];
-
     internal long GetNumCubesOn()
     {
       long num = 0;
-      foreach (var i in State)
-        if (i)
-          ++num;
-
       foreach (var b in enabledCubes)
         num += GetBlockSize(b);
 
@@ -30,16 +24,10 @@ namespace _22_ReactorReboot
 
     internal void ProcessStep(InputReader.Input input)
     {
-      for (long x = input.Block.A.X; x <= input.Block.B.X; ++x)
-        for (long y = input.Block.A.Y; y <= input.Block.B.Y; ++y)
-          for (long z = input.Block.A.Z; z <= input.Block.B.Z; ++z)
-          {
-            var X = x + limit;
-            var Y = y + limit;
-            var Z = z + limit;
-            if (X < State.GetLength(0) && Y < State.GetLength(1) && Z < State.GetLength(2) && X >= 0 && Y >= 0 && Z >= 0)
-              State[X, Y, Z] = input.On;
-          }
+      if (input.On)
+        ProcessAddBlockOn(input.Block);
+      else
+        ProcessAddBlockOff(input.Block);
     }
 
     internal static IEnumerable<InputReader.Input> LimitInputs(IEnumerable<InputReader.Input> inputs)
@@ -68,7 +56,35 @@ namespace _22_ReactorReboot
 
     internal void ProcessAddBlockOn(InputReader.Block block)
     {
-      enabledCubes.Add(block);
+      var fragmentsToAdd = new List<InputReader.Block>()
+      {
+        block
+      };
+
+      foreach (var eb in enabledCubes)
+      {
+        var newFragments = new List<InputReader.Block>();
+        foreach (var f in fragmentsToAdd)
+        {
+          newFragments.AddRange(GetFragmentsToAdd(eb, f));
+        }
+
+        fragmentsToAdd = newFragments;
+      }
+      
+      enabledCubes.AddRange(fragmentsToAdd);
+    }
+
+    internal void ProcessAddBlockOff(InputReader.Block block)
+    {
+      var fragmentsToAdd = new List<InputReader.Block>();
+
+      foreach (var eb in enabledCubes)
+      {
+        fragmentsToAdd.AddRange(GetFragmentsToAdd(block, eb));
+      }
+
+      enabledCubes = fragmentsToAdd;
     }
 
     internal static long GetBlockSize(InputReader.Block block)
