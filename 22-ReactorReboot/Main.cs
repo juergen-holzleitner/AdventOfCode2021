@@ -3,8 +3,7 @@
 var reactor = new Reactor();
 
 var allInput = InputReader.GetAllInputs(@"input.txt");
-var limitedInput = Reactor.LimitInputs(allInput, 50);
-foreach (var input in limitedInput)
+foreach (var input in allInput)
 {
   reactor.ProcessStep(input);
 }
