@@ -5,8 +5,6 @@ namespace _22_ReactorReboot
 {
   internal class Reactor
   {
-    const int limit = 50;
-
     List<InputReader.Block> enabledCubes = new();
 
     public Reactor()
@@ -30,7 +28,7 @@ namespace _22_ReactorReboot
         ProcessAddBlockOff(input.Block);
     }
 
-    internal static IEnumerable<InputReader.Input> LimitInputs(IEnumerable<InputReader.Input> inputs)
+    internal static IEnumerable<InputReader.Input> LimitInputs(IEnumerable<InputReader.Input> inputs, int limit)
     {
       foreach (var input in inputs)
       {

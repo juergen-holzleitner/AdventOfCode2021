@@ -62,7 +62,7 @@ namespace _22_ReactorReboot
       var reactor = new Reactor();
 
       var allInput = InputReader.GetAllInputs(@"input-small.txt");
-      var limitedInput = Reactor.LimitInputs(allInput);
+      var limitedInput = Reactor.LimitInputs(allInput, 50);
       foreach (var input in limitedInput)
       {
         reactor.ProcessStep(input);
@@ -78,7 +78,7 @@ namespace _22_ReactorReboot
       var reactor = new Reactor();
 
       var allInput = InputReader.GetAllInputs(@"input.txt");
-      var limitedInput = Reactor.LimitInputs(allInput);
+      var limitedInput = Reactor.LimitInputs(allInput, 50);
       foreach (var input in limitedInput)
       {
         reactor.ProcessStep(input);
@@ -97,7 +97,7 @@ namespace _22_ReactorReboot
       var input4 = InputReader.InterpretLine("on x=-30..12,y=10..51,z=10..12");
       var inputList = new List<InputReader.Input>() { input, input2, input3, input4 };
 
-      var limitedInput = Reactor.LimitInputs(inputList);
+      var limitedInput = Reactor.LimitInputs(inputList, 50);
 
       var input4Limited = InputReader.InterpretLine("on x=-30..12,y=10..50,z=10..12");
       var expectedList = new List<InputReader.Input>() { input, input4Limited };
