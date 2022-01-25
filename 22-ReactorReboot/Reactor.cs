@@ -28,7 +28,7 @@ namespace _22_ReactorReboot
         ProcessAddBlockOff(input.Block);
     }
 
-    internal static IEnumerable<InputReader.Input> LimitInputs(IEnumerable<InputReader.Input> inputs, int limit)
+    internal static IEnumerable<InputReader.Input> LimitInputs(IEnumerable<InputReader.Input> inputs, long limit)
     {
       foreach (var input in inputs)
       {
@@ -162,7 +162,7 @@ namespace _22_ReactorReboot
       return fragmentsToAdd;
     }
 
-    private static List<InputReader.Block> SplitX(InputReader.Block existingBlock, List<InputReader.Block> fragmentsToAdd, int splitX)
+    private static List<InputReader.Block> SplitX(InputReader.Block existingBlock, List<InputReader.Block> fragmentsToAdd, long splitX)
     {
       List<InputReader.Block> newFragments = new();
       foreach (var f in fragmentsToAdd)
@@ -186,7 +186,7 @@ namespace _22_ReactorReboot
       return newFragments;
     }
 
-    private static List<InputReader.Block> SplitY(InputReader.Block existingBlock, List<InputReader.Block> fragmentsToAdd, int splitY)
+    private static List<InputReader.Block> SplitY(InputReader.Block existingBlock, List<InputReader.Block> fragmentsToAdd, long splitY)
     {
       List<InputReader.Block> newFragments = new();
       foreach (var f in fragmentsToAdd)
@@ -210,7 +210,7 @@ namespace _22_ReactorReboot
       return newFragments;
     }
 
-    private static List<InputReader.Block> SplitZ(InputReader.Block existingBlock, List<InputReader.Block> fragmentsToAdd, int splitZ)
+    private static List<InputReader.Block> SplitZ(InputReader.Block existingBlock, List<InputReader.Block> fragmentsToAdd, long splitZ)
     {
       List<InputReader.Block> newFragments = new();
       foreach (var f in fragmentsToAdd)

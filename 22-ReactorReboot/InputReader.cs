@@ -12,12 +12,12 @@ namespace _22_ReactorReboot
       var regex = new Regex(@"(?<on>on|off) x=(?<StartX>-?\d+)..(?<EndX>-?\d+),y=(?<StartY>-?\d+)..(?<EndY>-?\d+),z=(?<StartZ>-?\d+)..(?<EndZ>-?\d+)");
       var match = regex.Match(line);
       var on = match.Groups["on"].Value == "on";
-      var startX = int.Parse(match.Groups["StartX"].Value);
-      var startY = int.Parse(match.Groups["StartY"].Value);
-      var startZ = int.Parse(match.Groups["StartZ"].Value);
-      var endX = int.Parse(match.Groups["EndX"].Value);
-      var endY = int.Parse(match.Groups["EndY"].Value);
-      var endZ = int.Parse(match.Groups["EndZ"].Value);
+      var startX = long.Parse(match.Groups["StartX"].Value);
+      var startY = long.Parse(match.Groups["StartY"].Value);
+      var startZ = long.Parse(match.Groups["StartZ"].Value);
+      var endX = long.Parse(match.Groups["EndX"].Value);
+      var endY = long.Parse(match.Groups["EndY"].Value);
+      var endZ = long.Parse(match.Groups["EndZ"].Value);
 
       if (startX > endX)
         throw new ApplicationException("invalid input");
@@ -41,7 +41,7 @@ namespace _22_ReactorReboot
              select input;
     }
 
-    public readonly record struct Position(int X, int Y, int Z);
+    public readonly record struct Position(long X, long Y, long Z);
 
     public readonly record struct Block(Position A, Position B);
 

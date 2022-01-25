@@ -11,7 +11,7 @@ namespace _22_ReactorReboot
     [DataRow("on x=10..12,y=3..7,z=2..9", true, 10, 3, 2, 12, 7, 9)]
     [DataRow("off x=10..12,y=3..7,z=2..9", false, 10, 3, 2, 12, 7, 9)]
     [DataRow("on x=5..12,y=3..7,z=2..9", true, 5, 3, 2, 12, 7, 9)]
-    public void Read_Start_Works(string line, bool on, int expectedStartX, int expectedStartY, int expectedStartZ, int expectedEndX, int expectedEndY, int expectedEndZ)
+    public void Read_Start_Works(string line, bool on, long expectedStartX, long expectedStartY, long expectedStartZ, long expectedEndX, long expectedEndY, long expectedEndZ)
     {
       var input = InputReader.InterpretLine(line);
       Assert.AreEqual(input.On, on);
@@ -86,6 +86,37 @@ namespace _22_ReactorReboot
 
       var numCubesOn = reactor.GetNumCubesOn();
       Assert.AreEqual(596598, numCubesOn);
+    }
+
+    [TestMethod]
+    public void Reactor_IsCorrect_Part2SmallInputLimited()
+    {
+      var reactor = new Reactor();
+
+      var allInput = InputReader.GetAllInputs(@"input-small2.txt");
+      var limitedInput = Reactor.LimitInputs(allInput, 50);
+      foreach (var input in limitedInput)
+      {
+        reactor.ProcessStep(input);
+      }
+
+      var numCubesOn = reactor.GetNumCubesOn();
+      Assert.AreEqual(474140, numCubesOn);
+    }
+
+    [TestMethod]
+    public void Reactor_IsCorrect_Part2SmallInput()
+    {
+      var reactor = new Reactor();
+
+      var allInput = InputReader.GetAllInputs(@"input-small2.txt");
+      foreach (var input in allInput)
+      {
+        reactor.ProcessStep(input);
+      }
+
+      var numCubesOn = reactor.GetNumCubesOn();
+      Assert.AreEqual(2758514936282235, numCubesOn);
     }
 
     [TestMethod]
