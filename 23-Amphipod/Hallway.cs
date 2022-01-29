@@ -2,11 +2,16 @@
 {
   internal class Hallway
   {
-    public Hallway()
+    public Hallway(int numPositions)
     {
+      NumPositions = numPositions;
     }
 
-    public static int MinPosition { get => 0; }
-    public static int MaxPosition { get => 10; }
+    internal Hallway Clone()
+    {
+      return new Hallway(NumPositions);
+    }
+
+    public int NumPositions { get; internal set; }
   }
 }
