@@ -6,7 +6,7 @@
     {
     }
 
-    public int MinPosition { get => 0; }
-    public int MaxPosition { get => 10; }
+    public static int MinPosition { get => 0; }
+    public static int MaxPosition { get => 10; }
   }
 }
