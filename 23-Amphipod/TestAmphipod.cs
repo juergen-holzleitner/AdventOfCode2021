@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace _23_Amphipod
@@ -55,7 +56,7 @@ namespace _23_Amphipod
     {
       var hallway = new Hallway(3);
       var sideRoom = new SideRoom(1, 'A', new char?[] { 'A' });
-      var burrow = new Burrow(hallway, sideRoom);
+      var burrow = new Burrow(hallway, new List<SideRoom>() { sideRoom });
       Assert.IsTrue(burrow.IsFinal());
     }
 
@@ -64,7 +65,7 @@ namespace _23_Amphipod
     {
       var hallway = new Hallway(3);
       var sideRoom = new SideRoom(1, 'A', new char?[] { 'B' });
-      var burrow = new Burrow(hallway, sideRoom);
+      var burrow = new Burrow(hallway, new List<SideRoom>() { sideRoom });
       Assert.IsFalse(burrow.IsFinal());
     }
 
@@ -182,11 +183,11 @@ namespace _23_Amphipod
     {
       var hallway = new Hallway(2);
       var sideRoom = new SideRoom(1, 'A', new char?[] { 'B' });
-      var burrow = new Burrow(hallway, sideRoom);
+      var burrow = new Burrow(hallway, new List<SideRoom>() { sideRoom });
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
       Assert.AreEqual(1, nextBurrowConfigs.Count());
       var nextConfig = nextBurrowConfigs.First();
-      Assert.IsNull(nextConfig.SideRoom.GetAmphipodAt(0));
+      Assert.IsNull(nextConfig.SideRooms[0].GetAmphipodAt(0));
       Assert.AreEqual('B', nextConfig.Hallway.GetAmphipodAt(0));
       Assert.IsNull(nextConfig.Hallway.GetAmphipodAt(1));
     }
@@ -197,7 +198,7 @@ namespace _23_Amphipod
       var hallway = new Hallway(3);
       hallway.MoveIn(1, 'A');
       var sideRoom = new SideRoom(0, 'A', new char?[] { 'B' });
-      var burrow = new Burrow(hallway, sideRoom);
+      var burrow = new Burrow(hallway, new List<SideRoom>() { sideRoom });
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
       Assert.AreEqual(0, nextBurrowConfigs.Count());
     }
@@ -252,11 +253,11 @@ namespace _23_Amphipod
       var hallway = new Hallway(3);
       hallway.MoveIn(1, 'A');
       var sideRoom = new SideRoom(0, 'A', new char?[] { null });
-      var burrow = new Burrow(hallway, sideRoom);
+      var burrow = new Burrow(hallway, new List<SideRoom>() { sideRoom });
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
       var nextConfig = nextBurrowConfigs.Single();
       Assert.IsNull(nextConfig.Hallway.GetAmphipodAt(1));
-      Assert.AreEqual('A', nextConfig.SideRoom.GetAmphipodAt(0));
+      Assert.AreEqual('A', nextConfig.SideRooms[0].GetAmphipodAt(0));
     }
 
     [TestMethod]
@@ -266,7 +267,7 @@ namespace _23_Amphipod
       hallway.MoveIn(2, 'A');
       hallway.MoveIn(1, 'B');
       var sideRoom = new SideRoom(0, 'A', new char?[] { null });
-      var burrow = new Burrow(hallway, sideRoom);
+      var burrow = new Burrow(hallway, new List<SideRoom>() { sideRoom });
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
       Assert.AreEqual(0, nextBurrowConfigs.Count());
     }

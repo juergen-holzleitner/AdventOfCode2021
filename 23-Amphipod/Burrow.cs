@@ -1,48 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace _23_Amphipod
 {
   internal class Burrow
   {
-    private readonly SideRoom sideRoom;
+    private readonly List<SideRoom> sideRooms;
     private readonly Hallway hallway;
 
-    internal SideRoom SideRoom { get => sideRoom; }
+    internal List<SideRoom> SideRooms { get => sideRooms; }
 
-    public Burrow(Hallway hallway, SideRoom sideRoom)
+    public Burrow(Hallway hallway, List<SideRoom> sideRooms)
     {
-      this.sideRoom = sideRoom;
+      this.sideRooms = sideRooms;
       this.hallway = hallway;
     }
 
     internal bool IsFinal()
     {
-      return sideRoom.IsFinal();
+      return sideRooms.All(s => s.IsFinal());
     }
 
     internal Burrow Clone()
     {
-      return new Burrow(hallway.Clone(), sideRoom.Clone());
+      return new Burrow(hallway.Clone(), sideRooms.Select( s => s.Clone()).ToList());
     }
 
     internal Hallway Hallway { get => hallway; }
 
     internal IEnumerable<Burrow> GetAllFollowingConfigs()
     {
-      if (SideRoom.CanMoveOut())
+      for (int sideRoom = 0; sideRoom < SideRooms.Count; ++sideRoom)
       {
-        for (int n = 0; n < hallway.NumPositions; ++n)
+        if (SideRooms[sideRoom].CanMoveOut())
         {
-          if (!IsSideRoomEntrence(n))
+          for (int n = 0; n < hallway.NumPositions; ++n)
           {
-            if (hallway.CanMoveInFrom(SideRoom.HallwayPosition, n))
+            if (!IsSideRoomEntrence(n))
             {
-              var next = Clone();
-              var move = next.SideRoom.MoveOut();
-              next.Hallway.MoveIn(n, move);
+              if (hallway.CanMoveInFrom(SideRooms[sideRoom].HallwayPosition, n))
+              {
+                var next = Clone();
+                var move = next.SideRooms[sideRoom].MoveOut();
+                next.Hallway.MoveIn(n, move);
 
-              yield return next;
+                yield return next;
+              }
             }
           }
         }
@@ -52,14 +56,17 @@ namespace _23_Amphipod
       {
         if (hallway.GetAmphipodAt(n) is char amphipod)
         {
-          if (sideRoom.CanMoveIn(amphipod))
+          for (int sideRoom = 0; sideRoom < SideRooms.Count; ++sideRoom)
           {
-            if (hallway.CanMoveTo(n, sideRoom.HallwayPosition))
+            if (SideRooms[sideRoom].CanMoveIn(amphipod))
             {
-              var next = Clone();
-              next.Hallway.MoveOut(n);
-              next.SideRoom.MoveIn(amphipod);
-              yield return next;
+              if (hallway.CanMoveTo(n, SideRooms[sideRoom].HallwayPosition))
+              {
+                var next = Clone();
+                next.Hallway.MoveOut(n);
+                next.SideRooms[sideRoom].MoveIn(amphipod);
+                yield return next;
+              }
             }
           }
         }
@@ -68,7 +75,7 @@ namespace _23_Amphipod
 
     private bool IsSideRoomEntrence(int position)
     {
-      return sideRoom.HallwayPosition == position;
+      return SideRooms.Any(s => s.HallwayPosition == position);
     }
   }
 }
