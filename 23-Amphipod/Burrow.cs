@@ -47,6 +47,23 @@ namespace _23_Amphipod
           }
         }
       }
+
+      for (int n = 0; n < hallway.NumPositions; ++n)
+      {
+        if (hallway.GetAmphipodAt(n) is char amphipod)
+        {
+          if (sideRoom.CanMoveIn(amphipod))
+          {
+            if (hallway.CanMoveTo(n, sideRoom.HallwayPosition))
+            {
+              var next = Clone();
+              next.Hallway.MoveOut(n);
+              next.SideRoom.MoveIn(amphipod);
+              yield return next;
+            }
+          }
+        }
+      }
     }
 
     private bool IsSideRoomEntrence(int position)

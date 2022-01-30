@@ -245,5 +245,61 @@ namespace _23_Amphipod
       sideRoom.MoveIn('A');
       Assert.AreEqual('A', sideRoom.GetAmphipodAt(1));
     }
+
+    [TestMethod]
+    public void CanMoveIntoFreeSideRoom()
+    {
+      var hallway = new Hallway(3);
+      hallway.MoveIn(1, 'A');
+      var sideRoom = new SideRoom(0, 'A', new char?[] { null });
+      var burrow = new Burrow(hallway, sideRoom);
+      var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
+      var nextConfig = nextBurrowConfigs.Single();
+      Assert.IsNull(nextConfig.Hallway.GetAmphipodAt(1));
+      Assert.AreEqual('A', nextConfig.SideRoom.GetAmphipodAt(0));
+    }
+
+    [TestMethod]
+    public void CanNotMoveIntoFreeSideRoomIfWayIsBlocked()
+    {
+      var hallway = new Hallway(3);
+      hallway.MoveIn(2, 'A');
+      hallway.MoveIn(1, 'B');
+      var sideRoom = new SideRoom(0, 'A', new char?[] { null });
+      var burrow = new Burrow(hallway, sideRoom);
+      var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
+      Assert.AreEqual(0, nextBurrowConfigs.Count());
+    }
+
+    [TestMethod]
+    public void HallwayCanMoveOutIsFalseIfNone()
+    {
+      var hallway = new Hallway(1);
+      Assert.IsFalse(hallway.CanMoveOut(0));
+    }
+
+    [TestMethod]
+    public void HallwayCanMoveOutIsTrueIfAny()
+    {
+      var hallway = new Hallway(1);
+      hallway.MoveIn(0, 'A');
+      Assert.IsTrue(hallway.CanMoveOut(0));
+    }
+
+    [TestMethod]
+    public void HallwayThrowsIfCanNotMoveOut()
+    {
+      var hallway = new Hallway(1);
+      Assert.ThrowsException<InvalidOperationException>(() => hallway.MoveOut(0));
+    }
+
+    [TestMethod]
+    public void HallwayPositionIsNullAfterMoveOut()
+    {
+      var hallway = new Hallway(1);
+      hallway.MoveIn(0, 'A');
+      hallway.MoveOut(0);
+      Assert.IsNull(hallway.GetAmphipodAt(0));
+    }
   }
 }

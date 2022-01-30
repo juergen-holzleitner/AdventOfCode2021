@@ -43,13 +43,37 @@ namespace _23_Amphipod
 
     internal bool CanMoveInFrom(int startPosition, int finalPosition)
     {
+      return CanMove(startPosition, finalPosition, true);
+    }
+
+    private bool CanMove(int startPosition, int finalPosition, bool checkThatStartIsEmpty)
+    {
       int min = Math.Min(startPosition, finalPosition);
       int max = Math.Max(startPosition, finalPosition);
       for (int n = min; n <= max; n++)
-        if (!CanMoveIn(n))
-          return false;
+        if (checkThatStartIsEmpty || n != startPosition)
+          if (!CanMoveIn(n))
+            return false;
 
       return true;
+    }
+
+    internal bool CanMoveTo(int startPosition, int targetPosition)
+    {
+      return CanMove(startPosition, targetPosition, false);
+    }
+
+    internal bool CanMoveOut(int position)
+    {
+      return GetAmphipodAt(position) is not null;
+    }
+
+    internal void MoveOut(int position)
+    {
+      if (!CanMoveOut(position))
+        throw new InvalidOperationException("can not move out");
+
+      hallway[position] = null;
     }
   }
 }
