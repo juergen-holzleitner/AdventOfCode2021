@@ -54,5 +54,33 @@ namespace _23_Amphipod
     {
       return new SideRoom(HallwayPosition, TargetAmphipod, (char?[])amphipodsInTheRoom.Clone());
     }
+
+    internal bool CanMoveIn(char amphipod)
+    {
+      if (amphipod != TargetAmphipod)
+        return false;
+
+      if (amphipodsInTheRoom.Any(a => a is not null && a != TargetAmphipod))
+        return false;
+
+      return amphipodsInTheRoom.Any(a => a is null);
+    }
+
+    internal void MoveIn(char amphipod)
+    {
+      if (!CanMoveIn(amphipod))
+        throw new InvalidOperationException("Can not move into sideroom");
+
+      for (int n = amphipodsInTheRoom.Length - 1; n >= 0; --n)
+      {
+        if (amphipodsInTheRoom[n] is null)
+        {
+          amphipodsInTheRoom[n] = amphipod;
+          return;
+        }
+      }
+
+      throw new InvalidOperationException("Can not move into sideroom");
+    }
   }
 }

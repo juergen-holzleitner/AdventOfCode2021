@@ -201,5 +201,49 @@ namespace _23_Amphipod
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
       Assert.AreEqual(0, nextBurrowConfigs.Count());
     }
+
+    [TestMethod]
+    public void SidewayCanNotMoveInIfInvalidTarget()
+    {
+      var sideRoom = new SideRoom(0, 'A', new char?[] { null });
+      Assert.IsFalse(sideRoom.CanMoveIn('B'));
+    }
+
+    [TestMethod]
+    public void SidewayCanMoveInIfFree()
+    {
+      var sideRoom = new SideRoom(0, 'A', new char?[] { null });
+      Assert.IsTrue(sideRoom.CanMoveIn('A'));
+    }
+
+    [TestMethod]
+    public void SidewayCanNotMoveInIfOthersAreIn()
+    {
+      var sideRoom = new SideRoom(0, 'A', new char?[] { null, 'B' });
+      Assert.IsFalse(sideRoom.CanMoveIn('A'));
+    }
+
+    [TestMethod]
+    public void SidewayMoveInOccupiesPlace()
+    {
+      var sideRoom = new SideRoom(0, 'A', new char?[] { null });
+      sideRoom.MoveIn('A');
+      Assert.AreEqual('A', sideRoom.GetAmphipodAt(0));
+    }
+
+    [TestMethod]
+    public void SidewayMoveInThrowsIfNotPossible()
+    {
+      var sideRoom = new SideRoom(0, 'A', new char?[] { null });
+      Assert.ThrowsException<InvalidOperationException>(() => sideRoom.MoveIn('B'));
+    }
+
+    [TestMethod]
+    public void SidewayMoveInOccupiesTheLastPlace()
+    {
+      var sideRoom = new SideRoom(0, 'A', new char?[] { null, null, 'A' });
+      sideRoom.MoveIn('A');
+      Assert.AreEqual('A', sideRoom.GetAmphipodAt(1));
+    }
   }
 }
