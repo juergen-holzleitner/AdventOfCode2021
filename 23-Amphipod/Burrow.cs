@@ -96,20 +96,16 @@ namespace _23_Amphipod
       }
     }
 
-    private long GetMoveCosts(int steps, char amphipod)
+    private static long GetMoveCosts(int steps, char amphipod)
     {
-      switch (amphipod)
+      return amphipod switch
       {
-        case 'A':
-          return steps;
-        case 'B':
-          return 10 * steps;
-        case 'C':
-          return 100 * steps;
-        case 'D':
-          return 1000 * steps;
-      }
-      throw new ArgumentException($"{nameof(steps)} has invalid value");
+        'A' => steps,
+        'B' => 10 * steps,
+        'C' => 100 * steps,
+        'D' => 1000 * steps,
+        _ => throw new ArgumentException($"{nameof(steps)} has invalid value"),
+      };
     }
 
     private bool IsSideRoomEntrence(int position)

@@ -350,5 +350,13 @@ namespace _23_Amphipod
                         select b).Single();
       Assert.AreEqual(400, cost);
     }
+
+    [TestMethod]
+    public void Sample()
+    {
+      var startBurrow = BurrowProcessor.GetSampleStartPosition();
+      var totalCost = BurrowProcessor.GetFinalBurrow(startBurrow);
+      Assert.AreEqual(12521, totalCost);
+    }
   }
 }

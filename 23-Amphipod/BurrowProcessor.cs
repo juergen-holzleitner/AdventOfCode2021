@@ -18,25 +18,21 @@ namespace _23_Amphipod
       return new Burrow(hallway, new List<SideRoom>() { sideRoomA, sideRoomB, sideRoomC, sideRoomD });
     }
 
-    internal static void GetFinalBurrow(Burrow startBurrow)
+    internal static long GetFinalBurrow(Burrow startBurrow)
     {
-      var current = new List<Burrow>() { startBurrow };
-
+      var burrows = new PriorityQueue<(Burrow, long), long>();
+      burrows.Enqueue((startBurrow, 0), 0);
       for (; ; )
       {
-        List<Burrow> next = new();
-        
-        foreach (var burrow in current)
-        {
-          if (burrow.IsFinal())
-            return;
-          foreach (var (nextBurrow, cost) in burrow.GetAllFollowingConfigs())
-          {
-            next.Add(nextBurrow);
-          }
-        }
+        var burrow = burrows.Dequeue();
+        if (burrow.Item1.IsFinal())
+          return burrow.Item2;
 
-        current = next;
+        foreach (var (nextBurrow, cost) in burrow.Item1.GetAllFollowingConfigs())
+        {
+          var totalCost = burrow.Item2 + cost;
+          burrows.Enqueue((nextBurrow, totalCost), totalCost);
+        }
       }
     }
   }
