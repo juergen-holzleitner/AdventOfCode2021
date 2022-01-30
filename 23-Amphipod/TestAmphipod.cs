@@ -320,5 +320,29 @@ namespace _23_Amphipod
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
       Assert.AreEqual(1, nextBurrowConfigs.Count());
     }
+
+    [TestMethod]
+    public void FirstPositionAfterInitialConfigIsFound()
+    {
+      var startBurrow = BurrowProcessor.GetSampleStartPosition();
+      var next = startBurrow.GetAllFollowingConfigs();
+      var sampleStep = (from b in next
+                       where b.Hallway.GetAmphipodAt(3) == 'B' && b.SideRooms[2].GetAmphipodAt(0) is null
+                       select b).Single();
+
+      next = sampleStep.GetAllFollowingConfigs();
+      sampleStep = (from b in next
+                        where b.Hallway.GetAmphipodAt(3) == 'B' 
+                        && b.SideRooms[2].GetAmphipodAt(0)=='C'
+                        && b.SideRooms[1].GetAmphipodAt(0) is null
+                        select b).Single();
+
+      next = sampleStep.GetAllFollowingConfigs();
+      sampleStep = (from b in next
+                    where b.Hallway.GetAmphipodAt(5) == 'D'
+                    && b.SideRooms[2].GetAmphipodAt(0) == 'C'
+                    && b.SideRooms[1].GetAmphipodAt(0) is null
+                    select b).Single();
+    }
   }
 }
