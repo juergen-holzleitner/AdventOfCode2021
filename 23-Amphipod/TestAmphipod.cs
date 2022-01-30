@@ -170,16 +170,41 @@ namespace _23_Amphipod
     }
 
     [TestMethod]
+    public void HallwayCanNotMoveInIfWayIsOccupied()
+    {
+      var hallway = new Hallway(3);
+      hallway.MoveIn(1, 'A');
+      Assert.IsFalse(hallway.CanMoveInFrom(0, 2));
+    }
+
+    [TestMethod]
     public void CanGetPossibleNextBurrowConfigurations()
     {
       var hallway = new Hallway(3);
       var sideRoom = new SideRoom(1, 'A', new char?[] { 'B' });
       var burrow = new Burrow(hallway, sideRoom);
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
+      Assert.AreEqual(2, nextBurrowConfigs.Count());
       foreach (var n in nextBurrowConfigs)
         Assert.IsNull(n.SideRoom.GetAmphipodAt(0));
       var left = nextBurrowConfigs.First();
       Assert.AreEqual('B', left.Hallway.GetAmphipodAt(0));
+
+      var amphipodsAtHallwayEntrence = from n in nextBurrowConfigs
+                                       where n.Hallway.GetAmphipodAt(sideRoom.HallwayPosition) is not null
+                                       select n;
+      Assert.AreEqual(0, amphipodsAtHallwayEntrence.Count());
+    }
+
+    [TestMethod]
+    public void CanNotMoveOverOtherAmphipods()
+    {
+      var hallway = new Hallway(3);
+      hallway.MoveIn(1, 'A');
+      var sideRoom = new SideRoom(0, 'A', new char?[] { 'B' });
+      var burrow = new Burrow(hallway, sideRoom);
+      var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
+      Assert.AreEqual(0, nextBurrowConfigs.Count());
     }
   }
 }

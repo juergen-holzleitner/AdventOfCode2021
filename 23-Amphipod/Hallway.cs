@@ -40,5 +40,16 @@ namespace _23_Amphipod
     {
       return hallway[position] is null;
     }
+
+    internal bool CanMoveInFrom(int startPosition, int finalPosition)
+    {
+      int min = Math.Min(startPosition, finalPosition);
+      int max = Math.Max(startPosition, finalPosition);
+      for (int n = min; n <= max; n++)
+        if (!CanMoveIn(n))
+          return false;
+
+      return true;
+    }
   }
 }

@@ -34,16 +34,24 @@ namespace _23_Amphipod
       {
         for (int n = 0; n < hallway.NumPositions; ++n)
         {
-          if (hallway.CanMoveIn(n))
+          if (!IsSideRoomEntrence(n))
           {
-            var next = Clone();
-            var move = next.SideRoom.MoveOut();
-            next.Hallway.MoveIn(n, move);
+            if (hallway.CanMoveInFrom(SideRoom.HallwayPosition, n))
+            {
+              var next = Clone();
+              var move = next.SideRoom.MoveOut();
+              next.Hallway.MoveIn(n, move);
 
-            yield return next;
+              yield return next;
+            }
           }
         }
       }
+    }
+
+    private bool IsSideRoomEntrence(int position)
+    {
+      return sideRoom.HallwayPosition == position;
     }
   }
 }
