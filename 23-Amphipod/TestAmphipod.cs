@@ -123,6 +123,53 @@ namespace _23_Amphipod
     }
 
     [TestMethod]
+    public void HallwayIsInitiallyEmpty()
+    {
+      var hallway = new Hallway(1);
+      Assert.IsNull(hallway.GetAmphipodAt(0));
+    }
+
+    [TestMethod]
+    public void HallwayCanMoveIn()
+    {
+      var hallway = new Hallway(1);
+      hallway.MoveIn(0, 'A');
+      Assert.AreEqual('A', hallway.GetAmphipodAt(0));
+    }
+
+    [TestMethod]
+    public void HallwayThrowsIfPositionIsOccupied()
+    {
+      var hallway = new Hallway(1);
+      hallway.MoveIn(0, 'A');
+      Assert.ThrowsException<InvalidOperationException>(() => hallway.MoveIn(0, 'A'));
+    }
+
+    [TestMethod]
+    public void HallwayCanBeCloned()
+    {
+      var hallway = new Hallway(1);
+      hallway.MoveIn(0, 'A');
+      var hallway2 = hallway.Clone();
+      Assert.AreEqual('A', hallway2.GetAmphipodAt(0));
+    }
+
+    [TestMethod]
+    public void HallwayCanMoveInIfEmpty()
+    {
+      var hallway = new Hallway(1);
+      Assert.IsTrue(hallway.CanMoveIn(0));
+    }
+
+    [TestMethod]
+    public void HallwayCanNotMoveInIfOccupied()
+    {
+      var hallway = new Hallway(1);
+      hallway.MoveIn(0, 'A');
+      Assert.IsFalse(hallway.CanMoveIn(0));
+    }
+
+    [TestMethod]
     public void CanGetPossibleNextBurrowConfigurations()
     {
       var hallway = new Hallway(3);
@@ -131,6 +178,8 @@ namespace _23_Amphipod
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
       foreach (var n in nextBurrowConfigs)
         Assert.IsNull(n.SideRoom.GetAmphipodAt(0));
+      var left = nextBurrowConfigs.First();
+      Assert.AreEqual('B', left.Hallway.GetAmphipodAt(0));
     }
   }
 }

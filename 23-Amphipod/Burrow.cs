@@ -26,14 +26,23 @@ namespace _23_Amphipod
       return new Burrow(hallway.Clone(), sideRoom.Clone());
     }
 
+    internal Hallway Hallway { get => hallway; }
+
     internal IEnumerable<Burrow> GetAllFollowingConfigs()
     {
       if (SideRoom.CanMoveOut())
       {
-        var next = Clone();
-        _ = next.SideRoom.MoveOut();
+        for (int n = 0; n < hallway.NumPositions; ++n)
+        {
+          if (hallway.CanMoveIn(n))
+          {
+            var next = Clone();
+            var move = next.SideRoom.MoveOut();
+            next.Hallway.MoveIn(n, move);
 
-        yield return next;
+            yield return next;
+          }
+        }
       }
     }
   }
