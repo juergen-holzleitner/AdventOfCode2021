@@ -47,7 +47,7 @@ namespace _23_Amphipod
       throw new InvalidOperationException("Unreachable state reached!");
     }
 
-    internal void MoveOut()
+    internal int MoveOut()
     {
       if (!CanMoveOut())
         throw new InvalidOperationException("Nothing to move out from the side room");
@@ -56,7 +56,7 @@ namespace _23_Amphipod
         if (amphipodsInTheRoom[i] is not null)
         {
           amphipodsInTheRoom[i] = null;
-          return;
+          return i + 1;
         }
       
       throw new InvalidOperationException("Unreachable state reached!");
@@ -78,7 +78,7 @@ namespace _23_Amphipod
       return amphipodsInTheRoom.Any(a => a is null);
     }
 
-    internal void MoveIn(char amphipod)
+    internal int MoveIn(char amphipod)
     {
       if (!CanMoveIn(amphipod))
         throw new InvalidOperationException("Can not move into sideroom");
@@ -88,7 +88,7 @@ namespace _23_Amphipod
         if (amphipodsInTheRoom[n] is null)
         {
           amphipodsInTheRoom[n] = amphipod;
-          return;
+          return n + 1;
         }
       }
 

@@ -29,7 +29,7 @@ namespace _23_Amphipod
 
     internal Hallway Hallway { get => hallway; }
 
-    internal IEnumerable<Burrow> GetAllFollowingConfigs()
+    internal IEnumerable<(Burrow, long)> GetAllFollowingConfigs()
     {
       for (int sideRoom = 0; sideRoom < SideRooms.Count; ++sideRoom)
       {
@@ -43,10 +43,11 @@ namespace _23_Amphipod
               {
                 var next = Clone();
                 var amphipod = SideRooms[sideRoom].GetMoveOutAmphipod();
-                next.SideRooms[sideRoom].MoveOut();
+                int steps = next.SideRooms[sideRoom].MoveOut();
+                steps += Math.Abs(n - next.SideRooms[sideRoom].HallwayPosition);
                 next.Hallway.MoveIn(n, amphipod);
 
-                yield return next;
+                yield return (next, GetMoveCosts(steps, amphipod));
               }
             }
           }
@@ -61,10 +62,11 @@ namespace _23_Amphipod
                 if (hallway.CanMoveTo(SideRooms[sideRoom].HallwayPosition, SideRooms[otherSideRoom].HallwayPosition))
                 {
                   var next = Clone();
-                  next.SideRooms[sideRoom].MoveOut();
-                  next.SideRooms[otherSideRoom].MoveIn(amphipod);
+                  int steps = next.SideRooms[sideRoom].MoveOut();
+                  steps += Math.Abs(next.SideRooms[sideRoom].HallwayPosition - next.SideRooms[otherSideRoom].HallwayPosition);
+                  steps += next.SideRooms[otherSideRoom].MoveIn(amphipod);
 
-                  yield return next;
+                  yield return (next, GetMoveCosts(steps, amphipod));
                 }
               }
             }
@@ -84,13 +86,30 @@ namespace _23_Amphipod
               {
                 var next = Clone();
                 next.Hallway.MoveOut(n);
-                next.SideRooms[sideRoom].MoveIn(amphipod);
-                yield return next;
+                int steps = Math.Abs(n - next.SideRooms[sideRoom].HallwayPosition);
+                steps += next.SideRooms[sideRoom].MoveIn(amphipod);
+                yield return (next, GetMoveCosts(steps, amphipod));
               }
             }
           }
         }
       }
+    }
+
+    private long GetMoveCosts(int steps, char amphipod)
+    {
+      switch (amphipod)
+      {
+        case 'A':
+          return steps;
+        case 'B':
+          return 10 * steps;
+        case 'C':
+          return 100 * steps;
+        case 'D':
+          return 1000 * steps;
+      }
+      throw new ArgumentException($"{nameof(steps)} has invalid value");
     }
 
     private bool IsSideRoomEntrence(int position)

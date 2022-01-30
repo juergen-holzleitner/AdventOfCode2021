@@ -193,7 +193,7 @@ namespace _23_Amphipod
       var burrow = new Burrow(hallway, new List<SideRoom>() { sideRoom });
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
       Assert.AreEqual(1, nextBurrowConfigs.Count());
-      var nextConfig = nextBurrowConfigs.First();
+      var (nextConfig, _) = nextBurrowConfigs.First();
       Assert.IsNull(nextConfig.SideRooms[0].GetAmphipodAt(0));
       Assert.AreEqual('B', nextConfig.Hallway.GetAmphipodAt(0));
       Assert.IsNull(nextConfig.Hallway.GetAmphipodAt(1));
@@ -262,7 +262,7 @@ namespace _23_Amphipod
       var sideRoom = new SideRoom(0, 'A', new char?[] { null });
       var burrow = new Burrow(hallway, new List<SideRoom>() { sideRoom });
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
-      var nextConfig = nextBurrowConfigs.Single();
+      var (nextConfig, _) = nextBurrowConfigs.Single();
       Assert.IsNull(nextConfig.Hallway.GetAmphipodAt(1));
       Assert.AreEqual('A', nextConfig.SideRooms[0].GetAmphipodAt(0));
     }
@@ -322,27 +322,33 @@ namespace _23_Amphipod
     }
 
     [TestMethod]
+    public void CostOfMoveOutIsCorrect()
+    {
+      var hallway = new Hallway(2);
+      var sideRoom = new SideRoom(0, 'A', new char?[] { 'B' });
+      var burrow = new Burrow(hallway, new List<SideRoom> { sideRoom });
+      var (_, cost) = burrow.GetAllFollowingConfigs().Single();
+      Assert.AreEqual(20, cost);
+    }
+
+    [TestMethod]
     public void FirstPositionAfterInitialConfigIsFound()
     {
       var startBurrow = BurrowProcessor.GetSampleStartPosition();
       var next = startBurrow.GetAllFollowingConfigs();
-      var sampleStep = (from b in next
-                       where b.Hallway.GetAmphipodAt(3) == 'B' && b.SideRooms[2].GetAmphipodAt(0) is null
+      var (sampleStep, cost) = (from b in next
+                       where b.Item1.Hallway.GetAmphipodAt(3) == 'B' 
+                       && b.Item1.SideRooms[2].GetAmphipodAt(0) is null
                        select b).Single();
+      Assert.AreEqual(40, cost);
 
       next = sampleStep.GetAllFollowingConfigs();
-      sampleStep = (from b in next
-                        where b.Hallway.GetAmphipodAt(3) == 'B' 
-                        && b.SideRooms[2].GetAmphipodAt(0)=='C'
-                        && b.SideRooms[1].GetAmphipodAt(0) is null
+      (sampleStep, cost) = (from b in next
+                        where b.Item1.Hallway.GetAmphipodAt(3) == 'B' 
+                        && b.Item1.SideRooms[2].GetAmphipodAt(0)=='C'
+                        && b.Item1.SideRooms[1].GetAmphipodAt(0) is null
                         select b).Single();
-
-      next = sampleStep.GetAllFollowingConfigs();
-      sampleStep = (from b in next
-                    where b.Hallway.GetAmphipodAt(5) == 'D'
-                    && b.SideRooms[2].GetAmphipodAt(0) == 'C'
-                    && b.SideRooms[1].GetAmphipodAt(0) is null
-                    select b).Single();
+      Assert.AreEqual(400, cost);
     }
   }
 }

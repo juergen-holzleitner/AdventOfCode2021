@@ -30,7 +30,7 @@ namespace _23_Amphipod
         {
           if (burrow.IsFinal())
             return;
-          foreach (var nextBurrow in burrow.GetAllFollowingConfigs())
+          foreach (var (nextBurrow, cost) in burrow.GetAllFollowingConfigs())
           {
             next.Add(nextBurrow);
           }
