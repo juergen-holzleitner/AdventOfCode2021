@@ -49,6 +49,25 @@ namespace _23_Amphipod
               }
             }
           }
+
+          for (int otherSideRoom = 0; otherSideRoom < SideRooms.Count; ++otherSideRoom)
+          {
+            if (otherSideRoom != sideRoom)
+            {
+              var amphipod = SideRooms[sideRoom].GetMoveOutAmphipod();
+              if (SideRooms[otherSideRoom].CanMoveIn(amphipod))
+              {
+                if (hallway.CanMoveTo(SideRooms[sideRoom].HallwayPosition, SideRooms[otherSideRoom].HallwayPosition))
+                {
+                  var next = Clone();
+                  next.SideRooms[sideRoom].MoveOut();
+                  next.SideRooms[otherSideRoom].MoveIn(amphipod);
+
+                  yield return next;
+                }
+              }
+            }
+          }
         }
       }
 

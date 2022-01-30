@@ -35,6 +35,18 @@ namespace _23_Amphipod
       return amphipodsInTheRoom.Any(a => a != null);
     }
 
+    internal char GetMoveOutAmphipod()
+    {
+      if (!CanMoveOut())
+        throw new InvalidOperationException("Can not move out");
+      for (int i = 0; i < amphipodsInTheRoom.Length; ++i)
+        if (amphipodsInTheRoom[i] is char amphipod)
+        {
+          return amphipod;
+        }
+      throw new InvalidOperationException("Unreachable state reached!");
+    }
+
     internal char MoveOut()
     {
       if (!CanMoveOut())

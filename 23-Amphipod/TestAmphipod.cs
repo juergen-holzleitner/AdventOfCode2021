@@ -79,6 +79,14 @@ namespace _23_Amphipod
     }
 
     [TestMethod]
+    public void SideRoomCanGetMoveOutAmphipod()
+    {
+      var sideRoom = new SideRoom(0, 'A', new char?[] { 'B' });
+      var amphipod = sideRoom.GetMoveOutAmphipod();
+      Assert.AreEqual('B', amphipod);
+    }
+
+    [TestMethod]
     public void SideRoomHasCanMoveOut()
     {
       var sideRoom = new SideRoom(1, 'A', new char?[] { 'B' });
@@ -301,6 +309,17 @@ namespace _23_Amphipod
       hallway.MoveIn(0, 'A');
       hallway.MoveOut(0);
       Assert.IsNull(hallway.GetAmphipodAt(0));
+    }
+
+    [TestMethod]
+    public void CanMoveDirectlyIntoTargetSideRoom()
+    {
+      var hallway = new Hallway(2);
+      var sideRoomA = new SideRoom(0, 'A', new char?[] { 'B' });
+      var sideRoomB = new SideRoom(1, 'B', new char?[] { null });
+      var burrow = new Burrow(hallway, new List<SideRoom>() { sideRoomA, sideRoomB });
+      var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
+      Assert.AreEqual(1, nextBurrowConfigs.Count());
     }
   }
 }
