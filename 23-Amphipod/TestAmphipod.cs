@@ -180,20 +180,15 @@ namespace _23_Amphipod
     [TestMethod]
     public void CanGetPossibleNextBurrowConfigurations()
     {
-      var hallway = new Hallway(3);
+      var hallway = new Hallway(2);
       var sideRoom = new SideRoom(1, 'A', new char?[] { 'B' });
       var burrow = new Burrow(hallway, sideRoom);
       var nextBurrowConfigs = burrow.GetAllFollowingConfigs();
-      Assert.AreEqual(2, nextBurrowConfigs.Count());
-      foreach (var n in nextBurrowConfigs)
-        Assert.IsNull(n.SideRoom.GetAmphipodAt(0));
-      var left = nextBurrowConfigs.First();
-      Assert.AreEqual('B', left.Hallway.GetAmphipodAt(0));
-
-      var amphipodsAtHallwayEntrence = from n in nextBurrowConfigs
-                                       where n.Hallway.GetAmphipodAt(sideRoom.HallwayPosition) is not null
-                                       select n;
-      Assert.AreEqual(0, amphipodsAtHallwayEntrence.Count());
+      Assert.AreEqual(1, nextBurrowConfigs.Count());
+      var nextConfig = nextBurrowConfigs.First();
+      Assert.IsNull(nextConfig.SideRoom.GetAmphipodAt(0));
+      Assert.AreEqual('B', nextConfig.Hallway.GetAmphipodAt(0));
+      Assert.IsNull(nextConfig.Hallway.GetAmphipodAt(1));
     }
 
     [TestMethod]
