@@ -42,8 +42,9 @@ namespace _23_Amphipod
               if (hallway.CanMoveInFrom(SideRooms[sideRoom].HallwayPosition, n))
               {
                 var next = Clone();
-                var move = next.SideRooms[sideRoom].MoveOut();
-                next.Hallway.MoveIn(n, move);
+                var amphipod = SideRooms[sideRoom].GetMoveOutAmphipod();
+                next.SideRooms[sideRoom].MoveOut();
+                next.Hallway.MoveIn(n, amphipod);
 
                 yield return next;
               }

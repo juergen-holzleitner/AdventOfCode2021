@@ -73,8 +73,7 @@ namespace _23_Amphipod
     public void SideRoomCanMoveOut()
     {
       var sideRoom = new SideRoom(1, 'A', new char?[] { 'B' });
-      var moveOut = sideRoom.MoveOut();
-      Assert.IsNotNull(moveOut);
+      sideRoom.MoveOut();
       Assert.IsNull(sideRoom.GetAmphipodAt(0));
     }
 
@@ -118,7 +117,7 @@ namespace _23_Amphipod
     public void CanNotMoveOutTwice()
     {
       var sideRoom = new SideRoom(1, 'A', new char?[] { 'B' });
-      _ = sideRoom.MoveOut();
+      sideRoom.MoveOut();
       Assert.IsFalse(sideRoom.CanMoveOut());
     }
 

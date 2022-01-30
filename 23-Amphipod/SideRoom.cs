@@ -47,16 +47,16 @@ namespace _23_Amphipod
       throw new InvalidOperationException("Unreachable state reached!");
     }
 
-    internal char MoveOut()
+    internal void MoveOut()
     {
       if (!CanMoveOut())
         throw new InvalidOperationException("Nothing to move out from the side room");
 
       for (int i = 0; i < amphipodsInTheRoom.Length; ++i)
-        if (amphipodsInTheRoom[i] is char amphipod)
+        if (amphipodsInTheRoom[i] is not null)
         {
           amphipodsInTheRoom[i] = null;
-          return amphipod;
+          return;
         }
       
       throw new InvalidOperationException("Unreachable state reached!");
