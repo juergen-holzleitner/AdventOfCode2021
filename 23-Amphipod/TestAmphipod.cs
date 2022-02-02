@@ -368,12 +368,19 @@ namespace _23_Amphipod
     }
 
     [TestMethod]
-    [Ignore]
     public void RealData()
     {
       var startBurrow = BurrowProcessor.GetRealStartPosition();
       var totalCost = BurrowProcessor.GetFinalBurrow(startBurrow);
       Assert.AreEqual(12530, totalCost);
+    }
+
+    [TestMethod]
+    public void Real2Data()
+    {
+      var startBurrow = BurrowProcessor.GetReal2StartPosition();
+      var totalCost = BurrowProcessor.GetFinalBurrow(startBurrow);
+      Assert.AreEqual(50492, totalCost);
     }
   }
 }
