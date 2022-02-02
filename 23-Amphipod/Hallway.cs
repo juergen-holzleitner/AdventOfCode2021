@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace _23_Amphipod
 {
@@ -74,6 +75,30 @@ namespace _23_Amphipod
         throw new InvalidOperationException("can not move out");
 
       hallway[position] = null;
+    }
+
+    public override bool Equals(object? obj)
+    {
+      if ((obj == null) || !GetType().Equals(obj.GetType()))
+      {
+        return false;
+      }
+      else
+      {
+        var other = (Hallway)obj;
+        return hallway.SequenceEqual(other.hallway);
+      }
+    }
+
+    public override int GetHashCode()
+    {
+      int hash = 0;
+      foreach (var x in hallway)
+      {
+        hash *= 5;
+        hash += (x ?? 64) - 64;
+      }
+      return hash;
     }
   }
 }

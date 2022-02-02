@@ -20,6 +20,8 @@ namespace _23_Amphipod
 
     internal static long GetFinalBurrow(Burrow startBurrow)
     {
+      var minReachableBurrowConfigurations = new Dictionary<Burrow, long>(new BurrowComparer());
+
       var burrows = new PriorityQueue<(Burrow, long), long>();
       burrows.Enqueue((startBurrow, 0), 0);
       for (; ; )
@@ -31,7 +33,17 @@ namespace _23_Amphipod
         foreach (var (nextBurrow, cost) in burrow.Item1.GetAllFollowingConfigs())
         {
           var totalCost = burrow.Item2 + cost;
-          burrows.Enqueue((nextBurrow, totalCost), totalCost);
+
+          if (!minReachableBurrowConfigurations.ContainsKey(nextBurrow))
+          {
+            burrows.Enqueue((nextBurrow, totalCost), totalCost);
+            minReachableBurrowConfigurations.Add(nextBurrow, totalCost);
+          }
+          else if (minReachableBurrowConfigurations[nextBurrow] > totalCost)
+          {
+            burrows.Enqueue((nextBurrow, totalCost), totalCost);
+            minReachableBurrowConfigurations[nextBurrow] = totalCost;
+          }
         }
       }
     }

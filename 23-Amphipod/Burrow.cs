@@ -113,4 +113,32 @@ namespace _23_Amphipod
       return SideRooms.Any(s => s.HallwayPosition == position);
     }
   }
+
+  internal class BurrowComparer : EqualityComparer<Burrow>
+  {
+    public override bool Equals(Burrow? x, Burrow? y)
+    {
+      if (x == null && y == null)
+        return true;
+
+      if (x == null || y == null)
+        return false;
+
+      if (!x.Hallway.Equals(y.Hallway))
+        return false;
+
+      if (!x.SideRooms.SequenceEqual(y.SideRooms))
+        return false;
+
+      return true;
+    }
+
+    public override int GetHashCode(Burrow burrow)
+    {
+      var hash = burrow.GetHashCode();
+      foreach (var s in burrow.SideRooms)
+        hash ^= s.GetHashCode();
+      return hash;
+    }
+  }
 }

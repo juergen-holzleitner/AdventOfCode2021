@@ -94,5 +94,29 @@ namespace _23_Amphipod
 
       throw new InvalidOperationException("Can not move into sideroom");
     }
+
+    public override bool Equals(object? obj)
+    {
+      if ((obj == null) || !GetType().Equals(obj.GetType()))
+      {
+        return false;
+      }
+      else
+      {
+        var other = (SideRoom)obj;
+        return amphipodsInTheRoom.SequenceEqual(other.amphipodsInTheRoom);
+      }
+    }
+
+    public override int GetHashCode()
+    {
+      int hash = 0;
+      foreach (var x in amphipodsInTheRoom)
+      {
+        hash *= 5;
+        hash += (x ?? 64) - 64;
+      }
+      return hash;
+    }
   }
 }
