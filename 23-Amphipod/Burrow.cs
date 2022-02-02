@@ -135,7 +135,7 @@ namespace _23_Amphipod
 
     public override int GetHashCode(Burrow burrow)
     {
-      var hash = burrow.GetHashCode();
+      var hash = burrow.Hallway.GetHashCode();
       foreach (var s in burrow.SideRooms)
         hash ^= s.GetHashCode();
       return hash;
