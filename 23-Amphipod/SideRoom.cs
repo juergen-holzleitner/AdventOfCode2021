@@ -32,7 +32,13 @@ namespace _23_Amphipod
       if (IsFinal())
         return false;
 
-      return amphipodsInTheRoom.Any(a => a != null);
+      for (int n = amphipodsInTheRoom.Length - 1; n >= 0; n--)
+      {
+        if (amphipodsInTheRoom[n] != null && amphipodsInTheRoom[n] != TargetAmphipod)
+            return true;
+      }
+
+      return false;
     }
 
     internal char GetMoveOutAmphipod()
