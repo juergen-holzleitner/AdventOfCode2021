@@ -17,6 +17,15 @@ namespace _23_Amphipod
       var sideRoomD = new SideRoom(8, 'D', new char?[] { 'D', 'A' });
       return new Burrow(hallway, new List<SideRoom>() { sideRoomA, sideRoomB, sideRoomC, sideRoomD });
     }
+    static internal Burrow GetSample2StartPosition()
+    {
+      var hallway = new Hallway(11);
+      var sideRoomA = new SideRoom(2, 'A', new char?[] { 'B', 'D', 'D', 'A' });
+      var sideRoomB = new SideRoom(4, 'B', new char?[] { 'C', 'C', 'B', 'D' });
+      var sideRoomC = new SideRoom(6, 'C', new char?[] { 'B', 'B', 'A', 'C' });
+      var sideRoomD = new SideRoom(8, 'D', new char?[] { 'D', 'A', 'C', 'A' });
+      return new Burrow(hallway, new List<SideRoom>() { sideRoomA, sideRoomB, sideRoomC, sideRoomD });
+    }
 
     static internal Burrow GetRealStartPosition()
     {

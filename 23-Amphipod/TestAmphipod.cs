@@ -360,6 +360,14 @@ namespace _23_Amphipod
     }
 
     [TestMethod]
+    public void Sample2Data()
+    {
+      var startBurrow = BurrowProcessor.GetSample2StartPosition();
+      var totalCost = BurrowProcessor.GetFinalBurrow(startBurrow);
+      Assert.AreEqual(44169, totalCost);
+    }
+
+    [TestMethod]
     [Ignore]
     public void RealData()
     {
