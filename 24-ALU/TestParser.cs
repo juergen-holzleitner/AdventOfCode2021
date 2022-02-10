@@ -1,13 +1,12 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace _24_ALU
 {
-  [TestClass]
   public class TestParser
   {
-    [TestMethod]
-    [DataRow("inp a", Parser.Operation.inp)]
-    [DataRow("add a b", Parser.Operation.add)]
+    [Theory]
+    [InlineData("inp a", Parser.Operation.inp)]
+    [InlineData("add a b", Parser.Operation.add)]
     public void Can_read_instruction(string code, Parser.Operation operation)
     {
       var sut = new Parser();
