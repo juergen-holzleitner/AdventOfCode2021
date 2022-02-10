@@ -2,9 +2,9 @@
 
 namespace _24_ALU
 {
-  internal class Parser
+  public class Parser
   {
-    public enum Operation { inp };
+    public enum Operation { inp, add };
 
     public Parser()
     {

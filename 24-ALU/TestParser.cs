@@ -6,14 +6,15 @@ namespace _24_ALU
   public class TestParser
   {
     [TestMethod]
-    public void Can_read_inp_instruction()
+    [DataRow("inp a", Parser.Operation.inp)]
+    [DataRow("add a b", Parser.Operation.add)]
+    public void Can_read_instruction(string code, Parser.Operation operation)
     {
-      const string code = "inp x";
       var sut = new Parser();
 
       var instruction = sut.ParseLine(code);
 
-      Assert.AreEqual(Parser.Operation.inp, instruction.Operation);
+      Assert.AreEqual(operation, instruction.Operation);
     }
   }
 }
