@@ -70,5 +70,17 @@ namespace _24_ALU
       instruction.Operand.As<Parser.RegisterOperand>().Register.Should().Be(expectedRegister);
     }
 
+    [Theory]
+    [InlineData("add x 10", 10)]
+    [InlineData("add x -1", -1)]
+    public void Can_parse_number_operand(string code, int expectedNumber)
+    {
+      var sut = new Parser();
+
+      var instruction = sut.ParseLine(code);
+
+      instruction.Operand.As<Parser.NumberOperand>().Number.Should().Be(expectedNumber);
+    }
+
   }
 }

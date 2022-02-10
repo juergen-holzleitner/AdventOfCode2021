@@ -11,6 +11,8 @@ namespace _24_ALU
 
     public record RegisterOperand(Register Register) : IOperand;
 
+    public record NumberOperand(int Number) : IOperand;
+
     public Parser()
     {
     }
@@ -23,9 +25,16 @@ namespace _24_ALU
       var register = ParseRegister(elements[1]);
       IOperand? operand = null;
       if (operation != Operation.inp)
-        operand = new RegisterOperand(ParseRegister(elements[2]));
+        operand = ParseOperand(elements[2]);
 
       return new(operation, register, operand);
+    }
+
+    private IOperand ParseOperand(string operand)
+    {
+      if (int.TryParse(operand, out var number))
+        return new NumberOperand(number);
+      return new RegisterOperand(ParseRegister(operand));
     }
 
     private Register ParseRegister(string register)
