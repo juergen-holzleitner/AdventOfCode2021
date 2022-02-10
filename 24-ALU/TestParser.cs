@@ -38,7 +38,7 @@ namespace _24_ALU
     [InlineData("inp y", Parser.Register.y)]
     [InlineData("inp z", Parser.Register.z)]
     [InlineData("inp w", Parser.Register.w)]
-    public void Can_Parse_Register(string code, Parser.Register expectedRegister)
+    public void Can_parse_register(string code, Parser.Register expectedRegister)
     {
       var sut = new Parser();
 
@@ -56,6 +56,18 @@ namespace _24_ALU
       var act = () => sut.ParseLine(code);
 
       act.Should().Throw<ArgumentException>();
+    }
+
+    [Theory]
+    [InlineData("add x x", Parser.Register.x)]
+    [InlineData("add x y", Parser.Register.y)]
+    public void Can_parse_register_operand(string code, Parser.Register expectedRegister)
+    {
+      var sut = new Parser();
+
+      var instruction = sut.ParseLine(code);
+
+      instruction.Operand.As<Parser.RegisterOperand>().Register.Should().Be(expectedRegister);
     }
 
   }

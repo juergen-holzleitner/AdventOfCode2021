@@ -7,6 +7,10 @@ namespace _24_ALU
     public enum Operation { inp, add, mul, div, mod, eql };
     public enum Register { w, x, y, z}
 
+    public interface IOperand { }
+
+    public record RegisterOperand(Register Register) : IOperand;
+
     public Parser()
     {
     }
@@ -17,7 +21,11 @@ namespace _24_ALU
 
       var operation = ParseOperation(elements[0]);
       var register = ParseRegister(elements[1]);
-      return new(operation, register);
+      IOperand? operand = null;
+      if (operation != Operation.inp)
+        operand = new RegisterOperand(ParseRegister(elements[2]));
+
+      return new(operation, register, operand);
     }
 
     private Register ParseRegister(string register)
@@ -47,6 +55,6 @@ namespace _24_ALU
       throw new ArgumentException("invalid operation", nameof(operation));
     }
 
-    public record Instruction(Operation Operation, Register Register);
+    public record Instruction(Operation Operation, Register Register, IOperand? Operand);
   }
 }
