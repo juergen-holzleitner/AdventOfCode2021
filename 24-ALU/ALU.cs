@@ -40,8 +40,8 @@ namespace _24_ALU
           break;
         case Parser.Operation.mod:
           var oldVal = registerValue[instruction.Register];
-          if (oldVal < 0)
-            throw new InvalidOperationException("Module with negative register value");
+          //if (oldVal < 0)
+          //  throw new InvalidOperationException("Module with negative register value");
           var operandVal = GetOperandValue(instruction.Operand);
           if (operandVal < 0)
             throw new InvalidOperationException("Module with negative operand value");
