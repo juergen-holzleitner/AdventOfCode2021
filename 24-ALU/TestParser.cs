@@ -1,6 +1,6 @@
-using Xunit;
 using FluentAssertions;
 using System;
+using Xunit;
 
 namespace _24_ALU
 {
@@ -15,9 +15,7 @@ namespace _24_ALU
     [InlineData("eql x y", Parser.Operation.eql)]
     public void Can_read_instruction(string code, Parser.Operation operation)
     {
-      var sut = new Parser();
-
-      var instruction = sut.ParseLine(code);
+      var instruction = Parser.ParseLine(code);
 
       instruction.Operation.Should().Be(operation);
     }
@@ -25,10 +23,9 @@ namespace _24_ALU
     [Fact]
     public void Invalid_instruction_throws()
     {
-      var sut = new Parser();
       string code = "asdf x";
 
-      var act = () => sut.ParseLine(code);
+      var act = () => Parser.ParseLine(code);
 
       act.Should().Throw<ArgumentException>();
     }
@@ -40,9 +37,7 @@ namespace _24_ALU
     [InlineData("inp w", Parser.Register.w)]
     public void Can_parse_register(string code, Parser.Register expectedRegister)
     {
-      var sut = new Parser();
-
-      var instruction = sut.ParseLine(code);
+      var instruction = Parser.ParseLine(code);
 
       instruction.Register.Should().Be(expectedRegister);
     }
@@ -50,10 +45,9 @@ namespace _24_ALU
     [Fact]
     public void Invalid_register_throws()
     {
-      var sut = new Parser();
       string code = "inp a";
 
-      var act = () => sut.ParseLine(code);
+      var act = () => Parser.ParseLine(code);
 
       act.Should().Throw<ArgumentException>();
     }
@@ -63,9 +57,7 @@ namespace _24_ALU
     [InlineData("add x y", Parser.Register.y)]
     public void Can_parse_register_operand(string code, Parser.Register expectedRegister)
     {
-      var sut = new Parser();
-
-      var instruction = sut.ParseLine(code);
+      var instruction = Parser.ParseLine(code);
 
       instruction.Operand.As<Parser.RegisterOperand>().Register.Should().Be(expectedRegister);
     }
@@ -75,9 +67,7 @@ namespace _24_ALU
     [InlineData("add x -1", -1)]
     public void Can_parse_number_operand(string code, int expectedNumber)
     {
-      var sut = new Parser();
-
-      var instruction = sut.ParseLine(code);
+      var instruction = Parser.ParseLine(code);
 
       instruction.Operand.As<Parser.NumberOperand>().Number.Should().Be(expectedNumber);
     }
