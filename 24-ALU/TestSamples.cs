@@ -107,5 +107,50 @@ mod w 2
       var val = alu.GetValue(Parser.Register.z);
       val.Should().NotBe(0);
     }
+
+    [Theory]
+    [InlineData(13579246899999)]
+    [InlineData(38576364913424)]
+    [InlineData(38769131346953)]
+    [InlineData(99862736452344)]
+    [InlineData(25123762349234)]
+    [InlineData(84628764641934)]
+    [InlineData(34523412143546)]
+    [InlineData(88876356245234)]
+    [InlineData(34534534534665)]
+    [InlineData(11111111111111)]
+    [InlineData(99999999999999)]
+    public void Optimized_programm_is_equal(long modelNumber)
+    {
+      var input = Parser.SplitNumber(modelNumber);
+      var alu = new ALU(input);
+      var programOriginal = File.ReadLines(@"input.txt");
+
+      foreach (var line in programOriginal)
+      {
+        var instruction = Parser.ParseLine(line);
+        alu.ProcessInstrution(instruction);
+      }
+
+      var valOriginal = alu.GetValue(Parser.Register.z);
+
+
+      alu = new ALU(input);
+      var programOptimized = File.ReadLines(@"input-small.txt");
+
+      foreach (var line in programOptimized)
+      {
+        if (string.IsNullOrEmpty(line))
+          continue;
+
+        var instruction = Parser.ParseLine(line);
+        alu.ProcessInstrution(instruction);
+      }
+
+      var valOptimized = alu.GetValue(Parser.Register.z);
+
+      valOptimized.Should().Be(valOriginal);
+    }
+
   }
 }
