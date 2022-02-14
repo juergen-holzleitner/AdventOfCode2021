@@ -5,7 +5,7 @@ namespace _24_ALU
 {
   internal class ALU
   {
-    readonly Dictionary<Parser.Register, int> registerValue = new();
+    readonly Dictionary<Parser.Register, long> registerValue = new();
     readonly IEnumerator<int>? inputs = null;
 
     public ALU()
@@ -20,7 +20,7 @@ namespace _24_ALU
       this.inputs = inputs.GetEnumerator();
     }
 
-    internal int GetValue(Parser.Register register)
+    internal long GetValue(Parser.Register register)
     {
       return registerValue[register];
     }
@@ -40,8 +40,8 @@ namespace _24_ALU
           break;
         case Parser.Operation.mod:
           var oldVal = registerValue[instruction.Register];
-          //if (oldVal < 0)
-          //  throw new InvalidOperationException("Module with negative register value");
+          if (oldVal < 0)
+            throw new InvalidOperationException("Module with negative register value");
           var operandVal = GetOperandValue(instruction.Operand);
           if (operandVal < 0)
             throw new InvalidOperationException("Module with negative operand value");
@@ -60,7 +60,7 @@ namespace _24_ALU
       }
     }
 
-    private int GetOperandValue(Parser.IOperand? operand)
+    private long GetOperandValue(Parser.IOperand? operand)
     {
       if (operand is Parser.RegisterOperand register)
         return registerValue[register.Register];
