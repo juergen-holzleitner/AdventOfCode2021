@@ -52,29 +52,28 @@ namespace _24_ALU
 
     private static Register ParseRegister(string register)
     {
-      switch (register)
+      return register switch
       {
-        case "w": return Register.w;
-        case "x": return Register.x;
-        case "y": return Register.y;
-        case "z": return Register.z;
-      }
-
-      throw new ArgumentException("invalid register", nameof(register));
+        "w" => Register.w,
+        "x" => Register.x,
+        "y" => Register.y,
+        "z" => Register.z,
+        _ => throw new ArgumentException("invalid register", nameof(register)),
+      };
     }
 
     private static Operation ParseOperation(string operation)
     {
-      switch (operation)
+      return operation switch
       {
-        case "inp": return Operation.inp;
-        case "add": return Operation.add;
-        case "mul": return Operation.mul;
-        case "div": return Operation.div;
-        case "mod": return Operation.mod;
-        case "eql": return Operation.eql;
-      }
-      throw new ArgumentException("invalid operation", nameof(operation));
+        "inp" => Operation.inp,
+        "add" => Operation.add,
+        "mul" => Operation.mul,
+        "div" => Operation.div,
+        "mod" => Operation.mod,
+        "eql" => Operation.eql,
+        _ => throw new ArgumentException("invalid operation", nameof(operation)),
+      };
     }
 
     internal static IEnumerable<int> SplitNumber(long number)

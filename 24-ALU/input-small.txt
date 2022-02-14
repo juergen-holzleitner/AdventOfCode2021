@@ -1,19 +1,143 @@
-inp x
-mul x -1
+inp z     // [1]
+add z 13  // [1] + 13
+mul z 26  // 26 * ([1] + 13)
 
-inp z
-inp x
-mul z 3
-eql z x
+inp y     // [2]
+add y 10  // [2] + 10
+add z y   // 26 * ([1] + 13) + [2] + 10
+mul z 26  // 26 * (26 * ([1] + 13) + [2] + 10)
 
-inp w
-add z w
-mod z 2
-div w 2
+inp w     // [3] -- skipped
+
+inp y     // [4]
+add y 1   // [4] + 1
+add z y   // 26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1
+
+inp x     // [5]
+add x 5   // [5] + 5
+
+inp w     // [6]
+eql x w   // [5] + 5 == [6]
+eql x 0   // [5] + 5 != [6]
+
+mul y 0   // 0
+add y 25  // 25
+mul y x   // 25 || 0
+add y 1   // 26 || 1
+mul z y   // 26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1)   ||   26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1
+
+mul y 0   // 0
+add y w   // [6]
+add y 3   // [6] + 3
+mul y x   // [6] + 3   ||   0
+
+add z y   // 26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [6] + 3   ||   26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1
+
+mul z 26   // 26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [6] + 3)   ||   26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1)
+
+inp y     // [7]
+add y 5   // [7] + 5
+add z y   // 26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [6] + 3) + [7] + 5   ||   26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [7] + 5
+
+mul z 26   // 26 * (26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [6] + 3) + [7] + 5)   ||   26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [7] + 5)
+
+inp y     // [8]
+add y 1   // [8] + 1
+add z y   // 26 * (26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [6] + 3) + [7] + 5) + [8] + 1   ||   26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [7] + 5) + [8] + 1
+
+mul z 26  // 26 * (26 * (26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [6] + 3) + [7] + 5) + [8] + 1)   ||   26 * (26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [7] + 5) + [8] + 1)
+
+inp y     // [9]
+add z y   // 26 * (26 * (26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [6] + 3) + [7] + 5) + [8] + 1) + [9]   ||   26 * (26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [7] + 5) + [8] + 1) + [9]
+
+
+mul x 0   // 0
+add x y   // [9] // original has int overflow at this position
+div z 26  // 26 * (26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [6] + 3) + [7] + 5) + [8] + 1   ||   26 * (26 * (26 * (26 * ([1] + 13) + [2] + 10) + [4] + 1) + [7] + 5) + [8] + 1
+add x -2  // [9] - 2
+
+inp w     // [10]
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
 add y w
-mod y 2
-div w 2
-add x w
-mod x 2
-div w 2
-mod w 2
+add y 13
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -5
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 7
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -11
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 15
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -13
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 12
+mul y x
+add z y
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -10
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 8
+mul y x
+add z y
