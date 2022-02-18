@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using static _24_ALU.Parser;
+using System;
 
 namespace _24_ALU
 {
@@ -116,5 +117,154 @@ namespace _24_ALU
       var value = sut.GetValue(Register.x);
       value.As<NumberOperand>().Number.Should().Be(0);
     }
+
+    [Fact]
+    public void Multiply_zero_with_something_is_zero()
+    {
+      var sut = new SymbolicALU();
+      var mul = new Instruction(Operation.mul, Register.x, new NumberOperand(5));
+      
+      sut.ProcessInstruction(mul);
+
+      var value = sut.GetValue(Register.x);
+      value.As<NumberOperand>().Number.Should().Be(0);
+    }
+
+    [Fact]
+    public void Div_by_zero_throws()
+    {
+      var sut = new SymbolicALU();
+      var div = new Instruction(Operation.div, Register.x, new NumberOperand(0));
+
+      var act = () => sut.ProcessInstruction(div);
+
+      act.Should().Throw<DivideByZeroException>();
+    }
+
+    [Fact]
+    public void Mod_by_zero_throws()
+    {
+      var sut = new SymbolicALU();
+      var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(0));
+
+      var act = () => sut.ProcessInstruction(mod);
+
+      act.Should().Throw<DivideByZeroException>();
+    }
+
+    [Fact]
+    public void Div_by_number_returns_term()
+    {
+      var sut = new SymbolicALU();
+      var inp = new Instruction(Operation.inp, Register.x, null);
+      var div = new Instruction(Operation.div, Register.x, new NumberOperand(5));
+
+      sut.ProcessInstruction(inp);
+      sut.ProcessInstruction(div);
+
+      var val = sut.GetValue(Register.x);
+      val.As<Term>().Operation.Should().Be(Operation.div);
+      val.As<Term>().Left.As<InputOperand>().Index.Should().Be(0);
+      val.As<Term>().Right.As<NumberOperand>().Number.Should().Be(5);
+    }
+
+    [Fact]
+    public void Zero_divided_by_something_is_zero()
+    {
+      var sut = new SymbolicALU();
+      var div = new Instruction(Operation.div, Register.x, new NumberOperand(5));
+
+      sut.ProcessInstruction(div);
+
+      var val = sut.GetValue(Register.x);
+      val.As<NumberOperand>().Number.Should().Be(0);
+    }
+
+    [Fact]
+    public void Zero_mod_something_is_zero()
+    {
+      var sut = new SymbolicALU();
+      var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(5));
+
+      sut.ProcessInstruction(mod);
+
+      var val = sut.GetValue(Register.x);
+      val.As<NumberOperand>().Number.Should().Be(0);
+    }
+
+    [Fact]
+    public void Mod_by_number_returns_term()
+    {
+      var sut = new SymbolicALU();
+      var inp = new Instruction(Operation.inp, Register.x, null);
+      var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(5));
+
+      sut.ProcessInstruction(inp);
+      sut.ProcessInstruction(mod);
+
+      var val = sut.GetValue(Register.x);
+      val.As<Term>().Operation.Should().Be(Operation.mod);
+      val.As<Term>().Left.As<InputOperand>().Index.Should().Be(0);
+      val.As<Term>().Right.As<NumberOperand>().Number.Should().Be(5);
+    }
+
+    [Fact]
+    public void Add_number_to_input_returns_term()
+    {
+      var sut = new SymbolicALU();
+      var inp = new Instruction(Operation.inp, Register.x, null);
+      var add = new Instruction(Operation.add, Register.x, new NumberOperand(5));
+
+      sut.ProcessInstruction(inp);
+      sut.ProcessInstruction(add);
+
+      var val = sut.GetValue(Register.x);
+      val.As<Term>().Operation.Should().Be(Operation.add);
+      val.As<Term>().Left.As<InputOperand>().Index.Should().Be(0);
+      val.As<Term>().Right.As<NumberOperand>().Number.Should().Be(5);
+    }
+
+    [Fact]
+    public void Multiply_two_number_returns_number()
+    {
+      var sut = new SymbolicALU();
+      var add = new Instruction(Operation.add, Register.x, new NumberOperand(3));
+      var mul = new Instruction(Operation.mul, Register.x, new NumberOperand(5));
+
+      sut.ProcessInstruction(add);
+      sut.ProcessInstruction(mul);
+
+      var val = sut.GetValue(Register.x);
+      val.As<NumberOperand>().Number.Should().Be(15);
+    }
+
+    [Fact]
+    public void Div_two_number_returns_number()
+    {
+      var sut = new SymbolicALU();
+      var add = new Instruction(Operation.add, Register.x, new NumberOperand(22));
+      var div = new Instruction(Operation.div, Register.x, new NumberOperand(5));
+
+      sut.ProcessInstruction(add);
+      sut.ProcessInstruction(div);
+
+      var val = sut.GetValue(Register.x);
+      val.As<NumberOperand>().Number.Should().Be(4);
+    }
+
+    [Fact]
+    public void Mod_two_number_returns_number()
+    {
+      var sut = new SymbolicALU();
+      var add = new Instruction(Operation.add, Register.x, new NumberOperand(22));
+      var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(5));
+
+      sut.ProcessInstruction(add);
+      sut.ProcessInstruction(mod);
+
+      var val = sut.GetValue(Register.x);
+      val.As<NumberOperand>().Number.Should().Be(2);
+    }
+
   }
 }

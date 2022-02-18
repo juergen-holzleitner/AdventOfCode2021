@@ -12,5 +12,7 @@
 
   public record InputOperand(int Index) : IOperand;
 
+  public record Term(Operation Operation, IOperand Left, IOperand Right) : IOperand;
+
   public record Instruction(Operation Operation, Register Register, IOperand? Operand);
 }

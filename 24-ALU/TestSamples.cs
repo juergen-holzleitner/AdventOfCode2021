@@ -152,5 +152,24 @@ mod w 2
       valOptimized.Should().Be(valOriginal);
     }
 
+    [Fact]
+    public void First_sample_works_symbolic()
+    {
+      var program = @"
+inp x
+mul x -1
+";
+      var sut = new SymbolicALU();
+
+      foreach (var instruction in Parser.ReadProgramm(program))
+        sut.ProcessInstruction(instruction);
+
+      var val = sut.GetValue(Register.x);
+
+      val.As<Term>().Operation.Should().Be(Operation.mul);
+      val.As<Term>().Left.As<InputOperand>().Index.Should().Be(0);
+      val.As<Term>().Right.As<NumberOperand>().Number.Should().Be(-1);
+    }
+
   }
 }

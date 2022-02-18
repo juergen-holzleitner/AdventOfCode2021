@@ -53,6 +53,11 @@ namespace _24_ALU
 
     private void ProcessMod(Register reg, IOperand operand)
     {
+      CheckDivByZero(operand);
+
+      if (TargetRegisterIsZero(reg))
+        return;
+
       if (operand is NumberOperand num2)
       {
         if (num2.Number == 1)
@@ -60,6 +65,15 @@ namespace _24_ALU
           register[reg] = new NumberOperand(0);
           return;
         }
+
+        if (register[reg] is NumberOperand num1)
+        {
+          register[reg] = new NumberOperand(num1.Number % num2.Number);
+          return;
+        }
+
+        register[reg] = new Term(Operation.mod, register[reg], num2);
+        return;
       }
 
       throw new NotImplementedException();
@@ -67,10 +81,24 @@ namespace _24_ALU
 
     private void ProcessDiv(Register reg, IOperand operand)
     {
+      CheckDivByZero(operand);
+
+      if (TargetRegisterIsZero(reg))
+        return;
+
       if (operand is NumberOperand num2)
       {
         if (num2.Number == 1)
           return;
+
+        if (register[reg] is NumberOperand num1)
+        {
+          register[reg] = new NumberOperand(num1.Number / num2.Number);
+          return;
+        }
+
+        register[reg] = new Term(Operation.div, register[reg], num2);
+        return;
       }
 
       throw new NotImplementedException();
@@ -78,6 +106,9 @@ namespace _24_ALU
 
     private void ProcessMul(Register reg, IOperand operand)
     {
+      if (TargetRegisterIsZero(reg))
+        return;
+
       if (operand is NumberOperand num2)
       {
         if (num2.Number == 0)
@@ -89,6 +120,15 @@ namespace _24_ALU
         {
           return;
         }
+
+        if (register[reg] is NumberOperand num1)
+        {
+          register[reg] = new NumberOperand(num1.Number * num2.Number);
+          return;
+        }
+
+        register[reg] = new Term(Operation.mul, register[reg], num2);
+        return;
       }
 
       throw new NotImplementedException();
@@ -106,6 +146,9 @@ namespace _24_ALU
           register[reg] = new NumberOperand(num1.Number + num2.Number);
           return;
         }
+
+        register[reg] = new Term(Operation.add, register[reg], num2);
+        return;
       }
 
       throw new NotImplementedException();
@@ -116,5 +159,26 @@ namespace _24_ALU
       register[reg] = new InputOperand(inputIndex);
       ++inputIndex;
     }
+
+    private static void CheckDivByZero(IOperand operand)
+    {
+      if (operand is NumberOperand numCheckZero)
+      {
+        if (numCheckZero.Number == 0)
+          throw new DivideByZeroException();
+      }
+    }
+
+    private bool TargetRegisterIsZero(Register reg)
+    {
+      if (register[reg] is NumberOperand numReg)
+      {
+        if (numReg.Number == 0)
+          return true;
+      }
+
+      return false;
+    }
+
   }
 }
