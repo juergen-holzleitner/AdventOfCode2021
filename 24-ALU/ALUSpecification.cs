@@ -10,5 +10,7 @@
 
   public record NumberOperand(int Number) : IOperand;
 
+  public record InputOperand(int Index) : IOperand;
+
   public record Instruction(Operation Operation, Register Register, IOperand? Operand);
 }

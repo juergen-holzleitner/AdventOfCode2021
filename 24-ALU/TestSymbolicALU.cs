@@ -32,5 +32,33 @@ namespace _24_ALU
       var value = sut.GetValue(Register.x);
       value.As<NumberOperand>().Number.Should().Be(testNumber);
     }
+
+    [Fact]
+    public void Inp_returns_Inp_Instruction()
+    {
+      var sut = new SymbolicALU();
+      var instruction = new Instruction(Operation.inp, Register.x, null);
+
+      sut.ProcessInstruction(instruction);
+
+      var value = sut.GetValue(Register.x);
+      value.As<InputOperand>().Index.Should().Be(0);
+    }
+
+    [Fact]
+    public void Inp_MultipleTimes_returns_correct_input_index()
+    {
+      var sut = new SymbolicALU();
+      var instruction = new Instruction(Operation.inp, Register.w, null);
+      
+      const int numInputs = 5;
+      for (int n = 0; n < numInputs + 1; ++n)
+      {
+        sut.ProcessInstruction(instruction);
+      }
+
+      var value = sut.GetValue(Register.w);
+      value.As<InputOperand>().Index.Should().Be(numInputs);
+    }
   }
 }

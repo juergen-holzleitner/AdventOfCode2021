@@ -7,6 +7,7 @@ namespace _24_ALU
   internal class SymbolicALU
   {
     readonly Dictionary<Register, IOperand> register = new();
+    int inputIndex = 0;
 
     public SymbolicALU()
     {
@@ -21,7 +22,13 @@ namespace _24_ALU
 
     internal void ProcessInstruction(Instruction instruction)
     {
-      if (instruction.Operation == Operation.add)
+      if(instruction.Operation == Operation.inp)
+      {
+        register[instruction.Register] = new InputOperand(inputIndex);
+        ++inputIndex;
+        return;
+      }
+      else if (instruction.Operation == Operation.add)
       {
         if (instruction.Operand is NumberOperand num2)
         {
