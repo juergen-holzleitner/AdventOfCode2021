@@ -51,29 +51,50 @@ namespace _24_ALU
       throw new NotImplementedException();
     }
 
-    private void ProcessMod(Register reg, IOperand operand)
+    private void ProcessInp(Register reg)
     {
-      CheckDivByZero(operand);
+      register[reg] = new InputOperand(inputIndex);
+      ++inputIndex;
+    }
 
+    private void ProcessAdd(Register reg, IOperand operand)
+    {
+      if (operand is NumberOperand num)
+      {
+        ProcessAdd(reg, num);
+        return;
+      }
+
+      if (operand is RegisterOperand regOp)
+      {
+        if (register[regOp.Register] is NumberOperand numOp)
+        {
+          ProcessAdd(reg, numOp);
+          return;
+        }
+      }
+
+      throw new NotImplementedException();
+    }
+
+    private void ProcessMul(Register reg, IOperand operand)
+    {
       if (TargetRegisterIsZero(reg))
         return;
 
-      if (operand is NumberOperand num2)
+      if (operand is NumberOperand num)
       {
-        if (num2.Number == 1)
-        {
-          register[reg] = new NumberOperand(0);
-          return;
-        }
-
-        if (register[reg] is NumberOperand num1)
-        {
-          register[reg] = new NumberOperand(num1.Number % num2.Number);
-          return;
-        }
-
-        register[reg] = new Term(Operation.mod, register[reg], num2);
+        ProcessMul(reg, num);
         return;
+      }
+
+      if (operand is RegisterOperand regOp)
+      {
+        if (register[regOp.Register] is NumberOperand numOp)
+        {
+          ProcessMul(reg, numOp);
+          return;
+        }
       }
 
       throw new NotImplementedException();
@@ -86,78 +107,112 @@ namespace _24_ALU
       if (TargetRegisterIsZero(reg))
         return;
 
-      if (operand is NumberOperand num2)
+      if (operand is NumberOperand num)
       {
-        if (num2.Number == 1)
-          return;
+        ProcessDiv(reg, num);
+        return;
+      }
 
-        if (register[reg] is NumberOperand num1)
+      if (operand is RegisterOperand regOp)
+      {
+        if (register[regOp.Register] is NumberOperand numOp)
         {
-          register[reg] = new NumberOperand(num1.Number / num2.Number);
+          ProcessDiv(reg, numOp);
           return;
         }
-
-        register[reg] = new Term(Operation.div, register[reg], num2);
-        return;
       }
 
       throw new NotImplementedException();
     }
 
-    private void ProcessMul(Register reg, IOperand operand)
+    private void ProcessMod(Register reg, IOperand operand)
     {
+      CheckDivByZero(operand);
+
       if (TargetRegisterIsZero(reg))
         return;
 
-      if (operand is NumberOperand num2)
+      if (operand is NumberOperand num)
       {
-        if (num2.Number == 0)
-        {
-          register[reg] = new NumberOperand(0);
-          return;
-        }
-        else if (num2.Number == 1)
-        {
-          return;
-        }
-
-        if (register[reg] is NumberOperand num1)
-        {
-          register[reg] = new NumberOperand(num1.Number * num2.Number);
-          return;
-        }
-
-        register[reg] = new Term(Operation.mul, register[reg], num2);
+        ProcessMod(reg, num);
         return;
+      }
+
+      if (operand is RegisterOperand regOp)
+      {
+        if (register[regOp.Register] is NumberOperand numOp)
+        {
+          ProcessMod(reg, numOp);
+          return;
+        }
       }
 
       throw new NotImplementedException();
     }
 
-    private void ProcessAdd(Register reg, IOperand operand)
+    private void ProcessMod(Register reg, NumberOperand num)
     {
-      if (operand is NumberOperand num2)
+      if (num.Number == 1)
       {
-        if (num2.Number == 0)
-          return;
-
-        if (register[reg] is NumberOperand num1)
-        {
-          register[reg] = new NumberOperand(num1.Number + num2.Number);
-          return;
-        }
-
-        register[reg] = new Term(Operation.add, register[reg], num2);
+        register[reg] = new NumberOperand(0);
         return;
       }
 
-      throw new NotImplementedException();
+      if (register[reg] is NumberOperand num1)
+      {
+        register[reg] = new NumberOperand(num1.Number % num.Number);
+        return;
+      }
+
+      register[reg] = new Term(Operation.mod, register[reg], num);
     }
 
-    private void ProcessInp(Register reg)
+    private void ProcessDiv(Register reg, NumberOperand num)
     {
-      register[reg] = new InputOperand(inputIndex);
-      ++inputIndex;
+      if (num.Number == 1)
+        return;
+
+      if (register[reg] is NumberOperand num1)
+      {
+        register[reg] = new NumberOperand(num1.Number / num.Number);
+        return;
+      }
+
+      register[reg] = new Term(Operation.div, register[reg], num);
+    }
+
+    private void ProcessMul(Register reg, NumberOperand num)
+    {
+      if (num.Number == 0)
+      {
+        register[reg] = new NumberOperand(0);
+        return;
+      }
+      
+      if (num.Number == 1)
+        return;
+
+      if (register[reg] is NumberOperand num1)
+      {
+        register[reg] = new NumberOperand(num1.Number * num.Number);
+        return;
+      }
+
+      register[reg] = new Term(Operation.mul, register[reg], num);
+    }
+
+    private void ProcessAdd(Register reg, NumberOperand num)
+    {
+      if (num.Number == 0)
+        return;
+
+      if (register[reg] is NumberOperand num1)
+      {
+        register[reg] = new NumberOperand(num1.Number + num.Number);
+        return;
+      }
+
+      register[reg] = new Term(Operation.add, register[reg], num);
     }
 
     private static void CheckDivByZero(IOperand operand)

@@ -266,5 +266,25 @@ namespace _24_ALU
       val.As<NumberOperand>().Number.Should().Be(2);
     }
 
+    [Theory]
+    [InlineData(22, 7, Operation.add, 29)]
+    [InlineData(2, -3, Operation.mul, -6)]
+    [InlineData(13, 3, Operation.div, 4)]
+    [InlineData(13, 3, Operation.mod, 1)]
+    public void Op_with_number_in_register_returns_number(int x, int y, Operation op, int expected)
+    {
+      var sut = new SymbolicALU();
+      var add1 = new Instruction(Operation.add, Register.x, new NumberOperand(x));
+      var add2 = new Instruction(Operation.add, Register.y, new NumberOperand(y));
+      var operation = new Instruction(op, Register.x, new RegisterOperand(Register.y));
+
+      sut.ProcessInstruction(add1);
+      sut.ProcessInstruction(add2);
+      sut.ProcessInstruction(operation);
+
+      var val = sut.GetValue(Register.x);
+      val.As<NumberOperand>().Number.Should().Be(expected);
+    }
+
   }
 }
