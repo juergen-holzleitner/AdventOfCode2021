@@ -19,7 +19,7 @@ mul x -1
       var sut = new ALU(input);
 
       foreach (var instruction in Parser.ReadProgramm(program))
-        sut.ProcessInstrution(instruction);
+        sut.ProcessInstruction(instruction);
 
       var val = sut.GetValue(Register.x);
 
@@ -39,7 +39,7 @@ eql z x
       var sut = new ALU(input);
 
       foreach (var instruction in Parser.ReadProgramm(program))
-        sut.ProcessInstrution(instruction);
+        sut.ProcessInstruction(instruction);
 
       var val = sut.GetValue(Register.z);
 
@@ -66,7 +66,7 @@ mod w 2
       var sut = new ALU(input);
 
       foreach (var instruction in Parser.ReadProgramm(program))
-        sut.ProcessInstrution(instruction);
+        sut.ProcessInstruction(instruction);
 
       var val1 = sut.GetValue(Register.z);
       var val2 = sut.GetValue(Register.y);
@@ -101,7 +101,7 @@ mod w 2
       foreach (var line in program)
       {
         var instruction = Parser.ParseLine(line);
-        alu.ProcessInstrution(instruction);
+        alu.ProcessInstruction(instruction);
       }
 
       var val = alu.GetValue(Register.z);
@@ -129,7 +129,7 @@ mod w 2
       foreach (var line in programOriginal)
       {
         var instruction = Parser.ParseLine(line);
-        alu.ProcessInstrution(instruction);
+        alu.ProcessInstruction(instruction);
       }
 
       var valOriginal = alu.GetValue(Register.z);
@@ -144,7 +144,7 @@ mod w 2
           continue;
 
         var instruction = Parser.ParseLine(line);
-        alu.ProcessInstrution(instruction);
+        alu.ProcessInstruction(instruction);
       }
 
       var valOptimized = alu.GetValue(Register.z);

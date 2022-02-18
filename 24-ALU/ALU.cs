@@ -25,7 +25,7 @@ namespace _24_ALU
       return registerValue[register];
     }
 
-    internal void ProcessInstrution(Instruction instruction)
+    internal void ProcessInstruction(Instruction instruction)
     {
       switch (instruction.Operation)
       {

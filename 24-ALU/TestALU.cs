@@ -29,7 +29,7 @@ namespace _24_ALU
       const int TestNumber = 5;
       var instruction = new Instruction(Operation.add, Register.x, new NumberOperand(TestNumber));
 
-      sut.ProcessInstrution(instruction);
+      sut.ProcessInstruction(instruction);
 
       var val = sut.GetValue(Register.x);
       val.Should().Be(TestNumber);
@@ -43,10 +43,10 @@ namespace _24_ALU
       var addX = new Instruction(Operation.add, Register.x, new NumberOperand(TestNumber));
       var addY = new Instruction(Operation.add, Register.y, new NumberOperand(TestNumber));
       var mul = new Instruction(Operation.mul, Register.y, new RegisterOperand(Register.x));
-      sut.ProcessInstrution(addX);
-      sut.ProcessInstrution(addY);
+      sut.ProcessInstruction(addX);
+      sut.ProcessInstruction(addY);
 
-      sut.ProcessInstrution(mul);
+      sut.ProcessInstruction(mul);
 
       var val = sut.GetValue(Register.y);
       val.Should().Be(25);
@@ -58,9 +58,9 @@ namespace _24_ALU
       var sut = new ALU();
       var addW = new Instruction(Operation.add, Register.w, new NumberOperand(-7));
       var div = new Instruction(Operation.div, Register.w, new NumberOperand(3));
-      sut.ProcessInstrution(addW);
+      sut.ProcessInstruction(addW);
 
-      sut.ProcessInstrution(div);
+      sut.ProcessInstruction(div);
 
       var val = sut.GetValue(Register.w);
       val.Should().Be(-2);
@@ -72,9 +72,9 @@ namespace _24_ALU
       var sut = new ALU();
       var addW = new Instruction(Operation.add, Register.w, new NumberOperand(-7));
       var div = new Instruction(Operation.div, Register.w, new NumberOperand(0));
-      sut.ProcessInstrution(addW);
+      sut.ProcessInstruction(addW);
 
-      var act = () => sut.ProcessInstrution(div);
+      var act = () => sut.ProcessInstruction(div);
 
       act.Should().Throw<DivideByZeroException>();
     }
@@ -86,8 +86,8 @@ namespace _24_ALU
       var addX = new Instruction(Operation.add, Register.x, new NumberOperand(10));
       var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(4));
 
-      sut.ProcessInstrution(addX);
-      sut.ProcessInstrution(mod);
+      sut.ProcessInstruction(addX);
+      sut.ProcessInstruction(mod);
 
       var val = sut.GetValue(Register.x);
       val.Should().Be(2);
@@ -100,8 +100,8 @@ namespace _24_ALU
       var addX = new Instruction(Operation.add, Register.x, new NumberOperand(-1));
       var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(1));
 
-      sut.ProcessInstrution(addX);
-      var act = () => sut.ProcessInstrution(mod);
+      sut.ProcessInstruction(addX);
+      var act = () => sut.ProcessInstruction(mod);
 
       act.Should().Throw<InvalidOperationException>();
     }
@@ -113,8 +113,8 @@ namespace _24_ALU
       var addX = new Instruction(Operation.add, Register.x, new NumberOperand(1));
       var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(-2));
 
-      sut.ProcessInstrution(addX);
-      var act = () => sut.ProcessInstrution(mod);
+      sut.ProcessInstruction(addX);
+      var act = () => sut.ProcessInstruction(mod);
 
       act.Should().Throw<InvalidOperationException>();
     }
@@ -126,8 +126,8 @@ namespace _24_ALU
       var addX = new Instruction(Operation.add, Register.x, new NumberOperand(1));
       var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(0));
 
-      sut.ProcessInstrution(addX);
-      var act = () => sut.ProcessInstrution(mod);
+      sut.ProcessInstruction(addX);
+      var act = () => sut.ProcessInstruction(mod);
 
       act.Should().Throw<DivideByZeroException>();
     }
@@ -138,7 +138,7 @@ namespace _24_ALU
       var sut = new ALU();
       var inpX = new Instruction(Operation.inp, Register.x, null);
 
-      var act = () => sut.ProcessInstrution(inpX);
+      var act = () => sut.ProcessInstruction(inpX);
 
       act.Should().Throw<InvalidOperationException>();
     }
@@ -150,7 +150,7 @@ namespace _24_ALU
       var sut = new ALU(inputs);
       var inpX = new Instruction(Operation.inp, Register.x, null);
 
-      sut.ProcessInstrution(inpX);
+      sut.ProcessInstruction(inpX);
 
       var val = sut.GetValue(Register.x);
       val.Should().Be(5);
@@ -162,9 +162,9 @@ namespace _24_ALU
       var sut = new ALU();
       var addX = new Instruction(Operation.add, Register.x, new NumberOperand(5));
       var equ = new Instruction(Operation.eql, Register.x, new NumberOperand(5));
-      sut.ProcessInstrution(addX);
+      sut.ProcessInstruction(addX);
 
-      sut.ProcessInstrution(equ);
+      sut.ProcessInstruction(equ);
 
       var val = sut.GetValue(Register.x);
       val.Should().Be(1);
@@ -176,9 +176,9 @@ namespace _24_ALU
       var sut = new ALU();
       var addX = new Instruction(Operation.add, Register.x, new NumberOperand(5));
       var equ = new Instruction(Operation.eql, Register.x, new NumberOperand(6));
-      sut.ProcessInstrution(addX);
+      sut.ProcessInstruction(addX);
 
-      sut.ProcessInstrution(equ);
+      sut.ProcessInstruction(equ);
 
       var val = sut.GetValue(Register.x);
       val.Should().Be(0);
