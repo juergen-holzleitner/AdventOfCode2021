@@ -4,17 +4,8 @@ using System.Linq;
 
 namespace _24_ALU
 {
-  public class Parser
+  public partial class Parser
   {
-    public enum Operation { inp, add, mul, div, mod, eql };
-    public enum Register { w, x, y, z }
-
-    public interface IOperand { }
-
-    public record RegisterOperand(Register Register) : IOperand;
-
-    public record NumberOperand(int Number) : IOperand;
-
     internal static IEnumerable<Instruction> ReadProgramm(string program)
     {
       using var reader = new System.IO.StringReader(program);
@@ -94,7 +85,5 @@ namespace _24_ALU
         }
       }
     }
-
-    public record Instruction(Operation Operation, Register Register, IOperand? Operand);
   }
 }

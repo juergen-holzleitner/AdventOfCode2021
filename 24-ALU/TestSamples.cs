@@ -21,7 +21,7 @@ mul x -1
       foreach (var instruction in Parser.ReadProgramm(program))
         sut.ProcessInstrution(instruction);
 
-      var val = sut.GetValue(Parser.Register.x);
+      var val = sut.GetValue(Register.x);
 
       val.Should().Be(-5);
     }
@@ -41,7 +41,7 @@ eql z x
       foreach (var instruction in Parser.ReadProgramm(program))
         sut.ProcessInstrution(instruction);
 
-      var val = sut.GetValue(Parser.Register.z);
+      var val = sut.GetValue(Register.z);
 
       val.Should().Be(1);
     }
@@ -68,10 +68,10 @@ mod w 2
       foreach (var instruction in Parser.ReadProgramm(program))
         sut.ProcessInstrution(instruction);
 
-      var val1 = sut.GetValue(Parser.Register.z);
-      var val2 = sut.GetValue(Parser.Register.y);
-      var val4 = sut.GetValue(Parser.Register.x);
-      var val8 = sut.GetValue(Parser.Register.w);
+      var val1 = sut.GetValue(Register.z);
+      var val2 = sut.GetValue(Register.y);
+      var val4 = sut.GetValue(Register.x);
+      var val8 = sut.GetValue(Register.w);
       val1.Should().Be(1);
       val2.Should().Be(1);
       val4.Should().Be(0);
@@ -104,7 +104,7 @@ mod w 2
         alu.ProcessInstrution(instruction);
       }
 
-      var val = alu.GetValue(Parser.Register.z);
+      var val = alu.GetValue(Register.z);
       val.Should().NotBe(0);
     }
 
@@ -132,7 +132,7 @@ mod w 2
         alu.ProcessInstrution(instruction);
       }
 
-      var valOriginal = alu.GetValue(Parser.Register.z);
+      var valOriginal = alu.GetValue(Register.z);
 
 
       alu = new ALU(input);
@@ -147,7 +147,7 @@ mod w 2
         alu.ProcessInstrution(instruction);
       }
 
-      var valOptimized = alu.GetValue(Parser.Register.z);
+      var valOptimized = alu.GetValue(Register.z);
 
       valOptimized.Should().Be(valOriginal);
     }

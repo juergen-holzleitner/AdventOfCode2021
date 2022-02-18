@@ -7,13 +7,13 @@ namespace _24_ALU
   public class TestParser
   {
     [Theory]
-    [InlineData("inp x", Parser.Operation.inp)]
-    [InlineData("add x y", Parser.Operation.add)]
-    [InlineData("mul x y", Parser.Operation.mul)]
-    [InlineData("div x y", Parser.Operation.div)]
-    [InlineData("mod x y", Parser.Operation.mod)]
-    [InlineData("eql x y", Parser.Operation.eql)]
-    public void Can_read_instruction(string code, Parser.Operation operation)
+    [InlineData("inp x", Operation.inp)]
+    [InlineData("add x y", Operation.add)]
+    [InlineData("mul x y", Operation.mul)]
+    [InlineData("div x y", Operation.div)]
+    [InlineData("mod x y", Operation.mod)]
+    [InlineData("eql x y", Operation.eql)]
+    public void Can_read_instruction(string code, Operation operation)
     {
       var instruction = Parser.ParseLine(code);
 
@@ -31,11 +31,11 @@ namespace _24_ALU
     }
 
     [Theory]
-    [InlineData("inp x", Parser.Register.x)]
-    [InlineData("inp y", Parser.Register.y)]
-    [InlineData("inp z", Parser.Register.z)]
-    [InlineData("inp w", Parser.Register.w)]
-    public void Can_parse_register(string code, Parser.Register expectedRegister)
+    [InlineData("inp x", Register.x)]
+    [InlineData("inp y", Register.y)]
+    [InlineData("inp z", Register.z)]
+    [InlineData("inp w", Register.w)]
+    public void Can_parse_register(string code, Register expectedRegister)
     {
       var instruction = Parser.ParseLine(code);
 
@@ -53,13 +53,13 @@ namespace _24_ALU
     }
 
     [Theory]
-    [InlineData("add x x", Parser.Register.x)]
-    [InlineData("add x y", Parser.Register.y)]
-    public void Can_parse_register_operand(string code, Parser.Register expectedRegister)
+    [InlineData("add x x", Register.x)]
+    [InlineData("add x y", Register.y)]
+    public void Can_parse_register_operand(string code, Register expectedRegister)
     {
       var instruction = Parser.ParseLine(code);
 
-      instruction.Operand.As<Parser.RegisterOperand>().Register.Should().Be(expectedRegister);
+      instruction.Operand.As<RegisterOperand>().Register.Should().Be(expectedRegister);
     }
 
     [Theory]
@@ -69,7 +69,7 @@ namespace _24_ALU
     {
       var instruction = Parser.ParseLine(code);
 
-      instruction.Operand.As<Parser.NumberOperand>().Number.Should().Be(expectedNumber);
+      instruction.Operand.As<NumberOperand>().Number.Should().Be(expectedNumber);
     }
 
   }
