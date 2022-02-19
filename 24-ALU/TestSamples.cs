@@ -227,12 +227,12 @@ mod w 2
     }
 
     [Fact]
-    public void Check_model_number_works_symbolic()
+    public void Check_model_number_works_symbolic_for_first_input()
     {
       var alu = new SymbolicALU();
       var program = File.ReadLines(@"input.txt");
 
-      foreach (var line in program.Take(7))
+      foreach (var line in program.Take(18))
       {
         var instruction = Parser.ParseLine(line);
         alu.ProcessInstruction(instruction);
@@ -241,7 +241,7 @@ mod w 2
       alu.GetOptions().Count.Should().Be(1);
       var option = alu.GetOptions().Single();
       var registerString = Parser.Format(option.State);
-      registerString.Should().Be("w: [0], x: 0, y: 0, z: 0");
+      registerString.Should().Be("w: [0], x: 1, y: [0] + 13, z: [0] + 13");
     }
 
   }
