@@ -437,8 +437,20 @@ namespace _24_ALU
 
         if (t.Operation == Operation.mod)
         {
-          var min = Math.Min(Math.Min(l.Min % r.Min, l.Min % r.Max), Math.Min(l.Max % r.Min, l.Max % r.Max));
-          var max = Math.Max(Math.Max(l.Min % r.Min, l.Min % r.Max), Math.Max(l.Max % r.Min, l.Max % r.Max));
+          if (l.Min <= 0 || l.Max <= 0)
+            throw new InvalidProgramException();
+
+          long min = 0;
+          if (l.Max < r.Min)
+            min = l.Min;
+
+          long max = r.Max - 1;
+          if (l.Max < max)
+            max = l.Max;
+
+          if (min > max)
+            throw new InvalidProgramException();
+
           return new ValueRange(min, max);
         }
       }

@@ -65,5 +65,18 @@ namespace _24_ALU
 
       range.Should().Be(new ValueRange(-18, -2));
     }
+
+    [Theory]
+    [InlineData(5, 10, 0, 9)]
+    [InlineData(5, 20, 6, 14)]
+    public void Range_of_mod_works(int min, int mod, int resMin, int resMax)
+    {
+      var add = new Term(Operation.add, new InputOperand(0), new NumberOperand(min));
+      var term = new Term(Operation.mod, add, new NumberOperand(mod));
+
+      var range = SymbolicALU.GetPossibleRange(term);
+
+      range.Should().Be(new ValueRange(resMin, resMax));
+    }
   }
 }
