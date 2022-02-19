@@ -237,7 +237,8 @@ namespace _24_ALU
         if (!isTautology)
         {
           var conditionFalse = new Condition(option.Condition.Operands.ToList());
-          conditionFalse.Operands.Add(new Term(Operation.neq, option.State.Register[reg], op));
+          if (!isContradiction)
+            conditionFalse.Operands.Add(new Term(Operation.neq, option.State.Register[reg], op));
           var stateFalse = new State(option.State.Register.ToDictionary(x => x.Key, x => x.Value));
           stateFalse.Register[reg] = new NumberOperand(0);
           var optionFalse = new Option(conditionFalse, stateFalse);
@@ -247,7 +248,8 @@ namespace _24_ALU
         if (!isContradiction)
         {
           var conditionTrue = option.Condition;
-          conditionTrue.Operands.Add(new Term(Operation.eql, option.State.Register[reg], op));
+          if (!isTautology)
+            conditionTrue.Operands.Add(new Term(Operation.eql, option.State.Register[reg], op));
           var stateTrue = option.State;
           stateTrue.Register[reg] = new NumberOperand(1);
           var optionTrue = new Option(conditionTrue, stateTrue);
