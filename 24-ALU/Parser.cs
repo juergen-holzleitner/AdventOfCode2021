@@ -181,5 +181,18 @@ namespace _24_ALU
 
       return Format(operand);
     }
+
+    internal static string FormatSymbolicALU(SymbolicALU alu)
+    {
+      var sb = new StringBuilder();
+      foreach (var option in alu.GetOptions())
+      {
+        var condition = Format(option.Condition);
+        sb.AppendLine($"\t[{condition}]:");
+        var registers = Format(option.State).Replace(", ", "\n\t\t");
+        sb.AppendLine("\t\t" + registers);
+      }
+      return sb.ToString();
+    }
   }
 }
