@@ -72,6 +72,9 @@ namespace _24_ALU
           ProcessAdd(reg, numOp);
           return;
         }
+
+        register[reg] = new Term(Operation.add, register[reg], register[regOp.Register]);
+        return;
       }
 
       throw new NotImplementedException();
@@ -95,6 +98,9 @@ namespace _24_ALU
           ProcessMul(reg, numOp);
           return;
         }
+
+        register[reg] = new Term(Operation.mul, register[reg], register[regOp.Register]);
+        return;
       }
 
       throw new NotImplementedException();
@@ -120,6 +126,9 @@ namespace _24_ALU
           ProcessDiv(reg, numOp);
           return;
         }
+
+        register[reg] = new Term(Operation.div, register[reg], register[regOp.Register]);
+        return;
       }
 
       throw new NotImplementedException();
@@ -151,6 +160,9 @@ namespace _24_ALU
           ProcessMod(reg, numOp);
           return;
         }
+
+        register[reg] = new Term(Operation.mod, register[reg], register[regOp.Register]);
+        return;
       }
 
       throw new NotImplementedException();

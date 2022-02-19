@@ -326,5 +326,27 @@ namespace _24_ALU
 
       act.Should().Throw<InvalidOperationException>();
     }
+
+    [Theory]
+    [InlineData(Operation.add)]
+    [InlineData(Operation.mul)]
+    [InlineData(Operation.div)]
+    [InlineData(Operation.mod)]
+    public void Op_with_two_inputs_yields_term(Operation op)
+    {
+      var sut = new SymbolicALU();
+      var inp1 = new Instruction(Operation.inp, Register.x, null);
+      var inp2 = new Instruction(Operation.inp, Register.y, null);
+      var operation = new Instruction(op, Register.x, new RegisterOperand(Register.y));
+
+      sut.ProcessInstruction(inp1);
+      sut.ProcessInstruction(inp2);
+      sut.ProcessInstruction(operation);
+
+      var val = sut.GetValue(Register.x);
+      val.As<Term>().Operation.Should().Be(op);
+      val.As<Term>().Left.As<InputOperand>().Index.Should().Be(0);
+      val.As<Term>().Right.As<InputOperand>().Index.Should().Be(1);
+    }
   }
 }
