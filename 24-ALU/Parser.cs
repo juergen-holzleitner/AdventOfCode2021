@@ -192,8 +192,16 @@ namespace _24_ALU
           var condition = Format(option.Condition);
           sb.AppendLine($"\t{condition}:");
         }
-        var registers = Format(option.State).Replace(", ", "\n\t\t");
-        sb.AppendLine("\t\t" + registers);
+
+        foreach (var reg in Enum.GetValues(typeof(Register)))
+        {
+          sb.Append("\t\t");
+          sb.Append(reg.ToString());
+          var term = option.State.Register[(Register)reg];
+          var valueRange = SymbolicALU.GetPossibleRange(term);
+          sb.Append($" [{valueRange.Min},{valueRange.Max}]: ");
+          sb.AppendLine(Format(term));
+        }
       }
       return sb.ToString();
     }

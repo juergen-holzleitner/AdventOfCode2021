@@ -11,6 +11,8 @@ namespace _24_ALU
 
     internal record Condition(List<IOperand> Operands);
 
+    internal record ValueRange(long Min, long Max);
+
     List<Option> options = new();
 
     int inputIndex = 0;
@@ -275,6 +277,13 @@ namespace _24_ALU
 
     private bool IsContradiction(State state, Register reg, IOperand op)
     {
+      if (op is InputOperand)
+      {
+        var valueRange = GetPossibleRange(state.Register[reg]);
+        if (valueRange.Max <= 0 || valueRange.Min >= 10)
+          return true;
+      }
+
       if (state.Register[reg] is NumberOperand num1)
       {
         if (op is NumberOperand num2)
@@ -282,23 +291,15 @@ namespace _24_ALU
           if (num1.Number != num2.Number)
             return true;
         }
-
-        if (op is InputOperand)
-        {
-          if (num1.Number <= 0 || num1.Number >= 10)
-            return true;
-        }
       }
       
       if (state.Register[reg] is InputOperand)
       {
-        if (op is NumberOperand num)
-        {
-          if (num.Number <= 0 || num.Number >= 10)
-            return true;
-        }
+        var valueRange = GetPossibleRange(op);
+        if (valueRange.Max <= 0 || valueRange.Min >= 10)
+          return true;
       }
-      
+
       return false;
     }
 
@@ -399,6 +400,50 @@ namespace _24_ALU
     internal List<Option> GetOptions()
     {
       return options;
+    }
+
+
+    internal static ValueRange GetPossibleRange(IOperand term)
+    {
+      if (term is NumberOperand num)
+      {
+        return new ValueRange(num.Number, num.Number);
+      }
+      else if (term is InputOperand)
+      {
+        return new ValueRange(1, 9);
+      }
+      else if (term is Term t)
+      {
+        var l = GetPossibleRange(t.Left);
+        var r = GetPossibleRange(t.Right);
+
+        if (t.Operation == Operation.add)
+          return new ValueRange(l.Min + r.Min, l.Max + r.Max);
+
+        if (t.Operation == Operation.mul)
+        {
+          var min = Math.Min(Math.Min(l.Min*r.Min, l.Min*r.Max), Math.Min(l.Max*r.Min, l.Max * r.Max));
+          var max = Math.Max(Math.Max(l.Min*r.Min, l.Min*r.Max), Math.Max(l.Max*r.Min, l.Max * r.Max));
+          return new ValueRange(min, max);
+        }
+
+        if (t.Operation == Operation.div)
+        {
+          var min = Math.Min(Math.Min(l.Min / r.Min, l.Min / r.Max), Math.Min(l.Max / r.Min, l.Max / r.Max));
+          var max = Math.Max(Math.Max(l.Min / r.Min, l.Min / r.Max), Math.Max(l.Max / r.Min, l.Max / r.Max));
+          return new ValueRange(min, max);
+        }
+
+        if (t.Operation == Operation.mod)
+        {
+          var min = Math.Min(Math.Min(l.Min % r.Min, l.Min % r.Max), Math.Min(l.Max % r.Min, l.Max % r.Max));
+          var max = Math.Max(Math.Max(l.Min % r.Min, l.Min % r.Max), Math.Max(l.Max % r.Min, l.Max % r.Max));
+          return new ValueRange(min, max);
+        }
+      }
+
+      throw new NotImplementedException();
     }
   }
 }
