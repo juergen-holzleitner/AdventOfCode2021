@@ -91,6 +91,9 @@ namespace _24_ALU
     internal static string Format(Condition condition)
     {
       StringBuilder str = new();
+      if (condition.Operands.Count == 1)
+        return Format(condition.Operands[0]);
+
       foreach (var op in condition.Operands)
       {
         if (str.Length > 0)
@@ -100,6 +103,22 @@ namespace _24_ALU
       }
 
       return str.ToString();
+    }
+
+    internal static string Format(State state)
+    {
+      StringBuilder sb = new StringBuilder();
+
+      foreach (var reg in Enum.GetValues(typeof(Register)))
+      {
+        if (sb.Length > 0)
+          sb.Append(", ");
+        sb.Append(reg.ToString());
+        sb.Append(": ");
+        sb.Append(Format(state.Register[(Register)reg]));
+      }
+
+      return sb.ToString();
     }
 
     internal static string Format(IOperand operand)

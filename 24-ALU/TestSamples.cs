@@ -193,12 +193,10 @@ eql z x
                         select o).Single();
       optionTrue.State.Register[Register.z].Should().Be(new NumberOperand(1));
 
-      var condition = optionTrue.Condition.Operands.Single().As<Term>();
-      condition.Right.Should().Be(new InputOperand(1));
-      var leftTerm = condition.Left.As<Term>();
-      leftTerm.Operation.Should().Be(Operation.mul);
-      leftTerm.Left.Should().Be(new InputOperand(0));
-      leftTerm.Right.Should().Be(new NumberOperand(3));
+      var conditionString = Parser.Format(optionTrue.Condition);
+      conditionString.Should().Be("[0] * 3 == [1]");
+      var stateString = Parser.Format(optionTrue.State);
+      stateString.Should().Be("w: 0, x: [1], y: 0, z: 1");
     }
 
   }

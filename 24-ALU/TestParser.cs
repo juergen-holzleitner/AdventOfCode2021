@@ -1,6 +1,7 @@
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using static _24_ALU.SymbolicALU;
 
@@ -174,6 +175,16 @@ namespace _24_ALU
       var str = Parser.Format(condition);
 
       str.Should().Be("(3 * [0] == [1] / 2) && (3 * [0] == [1] / 2)");
+    }
+
+    [Fact]
+    public void Can_print_State()
+    {
+      var alu = new SymbolicALU();
+
+      var str = Parser.Format(alu.GetOptions().Single().State);
+
+      str.Should().Be("w: 0, x: 0, y: 0, z: 0");
     }
   }
 }
