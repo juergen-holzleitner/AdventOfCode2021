@@ -171,5 +171,35 @@ mul x -1
       val.As<Term>().Right.As<NumberOperand>().Number.Should().Be(-1);
     }
 
+    [Fact]
+    public void Second_sample_works_symbolic()
+    {
+      var program = @"
+inp z
+inp x
+mul z 3
+eql z x
+";
+      var sut = new SymbolicALU();
+
+      foreach (var instruction in Parser.ReadProgramm(program))
+        sut.ProcessInstruction(instruction);
+
+      var options = sut.GetOptions();
+      options.Count.Should().Be(2);
+
+      var optionTrue = (from o in options
+                        where o.Condition.Operands.Single().As<Term>().Operation == Operation.eql
+                        select o).Single();
+      optionTrue.State.Register[Register.z].Should().Be(new NumberOperand(1));
+
+      var condition = optionTrue.Condition.Operands.Single().As<Term>();
+      condition.Right.Should().Be(new InputOperand(1));
+      var leftTerm = condition.Left.As<Term>();
+      leftTerm.Operation.Should().Be(Operation.mul);
+      leftTerm.Left.Should().Be(new InputOperand(0));
+      leftTerm.Right.Should().Be(new NumberOperand(3));
+    }
+
   }
 }

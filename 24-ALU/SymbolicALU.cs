@@ -7,8 +7,10 @@ namespace _24_ALU
 {
   internal class SymbolicALU
   {
-    internal record Option(State State);
+    internal record Option(Condition Condition, State State);
     internal record State(Dictionary<Register, IOperand> Register);
+
+    internal record Condition(List<IOperand> Operands);
 
     List<Option> options = new();
 
@@ -21,7 +23,7 @@ namespace _24_ALU
       foreach (var reg in Enum.GetValues(typeof(Register)))
         state.Register.Add((Register)reg, new NumberOperand(0));
 
-      options.Add(new Option(state));
+      options.Add(new Option(new(new List<IOperand>()), state));
     }
 
     internal IOperand GetValue(Register register)
@@ -214,8 +216,28 @@ namespace _24_ALU
       var newOptions = new List<Option>();
       foreach (var option in options)
       {
-        newOptions.Add(option);
-        newOptions.Add(option);
+        IOperand op = operand;
+        if (op is NumberOperand) { }
+        else if (op is RegisterOperand regOp)
+          op = option.State.Register[regOp.Register];
+        else
+          throw new InvalidOperationException();
+
+        var conditionFalse = new Condition(option.Condition.Operands.ToList());
+        conditionFalse.Operands.Add(new Term(Operation.neq, option.State.Register[reg], op));
+        var stateFalse = new State(option.State.Register.ToDictionary(x => x.Key, x => x.Value));
+        stateFalse.Register[reg] = new NumberOperand(0);
+
+        var conditionTrue = option.Condition;
+        conditionTrue.Operands.Add(new Term(Operation.eql, option.State.Register[reg], op));
+        var stateTrue = option.State;
+        stateTrue.Register[reg] = new NumberOperand(1);
+
+        var optionFalse = new Option(conditionFalse, stateFalse);
+        var optionTrue = new Option(conditionTrue, stateTrue);
+        
+        newOptions.Add(optionTrue);
+        newOptions.Add(optionFalse);
       }
 
       options = newOptions;

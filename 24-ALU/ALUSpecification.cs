@@ -2,7 +2,7 @@
 {
   public enum Register { w, x, y, z }
 
-  public enum Operation { inp, add, mul, div, mod, eql };
+  public enum Operation { inp, add, mul, div, mod, eql, neq };
 
   public interface IOperand { }
 

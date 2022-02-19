@@ -2,6 +2,7 @@
 using FluentAssertions;
 using static _24_ALU.Parser;
 using System;
+using System.Linq;
 
 namespace _24_ALU
 {
@@ -361,7 +362,18 @@ namespace _24_ALU
 
       var options = sut.GetOptions();
       options.Count.Should().Be(2);
-
+      var optionTrue = (from o in options
+                       where o.Condition.Operands.Single().As<Term>().Operation == Operation.eql
+                       select o).Single();
+      var optionFalse = (from o in options
+                        where o.Condition.Operands.Single().As<Term>().Operation == Operation.neq
+                        select o).Single();
+      optionTrue.State.Register[Register.x].Should().Be(new NumberOperand(1));
+      optionFalse.State.Register[Register.x].Should().Be(new NumberOperand(0));
+      optionTrue.Condition.Operands.Single().As<Term>().Left.Should().Be(new InputOperand(0));
+      optionTrue.Condition.Operands.Single().As<Term>().Right.Should().Be(new NumberOperand(1));
+      optionFalse.Condition.Operands.Single().As<Term>().Left.Should().Be(new InputOperand(0));
+      optionFalse.Condition.Operands.Single().As<Term>().Right.Should().Be(new NumberOperand(1));
     }
   }
 }
