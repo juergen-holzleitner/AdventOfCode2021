@@ -56,13 +56,14 @@ namespace _24_ALU
       range.Should().Be(new ValueRange(-9, -1));
     }
 
+    [Fact]
     public void Range_of_div_works()
     {
       var term = new Term(Operation.mul, new InputOperand(0), new NumberOperand(-2));
 
       var range = SymbolicALU.GetPossibleRange(term);
 
-      range.Should().Be(new ValueRange(-9, -1));
+      range.Should().Be(new ValueRange(-18, -2));
     }
   }
 }
