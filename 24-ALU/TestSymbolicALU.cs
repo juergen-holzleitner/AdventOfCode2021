@@ -374,5 +374,19 @@ namespace _24_ALU
       optionFalse.Condition.Operands.Single().As<Term>().Left.Should().Be(new InputOperand(0));
       optionFalse.Condition.Operands.Single().As<Term>().Right.Should().Be(new NumberOperand(1));
     }
+
+    [Fact]
+    public void Add_with_existing_zero_works()
+    {
+      var sut = new SymbolicALU();
+      var inp = new Instruction(Operation.inp, Register.w, null);
+      var add = new Instruction(Operation.add, Register.z, new RegisterOperand(Register.w));
+
+      sut.ProcessInstruction(inp);
+      sut.ProcessInstruction(add);
+
+      var val = sut.GetValue(Register.z);
+      val.Should().Be(new InputOperand(0));
+    }
   }
 }

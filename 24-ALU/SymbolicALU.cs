@@ -109,6 +109,12 @@ namespace _24_ALU
 
       if (operand is RegisterOperand regOp)
       {
+        if (TargetRegisterIsZero(reg, state))
+        {
+          state.Register[reg] = state.Register[regOp.Register];
+          return;
+        }
+
         if (state.Register[regOp.Register] is NumberOperand numOp)
         {
           ProcessAdd(reg, numOp, state);

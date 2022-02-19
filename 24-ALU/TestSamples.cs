@@ -199,5 +199,32 @@ eql z x
       stateString.Should().Be("w: 0, x: [1], y: 0, z: 1");
     }
 
+    [Fact]
+    public void Third_sample_works_symbolic()
+    {
+      var program = @"
+inp w
+add z w
+mod z 2
+div w 2
+add y w
+mod y 2
+div w 2
+add x w
+mod x 2
+div w 2
+mod w 2
+";
+      var sut = new SymbolicALU();
+
+      foreach (var instruction in Parser.ReadProgramm(program))
+        sut.ProcessInstruction(instruction);
+
+      sut.GetOptions().Count.Should().Be(1);
+      sut.GetOptions().Single().Condition.Operands.Should().BeEmpty();
+      var stateString = Parser.Format(sut.GetOptions().Single().State);
+      stateString.Should().Be("w: ((([0] / 2) / 2) / 2) % 2, x: (([0] / 2) / 2) % 2, y: ([0] / 2) % 2, z: [0] % 2");
+    }
+
   }
 }
