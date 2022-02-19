@@ -348,5 +348,20 @@ namespace _24_ALU
       val.As<Term>().Left.As<InputOperand>().Index.Should().Be(0);
       val.As<Term>().Right.As<InputOperand>().Index.Should().Be(1);
     }
+
+    [Fact]
+    public void Conditional_yiels_two_options()
+    {
+      var sut = new SymbolicALU();
+      var inp = new Instruction(Operation.inp, Register.x, null);
+      var cond = new Instruction(Operation.eql, Register.x, new NumberOperand(1));
+
+      sut.ProcessInstruction(inp);
+      sut.ProcessInstruction(cond);
+
+      var options = sut.GetOptions();
+      options.Count.Should().Be(2);
+
+    }
   }
 }

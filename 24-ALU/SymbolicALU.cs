@@ -1,23 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using static _24_ALU.Parser;
 
 namespace _24_ALU
 {
   internal class SymbolicALU
   {
-    readonly Dictionary<Register, IOperand> register = new();
+    internal record Option(State State);
+    internal record State(Dictionary<Register, IOperand> Register);
+
+    List<Option> options = new();
+
     int inputIndex = 0;
 
     public SymbolicALU()
     {
+      var state = new State(new Dictionary<Register, IOperand>());
+
       foreach (var reg in Enum.GetValues(typeof(Register)))
-        register.Add((Register)reg, new NumberOperand(0));
+        state.Register.Add((Register)reg, new NumberOperand(0));
+
+      options.Add(new Option(state));
     }
 
     internal IOperand GetValue(Register register)
     {
-      return this.register[register];
+      return options.Single().State.Register[register];
     }
 
     internal void ProcessInstruction(Instruction instruction)
@@ -47,94 +56,126 @@ namespace _24_ALU
         ProcessMod(instruction.Register, instruction.Operand);
         return;
       }
+      else if (instruction.Operation == Operation.eql && instruction.Operand is not null)
+      {
+        ProcessEql(instruction.Register, instruction.Operand);
+        return;
+      }
 
       throw new NotImplementedException();
     }
 
     private void ProcessInp(Register reg)
     {
-      register[reg] = new InputOperand(inputIndex);
+      foreach (var o in options)
+        ProcessInp(reg, o.State);
+      
       ++inputIndex;
     }
-
     private void ProcessAdd(Register reg, IOperand operand)
     {
-      if (operand is NumberOperand num)
-      {
-        ProcessAdd(reg, num);
-        return;
-      }
-
-      if (operand is RegisterOperand regOp)
-      {
-        if (register[regOp.Register] is NumberOperand numOp)
-        {
-          ProcessAdd(reg, numOp);
-          return;
-        }
-
-        register[reg] = new Term(Operation.add, register[reg], register[regOp.Register]);
-        return;
-      }
-
-      throw new NotImplementedException();
+      foreach (var o in options)
+        ProcessAdd(reg, operand, o.State);
     }
-
     private void ProcessMul(Register reg, IOperand operand)
     {
-      if (TargetRegisterIsZero(reg))
-        return;
+      foreach (var o in options)
+        ProcessMul(reg, operand, o.State);
+    }
+    private void ProcessDiv(Register reg, IOperand operand)
+    {
+      foreach (var o in options)
+        ProcessDiv(reg, operand, o.State);
+    }
+    private void ProcessMod(Register reg, IOperand operand)
+    {
+      foreach (var o in options)
+        ProcessMod(reg, operand, o.State);
+    }
 
+    private void ProcessInp(Register reg, State state)
+    {
+      state.Register[reg] = new InputOperand(inputIndex);
+    }
+
+    private void ProcessAdd(Register reg, IOperand operand, State state)
+    {
       if (operand is NumberOperand num)
       {
-        ProcessMul(reg, num);
+        ProcessAdd(reg, num, state);
         return;
       }
 
       if (operand is RegisterOperand regOp)
       {
-        if (register[regOp.Register] is NumberOperand numOp)
+        if (state.Register[regOp.Register] is NumberOperand numOp)
         {
-          ProcessMul(reg, numOp);
+          ProcessAdd(reg, numOp, state);
           return;
         }
 
-        register[reg] = new Term(Operation.mul, register[reg], register[regOp.Register]);
+        state.Register[reg] = new Term(Operation.add, state.Register[reg], state.Register[regOp.Register]);
         return;
       }
 
       throw new NotImplementedException();
     }
 
-    private void ProcessDiv(Register reg, IOperand operand)
+    private void ProcessMul(Register reg, IOperand operand, State state)
+    {
+      if (TargetRegisterIsZero(reg, state))
+        return;
+
+      if (operand is NumberOperand num)
+      {
+        ProcessMul(reg, num, state);
+        return;
+      }
+
+      if (operand is RegisterOperand regOp)
+      {
+        if (state.Register[regOp.Register] is NumberOperand numOp)
+        {
+          ProcessMul(reg, numOp, state);
+          return;
+        }
+
+        state.Register[reg] = new Term(Operation.mul, state.Register[reg], state.Register[regOp.Register]);
+        return;
+      }
+
+      throw new NotImplementedException();
+    }
+
+    private void ProcessDiv(Register reg, IOperand operand, State state)
     {
       CheckDivByZero(operand);
 
-      if (TargetRegisterIsZero(reg))
+      if (TargetRegisterIsZero(reg, state))
         return;
 
       if (operand is NumberOperand num)
       {
-        ProcessDiv(reg, num);
+        ProcessDiv(reg, num, state);
         return;
       }
 
       if (operand is RegisterOperand regOp)
       {
-        if (register[regOp.Register] is NumberOperand numOp)
+        if (state.Register[regOp.Register] is NumberOperand numOp)
         {
-          ProcessDiv(reg, numOp);
+          ProcessDiv(reg, numOp, state);
           return;
         }
 
-        register[reg] = new Term(Operation.div, register[reg], register[regOp.Register]);
+        state.Register[reg] = new Term(Operation.div, state.Register[reg], state.Register[regOp.Register]);
         return;
       }
 
       throw new NotImplementedException();
     }
 
-    private void ProcessMod(Register reg, IOperand operand)
+    private void ProcessMod(Register reg, IOperand operand, State state)
     {
       CheckDivByZero(operand);
 
@@ -144,33 +185,45 @@ namespace _24_ALU
           throw new InvalidOperationException("Module with negative operand value");
       }
 
-      if (TargetRegisterIsZero(reg))
+      if (TargetRegisterIsZero(reg, state))
         return;
 
       if (operand is NumberOperand num)
       {
-        ProcessMod(reg, num);
+        ProcessMod(reg, num, state);
         return;
       }
 
       if (operand is RegisterOperand regOp)
       {
-        if (register[regOp.Register] is NumberOperand numOp)
+        if (state.Register[regOp.Register] is NumberOperand numOp)
         {
-          ProcessMod(reg, numOp);
+          ProcessMod(reg, numOp, state);
           return;
         }
 
-        register[reg] = new Term(Operation.mod, register[reg], register[regOp.Register]);
+        state.Register[reg] = new Term(Operation.mod, state.Register[reg], state.Register[regOp.Register]);
         return;
       }
 
       throw new NotImplementedException();
     }
 
-    private void ProcessMod(Register reg, NumberOperand num)
+    private void ProcessEql(Register reg, IOperand operand)
     {
-      if (register[reg] is NumberOperand numNeg)
+      var newOptions = new List<Option>();
+      foreach (var option in options)
+      {
+        newOptions.Add(option);
+        newOptions.Add(option);
+      }
+
+      options = newOptions;
+    }
+
+    private void ProcessMod(Register reg, NumberOperand num, State state)
+    {
+      if (state.Register[reg] is NumberOperand numNeg)
       {
         if (numNeg.Number < 0)
           throw new InvalidOperationException("Module with negative register value");
@@ -178,68 +231,68 @@ namespace _24_ALU
 
       if (num.Number == 1)
       {
-        register[reg] = new NumberOperand(0);
+        state.Register[reg] = new NumberOperand(0);
         return;
       }
 
       if (num.Number < 0)
         throw new InvalidOperationException("Module with negative register value");
 
-      if (register[reg] is NumberOperand num1)
+      if (state.Register[reg] is NumberOperand num1)
       {
-        register[reg] = new NumberOperand(num1.Number % num.Number);
+        state.Register[reg] = new NumberOperand(num1.Number % num.Number);
         return;
       }
 
-      register[reg] = new Term(Operation.mod, register[reg], num);
+      state.Register[reg] = new Term(Operation.mod, state.Register[reg], num);
     }
 
-    private void ProcessDiv(Register reg, NumberOperand num)
+    private void ProcessDiv(Register reg, NumberOperand num, State state)
     {
       if (num.Number == 1)
         return;
 
-      if (register[reg] is NumberOperand num1)
+      if (state.Register[reg] is NumberOperand num1)
       {
-        register[reg] = new NumberOperand(num1.Number / num.Number);
+        state.Register[reg] = new NumberOperand(num1.Number / num.Number);
         return;
       }
 
-      register[reg] = new Term(Operation.div, register[reg], num);
+      state.Register[reg] = new Term(Operation.div, state.Register[reg], num);
     }
 
-    private void ProcessMul(Register reg, NumberOperand num)
+    private void ProcessMul(Register reg, NumberOperand num, State state)
     {
       if (num.Number == 0)
       {
-        register[reg] = new NumberOperand(0);
+        state.Register[reg] = new NumberOperand(0);
         return;
       }
       
       if (num.Number == 1)
         return;
 
-      if (register[reg] is NumberOperand num1)
+      if (state.Register[reg] is NumberOperand num1)
       {
-        register[reg] = new NumberOperand(num1.Number * num.Number);
+        state.Register[reg] = new NumberOperand(num1.Number * num.Number);
         return;
       }
 
-      register[reg] = new Term(Operation.mul, register[reg], num);
+      state.Register[reg] = new Term(Operation.mul, state.Register[reg], num);
     }
 
-    private void ProcessAdd(Register reg, NumberOperand num)
+    private void ProcessAdd(Register reg, NumberOperand num, State state)
     {
       if (num.Number == 0)
         return;
 
-      if (register[reg] is NumberOperand num1)
+      if (state.Register[reg] is NumberOperand num1)
       {
-        register[reg] = new NumberOperand(num1.Number + num.Number);
+        state.Register[reg] = new NumberOperand(num1.Number + num.Number);
         return;
       }
 
-      register[reg] = new Term(Operation.add, register[reg], num);
+      state.Register[reg] = new Term(Operation.add, state.Register[reg], num);
     }
 
     private static void CheckDivByZero(IOperand operand)
@@ -251,9 +304,9 @@ namespace _24_ALU
       }
     }
 
-    private bool TargetRegisterIsZero(Register reg)
+    private bool TargetRegisterIsZero(Register reg, State state)
     {
-      if (register[reg] is NumberOperand numReg)
+      if (state.Register[reg] is NumberOperand numReg)
       {
         if (numReg.Number == 0)
           return true;
@@ -262,5 +315,9 @@ namespace _24_ALU
       return false;
     }
 
+    internal List<Option> GetOptions()
+    {
+      return options;
+    }
   }
 }
