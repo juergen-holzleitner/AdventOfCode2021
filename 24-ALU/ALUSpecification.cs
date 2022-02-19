@@ -8,7 +8,7 @@
 
   public record RegisterOperand(Register Register) : IOperand;
 
-  public record NumberOperand(int Number) : IOperand;
+  public record NumberOperand(long Number) : IOperand;
 
   public record InputOperand(int Index) : IOperand;
 

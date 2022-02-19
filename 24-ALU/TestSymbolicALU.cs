@@ -286,5 +286,45 @@ namespace _24_ALU
       val.As<NumberOperand>().Number.Should().Be(expected);
     }
 
+    [Fact]
+    public void Mod_with_negative_operand_value_throws()
+    {
+      var sut = new SymbolicALU();
+      var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(-1));
+
+      var act = () => sut.ProcessInstruction(mod);
+
+      act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void Mod_with_negative_register_value_throws()
+    {
+      var sut = new SymbolicALU();
+      var add = new Instruction(Operation.add, Register.x, new NumberOperand(-1));
+      var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(5));
+      sut.ProcessInstruction(add);
+
+      var act = () => sut.ProcessInstruction(mod);
+
+      act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Theory]
+    [InlineData(-1, 5)]
+    [InlineData(1, -5)]
+    public void Mod_with_negative_register_register_value_throws(int x, int y)
+    {
+      var sut = new SymbolicALU();
+      var add1 = new Instruction(Operation.add, Register.x, new NumberOperand(x));
+      var add2 = new Instruction(Operation.add, Register.y, new NumberOperand(y));
+      var mod = new Instruction(Operation.mod, Register.y, new RegisterOperand(Register.x));
+      sut.ProcessInstruction(add1);
+      sut.ProcessInstruction(add2);
+
+      var act = () => sut.ProcessInstruction(mod);
+
+      act.Should().Throw<InvalidOperationException>();
+    }
   }
 }

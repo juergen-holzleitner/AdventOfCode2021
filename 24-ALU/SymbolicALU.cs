@@ -129,6 +129,12 @@ namespace _24_ALU
     {
       CheckDivByZero(operand);
 
+      if (operand is NumberOperand numNeg)
+      {
+        if (numNeg.Number < 0)
+          throw new InvalidOperationException("Module with negative operand value");
+      }
+
       if (TargetRegisterIsZero(reg))
         return;
 
@@ -152,11 +158,20 @@ namespace _24_ALU
 
     private void ProcessMod(Register reg, NumberOperand num)
     {
+      if (register[reg] is NumberOperand numNeg)
+      {
+        if (numNeg.Number < 0)
+          throw new InvalidOperationException("Module with negative register value");
+      }
+
       if (num.Number == 1)
       {
         register[reg] = new NumberOperand(0);
         return;
       }
+
+      if (num.Number < 0)
+        throw new InvalidOperationException("Module with negative register value");
 
       if (register[reg] is NumberOperand num1)
       {
