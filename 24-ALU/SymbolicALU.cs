@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static _24_ALU.Parser;
 
 namespace _24_ALU
 {
@@ -33,7 +32,7 @@ namespace _24_ALU
 
     internal void ProcessInstruction(Instruction instruction)
     {
-      if(instruction.Operation == Operation.inp)
+      if (instruction.Operation == Operation.inp)
       {
         ProcessInp(instruction.Register);
         return;
@@ -71,7 +70,7 @@ namespace _24_ALU
     {
       foreach (var o in options)
         ProcessInp(reg, o.State);
-      
+
       ++inputIndex;
     }
     private void ProcessAdd(Register reg, IOperand operand)
@@ -100,7 +99,7 @@ namespace _24_ALU
       state.Register[reg] = new InputOperand(inputIndex);
     }
 
-    private void ProcessAdd(Register reg, IOperand operand, State state)
+    private static void ProcessAdd(Register reg, IOperand operand, State state)
     {
       if (operand is NumberOperand num)
       {
@@ -123,7 +122,7 @@ namespace _24_ALU
       throw new NotImplementedException();
     }
 
-    private void ProcessMul(Register reg, IOperand operand, State state)
+    private static void ProcessMul(Register reg, IOperand operand, State state)
     {
       if (TargetRegisterIsZero(reg, state))
         return;
@@ -149,7 +148,7 @@ namespace _24_ALU
       throw new NotImplementedException();
     }
 
-    private void ProcessDiv(Register reg, IOperand operand, State state)
+    private static void ProcessDiv(Register reg, IOperand operand, State state)
     {
       CheckDivByZero(operand);
 
@@ -177,7 +176,7 @@ namespace _24_ALU
       throw new NotImplementedException();
     }
 
-    private void ProcessMod(Register reg, IOperand operand, State state)
+    private static void ProcessMod(Register reg, IOperand operand, State state)
     {
       CheckDivByZero(operand);
 
@@ -235,7 +234,7 @@ namespace _24_ALU
 
         var optionFalse = new Option(conditionFalse, stateFalse);
         var optionTrue = new Option(conditionTrue, stateTrue);
-        
+
         newOptions.Add(optionTrue);
         newOptions.Add(optionFalse);
       }
@@ -243,7 +242,7 @@ namespace _24_ALU
       options = newOptions;
     }
 
-    private void ProcessMod(Register reg, NumberOperand num, State state)
+    private static void ProcessMod(Register reg, NumberOperand num, State state)
     {
       if (state.Register[reg] is NumberOperand numNeg)
       {
@@ -269,7 +268,7 @@ namespace _24_ALU
       state.Register[reg] = new Term(Operation.mod, state.Register[reg], num);
     }
 
-    private void ProcessDiv(Register reg, NumberOperand num, State state)
+    private static void ProcessDiv(Register reg, NumberOperand num, State state)
     {
       if (num.Number == 1)
         return;
@@ -283,14 +282,14 @@ namespace _24_ALU
       state.Register[reg] = new Term(Operation.div, state.Register[reg], num);
     }
 
-    private void ProcessMul(Register reg, NumberOperand num, State state)
+    private static void ProcessMul(Register reg, NumberOperand num, State state)
     {
       if (num.Number == 0)
       {
         state.Register[reg] = new NumberOperand(0);
         return;
       }
-      
+
       if (num.Number == 1)
         return;
 
@@ -303,7 +302,7 @@ namespace _24_ALU
       state.Register[reg] = new Term(Operation.mul, state.Register[reg], num);
     }
 
-    private void ProcessAdd(Register reg, NumberOperand num, State state)
+    private static void ProcessAdd(Register reg, NumberOperand num, State state)
     {
       if (num.Number == 0)
         return;
@@ -326,7 +325,7 @@ namespace _24_ALU
       }
     }
 
-    private bool TargetRegisterIsZero(Register reg, State state)
+    private static bool TargetRegisterIsZero(Register reg, State state)
     {
       if (state.Register[reg] is NumberOperand numReg)
       {

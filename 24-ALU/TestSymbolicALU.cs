@@ -1,8 +1,7 @@
-﻿using Xunit;
-using FluentAssertions;
-using static _24_ALU.Parser;
+﻿using FluentAssertions;
 using System;
 using System.Linq;
+using Xunit;
 
 namespace _24_ALU
 {
@@ -52,7 +51,7 @@ namespace _24_ALU
     {
       var sut = new SymbolicALU();
       var inp = new Instruction(Operation.inp, Register.w, null);
-      
+
       const int numInputs = 5;
       for (int n = 0; n < numInputs + 1; ++n)
       {
@@ -124,7 +123,7 @@ namespace _24_ALU
     {
       var sut = new SymbolicALU();
       var mul = new Instruction(Operation.mul, Register.x, new NumberOperand(5));
-      
+
       sut.ProcessInstruction(mul);
 
       var value = sut.GetValue(Register.x);
@@ -363,11 +362,11 @@ namespace _24_ALU
       var options = sut.GetOptions();
       options.Count.Should().Be(2);
       var optionTrue = (from o in options
-                       where o.Condition.Operands.Single().As<Term>().Operation == Operation.eql
-                       select o).Single();
-      var optionFalse = (from o in options
-                        where o.Condition.Operands.Single().As<Term>().Operation == Operation.neq
+                        where o.Condition.Operands.Single().As<Term>().Operation == Operation.eql
                         select o).Single();
+      var optionFalse = (from o in options
+                         where o.Condition.Operands.Single().As<Term>().Operation == Operation.neq
+                         select o).Single();
       optionTrue.State.Register[Register.x].Should().Be(new NumberOperand(1));
       optionFalse.State.Register[Register.x].Should().Be(new NumberOperand(0));
       optionTrue.Condition.Operands.Single().As<Term>().Left.Should().Be(new InputOperand(0));

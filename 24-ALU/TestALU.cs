@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
-using static _24_ALU.Parser;
 
 namespace _24_ALU
 {
