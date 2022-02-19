@@ -153,6 +153,22 @@ namespace _24_ALU
     }
 
     [Fact]
+    public void Mod_with_small_range_is_optimized()
+    {
+      var sut = new SymbolicALU();
+      var inp = new Instruction(Operation.inp, Register.x, null);
+      var add = new Instruction(Operation.add, Register.x, new NumberOperand(13));
+      var mod = new Instruction(Operation.mod, Register.x, new NumberOperand(26));
+
+      sut.ProcessInstruction(inp);
+      sut.ProcessInstruction(add);
+      sut.ProcessInstruction(mod);
+
+      var val = sut.GetValue(Register.x);
+      val.Should().Be(new Term(Operation.add, new InputOperand(0), new NumberOperand(13)));
+    }
+
+    [Fact]
     public void Div_by_number_returns_term()
     {
       var sut = new SymbolicALU();

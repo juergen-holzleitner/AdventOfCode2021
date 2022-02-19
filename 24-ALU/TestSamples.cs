@@ -223,7 +223,7 @@ mod w 2
       sut.GetOptions().Count.Should().Be(1);
       sut.GetOptions().Single().Condition.Operands.Should().BeEmpty();
       var stateString = Parser.Format(sut.GetOptions().Single().State);
-      stateString.Should().Be("w: ((([0] / 2) / 2) / 2) % 2, x: (([0] / 2) / 2) % 2, y: ([0] / 2) % 2, z: [0] % 2");
+      stateString.Should().Be("w: (([0] / 2) / 2) / 2, x: (([0] / 2) / 2) % 2, y: ([0] / 2) % 2, z: [0] % 2");
     }
 
     [Fact]

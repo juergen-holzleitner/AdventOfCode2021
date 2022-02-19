@@ -199,7 +199,7 @@ namespace _24_ALU
           sb.Append(reg.ToString());
           var term = option.State.Register[(Register)reg];
           var valueRange = SymbolicALU.GetPossibleRange(term);
-          sb.Append($" [{valueRange.Min},{valueRange.Max}]: ");
+          sb.Append($" [{valueRange.Min} - {valueRange.Max}]: ");
           sb.AppendLine(Format(term));
         }
       }

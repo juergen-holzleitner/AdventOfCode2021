@@ -10,7 +10,7 @@ using System.Text;
 // multiply out terms, i.e. mul, div, mod
 // run old algorithm with random inputs to find a valid number
 
-RandomAnalysis();
+SymbolicAnalysis();
 
 void SymbolicAnalysis()
 {

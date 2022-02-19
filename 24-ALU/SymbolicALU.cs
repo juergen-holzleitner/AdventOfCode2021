@@ -211,6 +211,11 @@ namespace _24_ALU
           return;
         }
 
+        var leftRange = GetPossibleRange(state.Register[reg]);
+        var rightRange = GetPossibleRange(state.Register[regOp.Register]);
+        if (leftRange.Max < rightRange.Min)
+          return;
+
         state.Register[reg] = new Term(Operation.mod, state.Register[reg], state.Register[regOp.Register]);
         return;
       }
@@ -326,6 +331,11 @@ namespace _24_ALU
         return;
       }
 
+      var leftRange = GetPossibleRange(state.Register[reg]);
+      var rightRange = GetPossibleRange(num);
+      if (leftRange.Max < rightRange.Min)
+        return;
+
       state.Register[reg] = new Term(Operation.mod, state.Register[reg], num);
     }
 
@@ -437,7 +447,10 @@ namespace _24_ALU
 
         if (t.Operation == Operation.mod)
         {
-          if (l.Min <= 0 || l.Max <= 0)
+          if (l.Min < 0 || l.Max < 0)
+            throw new InvalidProgramException();
+
+          if (r.Min <= 0 || r.Max <= 0)
             throw new InvalidProgramException();
 
           long min = 0;
