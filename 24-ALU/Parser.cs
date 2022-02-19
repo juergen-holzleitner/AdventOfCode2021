@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using static _24_ALU.SymbolicALU;
 
 namespace _24_ALU
 {
@@ -84,6 +86,81 @@ namespace _24_ALU
           number /= 10;
         }
       }
+    }
+
+    internal static string Format(Condition condition)
+    {
+      StringBuilder str = new();
+      foreach (var op in condition.Operands)
+      {
+        if (str.Length > 0)
+          str.Append(" && ");
+
+        str.Append($"({Format(op)})");
+      }
+
+      return str.ToString();
+    }
+
+    internal static string Format(IOperand operand)
+    {
+      if (operand is NumberOperand number)
+        return number.Number.ToString();
+      else if (operand is InputOperand input)
+        return $"[{input.Index}]";
+      else if (operand is Term term)
+        return Format(term);
+
+      throw new NotImplementedException();
+    }
+
+    internal static string Format(Term term)
+    {
+      if (term.Operation == Operation.add)
+      {
+        return $"{Format(term.Left)} + {Format(term.Right)}";
+      }
+      else if (term.Operation == Operation.mul)
+      {
+        return $"{FormatFactor(term.Left)} * {FormatFactor(term.Right)}";
+      }
+      else if (term.Operation == Operation.div)
+      {
+        return $"{FormatDiv(term.Left)} / {FormatDiv(term.Right)}";
+      }
+      else if (term.Operation == Operation.mod)
+      {
+        return $"{FormatDiv(term.Left)} % {FormatDiv(term.Right)}";
+      }
+      else if (term.Operation == Operation.eql)
+      {
+        return $"{Format(term.Left)} == {Format(term.Right)}";
+      }
+      else if (term.Operation == Operation.neq)
+      {
+        return $"{Format(term.Left)} != {Format(term.Right)}";
+      }
+
+      throw new NotImplementedException();
+    }
+
+    internal static string FormatFactor(IOperand operand)
+    {
+      if (operand is Term term)
+      {
+        if (term.Operation == Operation.add)
+          return $"({Format(term)})";
+      }
+
+      return Format(operand);
+    }
+
+    internal static string FormatDiv(IOperand operand)
+    {
+      if (operand is Term term)
+        return $"({Format(term)})";
+
+      return Format(operand);
     }
   }
 }

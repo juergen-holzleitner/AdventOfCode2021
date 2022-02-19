@@ -1,6 +1,8 @@
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using Xunit;
+using static _24_ALU.SymbolicALU;
 
 namespace _24_ALU
 {
@@ -72,5 +74,106 @@ namespace _24_ALU
       instruction.Operand.As<NumberOperand>().Number.Should().Be(expectedNumber);
     }
 
+    [Fact]
+    public void Can_format_Number()
+    {
+      var operand = new NumberOperand(3);
+
+      var str = Parser.Format(operand);
+
+      str.Should().Be("3");
+    }
+
+    [Fact]
+    public void Can_format_Input()
+    {
+      var operand = new InputOperand(2);
+
+      var str = Parser.Format(operand);
+
+      str.Should().Be("[2]");
+    }
+
+    [Fact]
+    public void Can_format_Add()
+    {
+      var operand = new Term(Operation.add, new NumberOperand(3), new InputOperand(0));
+
+      var str = Parser.Format(operand);
+
+      str.Should().Be("3 + [0]");
+    }
+
+    [Fact]
+    public void Can_format_Mul()
+    {
+      var add = new Term(Operation.add, new NumberOperand(3), new InputOperand(0));
+      var operand = new Term(Operation.mul, new NumberOperand(2), add);
+
+      var str = Parser.Format(operand);
+
+      str.Should().Be("2 * (3 + [0])");
+    }
+
+    [Fact]
+    public void Can_format_Div()
+    {
+      var mul = new Term(Operation.mul, new NumberOperand(3), new InputOperand(0));
+      var operand = new Term(Operation.div, mul, new InputOperand(1));
+
+      var str = Parser.Format(operand);
+
+      str.Should().Be("(3 * [0]) / [1]");
+    }
+
+    [Fact]
+    public void Can_format_Mod()
+    {
+      var mul = new Term(Operation.mul, new NumberOperand(3), new InputOperand(0));
+      var div = new Term(Operation.div, new InputOperand(1), new NumberOperand(2));
+      var operand = new Term(Operation.mod, mul, div);
+
+      var str = Parser.Format(operand);
+
+      str.Should().Be("(3 * [0]) % ([1] / 2)");
+    }
+
+    [Fact]
+    public void Can_format_Equal()
+    {
+      var mul = new Term(Operation.mul, new NumberOperand(3), new InputOperand(0));
+      var div = new Term(Operation.div, new InputOperand(1), new NumberOperand(2));
+      var operand = new Term(Operation.eql, mul, div);
+
+      var str = Parser.Format(operand);
+
+      str.Should().Be("3 * [0] == [1] / 2");
+    }
+
+    [Fact]
+    public void Can_format_NotEqual()
+    {
+      var mul = new Term(Operation.mul, new NumberOperand(3), new InputOperand(0));
+      var div = new Term(Operation.div, new InputOperand(1), new NumberOperand(2));
+      var operand = new Term(Operation.neq, mul, div);
+
+      var str = Parser.Format(operand);
+
+      str.Should().Be("3 * [0] != [1] / 2");
+    }
+
+    [Fact]
+    public void Can_format_Condition()
+    {
+      var mul = new Term(Operation.mul, new NumberOperand(3), new InputOperand(0));
+      var div = new Term(Operation.div, new InputOperand(1), new NumberOperand(2));
+      var operand = new Term(Operation.eql, mul, div);
+
+      var condition = new Condition(new List<IOperand>() { operand, operand });
+
+      var str = Parser.Format(condition);
+
+      str.Should().Be("(3 * [0] == [1] / 2) && (3 * [0] == [1] / 2)");
+    }
   }
 }
