@@ -228,24 +228,76 @@ namespace _24_ALU
         else
           throw new InvalidOperationException();
 
-        var conditionFalse = new Condition(option.Condition.Operands.ToList());
-        conditionFalse.Operands.Add(new Term(Operation.neq, option.State.Register[reg], op));
-        var stateFalse = new State(option.State.Register.ToDictionary(x => x.Key, x => x.Value));
-        stateFalse.Register[reg] = new NumberOperand(0);
+        bool isTautology = IsTautology(option.State, reg, op);
+        bool isContradiction = IsContradiction(option.State, reg, op);
 
-        var conditionTrue = option.Condition;
-        conditionTrue.Operands.Add(new Term(Operation.eql, option.State.Register[reg], op));
-        var stateTrue = option.State;
-        stateTrue.Register[reg] = new NumberOperand(1);
+        if (isTautology && isContradiction)
+          throw new InvalidProgramException();
 
-        var optionFalse = new Option(conditionFalse, stateFalse);
-        var optionTrue = new Option(conditionTrue, stateTrue);
+        if (!isTautology)
+        {
+          var conditionFalse = new Condition(option.Condition.Operands.ToList());
+          conditionFalse.Operands.Add(new Term(Operation.neq, option.State.Register[reg], op));
+          var stateFalse = new State(option.State.Register.ToDictionary(x => x.Key, x => x.Value));
+          stateFalse.Register[reg] = new NumberOperand(0);
+          var optionFalse = new Option(conditionFalse, stateFalse);
+          newOptions.Add(optionFalse);
+        }
 
-        newOptions.Add(optionTrue);
-        newOptions.Add(optionFalse);
+        if (!isContradiction)
+        {
+          var conditionTrue = option.Condition;
+          conditionTrue.Operands.Add(new Term(Operation.eql, option.State.Register[reg], op));
+          var stateTrue = option.State;
+          stateTrue.Register[reg] = new NumberOperand(1);
+          var optionTrue = new Option(conditionTrue, stateTrue);
+          newOptions.Add(optionTrue);
+        }
       }
 
       options = newOptions;
+    }
+
+    private bool IsTautology(State state, Register reg, IOperand op)
+    {
+      if (state.Register[reg] is NumberOperand num1)
+      {
+        if (op is NumberOperand num2)
+        {
+          if (num1.Number == num2.Number)
+            return true;
+        }
+      }
+      return false;
+    }
+
+    private bool IsContradiction(State state, Register reg, IOperand op)
+    {
+      if (state.Register[reg] is NumberOperand num1)
+      {
+        if (op is NumberOperand num2)
+        {
+          if (num1.Number != num2.Number)
+            return true;
+        }
+
+        if (op is InputOperand)
+        {
+          if (num1.Number <= 0 || num1.Number >= 10)
+            return true;
+        }
+      }
+      
+      if (state.Register[reg] is InputOperand)
+      {
+        if (op is NumberOperand num)
+        {
+          if (num.Number <= 0 || num.Number >= 10)
+            return true;
+        }
+      }
+      
+      return false;
     }
 
     private static void ProcessMod(Register reg, NumberOperand num, State state)

@@ -226,5 +226,23 @@ mod w 2
       stateString.Should().Be("w: ((([0] / 2) / 2) / 2) % 2, x: (([0] / 2) / 2) % 2, y: ([0] / 2) % 2, z: [0] % 2");
     }
 
+    [Fact]
+    public void Check_model_number_works_symbolic()
+    {
+      var alu = new SymbolicALU();
+      var program = File.ReadLines(@"input.txt");
+
+      foreach (var line in program.Take(7))
+      {
+        var instruction = Parser.ParseLine(line);
+        alu.ProcessInstruction(instruction);
+      }
+
+      alu.GetOptions().Count.Should().Be(1);
+      var option = alu.GetOptions().Single();
+      var registerString = Parser.Format(option.State);
+      registerString.Should().Be("w: [0], x: 0, y: 0, z: 0");
+    }
+
   }
 }

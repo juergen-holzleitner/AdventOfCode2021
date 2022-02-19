@@ -388,5 +388,84 @@ namespace _24_ALU
       var val = sut.GetValue(Register.z);
       val.Should().Be(new InputOperand(0));
     }
+
+    [Fact]
+    public void Cond_that_is_always_true_does_not_generate_option()
+    {
+      var sut = new SymbolicALU();
+      var eql = new Instruction(Operation.eql, Register.x, new NumberOperand(0));
+
+      sut.ProcessInstruction(eql);
+
+      sut.GetOptions().Should().HaveCount(1);
+      sut.GetOptions().Single().State.Register[Register.x].Should().Be(new NumberOperand(1));
+    }
+
+    [Fact]
+    public void Cond_that_is_always_false_does_not_generate_option()
+    {
+      var sut = new SymbolicALU();
+      var add = new Instruction(Operation.add, Register.x, new NumberOperand(5));
+      var eql = new Instruction(Operation.eql, Register.x, new NumberOperand(0));
+
+      sut.ProcessInstruction(add);
+      sut.ProcessInstruction(eql);
+
+      sut.GetOptions().Should().HaveCount(1);
+      sut.GetOptions().Single().State.Register[Register.x].Should().Be(new NumberOperand(0));
+    }
+
+    [Theory]
+    [InlineData(0, true)]
+    [InlineData(10, true)]
+    [InlineData(1, false)]
+    public void Cond_with_input_must_have_valid_value(int compareValue, bool isContradiction)
+    {
+      var sut = new SymbolicALU();
+      var inp = new Instruction(Operation.inp, Register.x, null);
+      var eql = new Instruction(Operation.eql, Register.x, new NumberOperand(compareValue));
+
+      sut.ProcessInstruction(inp);
+      sut.ProcessInstruction(eql);
+
+      if (isContradiction)
+      {
+        sut.GetOptions().Should().HaveCount(1);
+        sut.GetOptions().Single().State.Register[Register.x].Should().Be(new NumberOperand(0));
+      }
+      else
+      {
+        sut.GetOptions().Should().HaveCount(2);
+        sut.GetOptions().All(o => o.Condition.Operands.Single().As<Term>().Right.As<NumberOperand>().Number == compareValue).Should().BeTrue();
+      }
+    }
+
+    [Theory]
+    [InlineData(0, true)]
+    [InlineData(10, true)]
+    [InlineData(1, false)]
+    public void Cond_with_input_must_have_valid_registervalue(int compareValue, bool isContradiction)
+    {
+      var sut = new SymbolicALU();
+      var add = new Instruction(Operation.add, Register.x, new NumberOperand(compareValue));
+      var inp = new Instruction(Operation.inp, Register.y, null);
+      var eql = new Instruction(Operation.eql, Register.x, new RegisterOperand(Register.y));
+
+      sut.ProcessInstruction(add);
+      sut.ProcessInstruction(inp);
+      sut.ProcessInstruction(eql);
+
+      if (isContradiction)
+      {
+        sut.GetOptions().Should().HaveCount(1);
+        sut.GetOptions().Single().State.Register[Register.x].Should().Be(new NumberOperand(0));
+      }
+      else
+      {
+        sut.GetOptions().Should().HaveCount(2);
+        sut.GetOptions().All(o => o.Condition.Operands.Single().As<Term>().Right.As<InputOperand>().Index == 0).Should().BeTrue();
+      }
+    }
+
   }
 }
