@@ -4,23 +4,25 @@ namespace _25_SeaCucumber
 {
   internal class Processor
   {
-    internal static char[] MoveHorizontal(char[] current)
+    internal static char[,] MoveHorizontal(char[,] current)
     {
-      var pos = new char[current.Length];
-      for (int i = 0; i < current.Length; i++)
-        pos[i] = '.';
+      var pos = new char[current.GetLength(0), current.GetLength(1)];
+      for (int y = 0; y < current.GetLength(0); ++y)
+        for (int x = 0; x < current.GetLength(1); ++x)
+          pos[y,x] = '.';
 
-      for (int i = 0; i < current.Length; i++)
-      {
-        if (current[i] == '>')
+      for (int y = 0; y < current.GetLength(0); ++y)
+        for (int x = 0; x < current.GetLength(1); ++x)
         {
-          var nextPos = (i + 1) % current.Length;
-          if (current[nextPos] == '.')
-            pos[nextPos] = '>';
-          else
-            pos[i] = '>';
+          if (current[y,x] == '>')
+          {
+            var rightPos = (x + 1) % current.GetLength(1);
+            if (current[y, rightPos] == '.')
+              pos[y, rightPos] = '>';
+            else
+              pos[y, x] = '>';
+          }
         }
-      }
       return pos;
     }
   }
