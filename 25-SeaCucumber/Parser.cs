@@ -15,7 +15,7 @@ namespace _25_SeaCucumber
       {
         System.Diagnostics.Trace.Assert(l.Length == arr.GetLength(1));
 
-        for (int x = 0; x < arr.GetLength(0); ++x)
+        for (int x = 0; x < l.Length; ++x)
         {
           var ch = l[x];
           System.Diagnostics.Trace.Assert(ch == '.' || ch == '>' || ch == 'v');
