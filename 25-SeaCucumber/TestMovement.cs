@@ -56,7 +56,7 @@ namespace _25_SeaCucumber
       for (var i = 0; i < initial.Length; i++)
         initialArr[0, i] = initial[i];
 
-      var finalArr = Processor.MoveHorizontal(initialArr);
+      (var finalArr, _) = Processor.MoveHorizontal(initialArr);
 
       var final = new char[finalArr.GetLength(1)];
       for (var i = 0; i < final.Length; i++)
@@ -69,7 +69,7 @@ namespace _25_SeaCucumber
     {
       var arr = new char[3, 1] { { '.' }, { 'v' }, { '.' } };
 
-      var final = Processor.MoveVertical(arr);
+      (var final, _) = Processor.MoveVertical(arr);
 
       var expected = new char[3, 1] { { '.' }, { '.' }, { 'v' } };
       final.Should().Equal(expected);
@@ -86,7 +86,7 @@ namespace _25_SeaCucumber
 ";
       var initialArr = Parser.Parse(initialString);
 
-      var finalArr = Processor.Move(initialArr);
+      (var finalArr, _) = Processor.Move(initialArr);
 
       var finalString = @"
 ..........
@@ -95,6 +95,75 @@ namespace _25_SeaCucumber
 ..........
 ";
       finalArr.Should().Equal(Parser.Parse(finalString));
+    }
+
+    [Fact]
+    public void TestSecondExample()
+    {
+      var initialString = @"
+...>...
+.......
+......>
+v.....>
+......>
+.......
+..vvv..
+";
+      var currentArr = Parser.Parse(initialString);
+
+      for (int n = 0; n < 4; ++n)
+        (currentArr, _) = Processor.Move(currentArr);
+
+      var finalString = @"
+>......
+..v....
+..>.v..
+.>.v...
+...>...
+.......
+v......
+";
+      currentArr.Should().Equal(Parser.Parse(finalString));
+    }
+
+    [Fact]
+    public void TestThirdExample()
+    {
+      var initialString = @"
+v...>>.vv>
+.vv>>.vv..
+>>.>v>...v
+>>v>>.>.v.
+v>v.vv.v..
+>.>>..v...
+.vv..>.>v.
+v.v..>>v.v
+....v..v.>
+";
+      var currentArr = Parser.Parse(initialString);
+
+      bool wasMoving;
+      int steps = 1;
+      do {
+        (currentArr, wasMoving) = Processor.Move(currentArr);
+        if (wasMoving)
+          ++steps;
+      } while (wasMoving);
+
+      steps.Should().Be(58);
+
+      var finalString = @"
+..>>v>vv..
+..v.>>vv..
+..>>v>>vv.
+..>>>>>vv.
+v......>vv
+v>v....>>v
+vvv.....>>
+>vv......>
+.>v.vv.v..
+";
+      currentArr.Should().Equal(Parser.Parse(finalString));
     }
 
   }
