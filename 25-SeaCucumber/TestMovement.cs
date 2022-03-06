@@ -1,6 +1,7 @@
 using Xunit;
 using FluentAssertions;
 using System;
+using System.IO;
 
 namespace _25_SeaCucumber
 {
@@ -145,6 +146,37 @@ v.v..>>v.v
       bool wasMoving;
       int steps = 1;
       do {
+        (currentArr, wasMoving) = Processor.Move(currentArr);
+        if (wasMoving)
+          ++steps;
+      } while (wasMoving);
+
+      steps.Should().Be(58);
+
+      var finalString = @"
+..>>v>vv..
+..v.>>vv..
+..>>v>>vv.
+..>>>>>vv.
+v......>vv
+v>v....>>v
+vvv.....>>
+>vv......>
+.>v.vv.v..
+";
+      currentArr.Should().Equal(Parser.Parse(finalString));
+    }
+
+    [Fact]
+    public void TestInputSmall ()
+    {
+      var initialString = File.ReadAllText(@"input-small.txt");
+      var currentArr = Parser.Parse(initialString);
+
+      bool wasMoving;
+      int steps = 1;
+      do
+      {
         (currentArr, wasMoving) = Processor.Move(currentArr);
         if (wasMoving)
           ++steps;
